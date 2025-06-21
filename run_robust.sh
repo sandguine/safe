@@ -118,7 +118,7 @@ EOF
         fi
         
         # Validate API key format
-        if [[ ! "$CLAUDE_API_KEY" =~ ^sk-[a-zA-Z0-9]+$ ]]; then
+        if [[ ! "$CLAUDE_API_KEY" =~ ^sk-[a-zA-Z0-9_-]+$ ]]; then
             log_error "Invalid API key format (should start with 'sk-')"
             return 1
         fi
@@ -246,20 +246,22 @@ run_main_application() {
     
     # Set default parameters
     CYCLES=${CYCLES:-10}
-    PUZZLES_PER_CYCLE=${PUZZLES_PER_CYCLE:-2}
-    SOLUTIONS_PER_PUZZLE=${SOLUTIONS_PER_PUZZLE:-1}
     
     log_info "Running with parameters:"
     log_info "  - Cycles: $CYCLES"
-    log_info "  - Puzzles per cycle: $PUZZLES_PER_CYCLE"
-    log_info "  - Solutions per puzzle: $SOLUTIONS_PER_PUZZLE"
+    log_info "  - Referee: ON (with oversight)"
+    log_info "  - Config puzzles: ON"
     
-    # Run the main application
+    # Generate output filename with timestamp
+    timestamp=$(date +%Y%m%d_%H%M%S)
+    output_file="results/robust_run_${timestamp}.csv"
+    
+    # Run the main application with correct arguments
     if python3 azr_loop.py \
+        --with_ref \
         --cycles "$CYCLES" \
-        --puzzles_per_cycle "$PUZZLES_PER_CYCLE" \
-        --solutions_per_puzzle "$SOLUTIONS_PER_PUZZLE" \
-        --output "results/robust_run_$(date +%Y%m%d_%H%M%S).csv"; then
+        --config \
+        --output "$output_file"; then
         log_success "Main application completed successfully"
         return 0
     else

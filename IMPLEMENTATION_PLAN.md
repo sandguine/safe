@@ -112,7 +112,7 @@ export CLAUDE_API_KEY="your-api-key-here"
 ### Interactive Demo
 ```bash
 # Run with interactive controls
-python live_demo.py --cycles 3 --n_samples 16
+python live_demo.py --cycles 3
 ```
 
 ### Red-Teaming

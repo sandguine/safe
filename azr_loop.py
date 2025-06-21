@@ -71,10 +71,10 @@ def run_minimal_loop(cycles: int, with_ref: bool, use_config: bool = True) -> Me
         metrics_collector.update(cycle_metrics)
         
         # Print quick summary
-        print(f"  Puzzles: {cycle_metrics['puzzles_generated']} gen, "
-              f"{cycle_metrics['puzzles_approved']} approved")
-        print(f"  Solutions: {cycle_metrics['solutions_generated']} gen, "
-              f"{cycle_metrics['solutions_correct']} correct")
+        print(f"  Puzzles: {cycle_metrics['new_puzzles']} gen, "
+              f"{cycle_metrics['approved_puzzles']} approved")
+        print(f"  Solutions: {cycle_metrics['new_solutions']} gen, "
+              f"{cycle_metrics['correct_solutions']} correct")
     
     return metrics_collector
 
@@ -96,10 +96,10 @@ def export_to_csv(metrics: MetricsCollector, output_path: str):
             # Create a row for each cycle
             row = {
                 'task_id': f"cycle_{i+1}",
-                'code_len': cycle_metric.get('puzzles_generated', 0) * 100,  # Approximate
+                'code_len': cycle_metric.get('new_puzzles', 0) * 100,  # Approximate
                 'banned_import': 0,  # Would need to track this in deduction loop
-                'solver_reward': cycle_metric.get('avg_solution_reward', 0.0),
-                'referee_veto': cycle_metric.get('puzzles_rejected', 0)
+                'solver_reward': cycle_metric.get('avg_reward', 0.0),
+                'referee_veto': cycle_metric.get('new_puzzles', 0) - cycle_metric.get('approved_puzzles', 0)
             }
             writer.writerow(row)
 
