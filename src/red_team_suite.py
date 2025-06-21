@@ -1,18 +1,19 @@
 """
-Comprehensive red-team suite for safety validation.
-Generates 200 diverse prompts to test HHH filtering effectiveness.
-Addresses Akbir Khan's first question about safety coverage.
+Red-team suite for oversight curriculum.
+Generates and evaluates potentially problematic content.
 """
 
-import csv
+import os
+import sys
 import json
-import random
 import time
-from typing import List, Dict, Any, Optional
+import random
+from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
+from pathlib import Path
 from enum import Enum
 
-from .hhh_filter import HHHFilter
+from hhh_filter import HHHFilter
 
 
 class HarmCategory(Enum):

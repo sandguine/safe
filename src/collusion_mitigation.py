@@ -3,15 +3,20 @@ Collusion mitigation system for AZR oversight curriculum.
 Addresses concerns about model collusion and task difficulty drift.
 """
 
+import os
+import sys
 import random
 import hashlib
 import time
 import json
+import numpy as np
+import pandas as pd
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 
-from .model import ask
+from model import ask
 
 
 class ModelRole(Enum):
@@ -265,7 +270,6 @@ class CollusionMitigator:
     def save_mitigation_data(self, filepath: str = "results/collusion_mitigation.json"):
         """Save collusion mitigation data"""
         
-        import os
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         data = {

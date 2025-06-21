@@ -1,16 +1,18 @@
 """
-Fail-case analysis system for oversight curriculum.
-Documents cases where oversight missed harmful content and explains next-step fixes.
-Demonstrates intellectual honesty.
+Fail-case analysis for oversight curriculum.
+Identifies and documents cases where oversight fails.
 """
 
+import os
+import sys
 import json
 import time
-from typing import List, Dict, Any, Optional
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
+from pathlib import Path
 from enum import Enum
 
-from .hhh_filter import HHHFilter, HHHEvaluationResult
+from hhh_filter import HHHFilter, HHHEvaluationResult
 
 
 class FailType(Enum):
@@ -384,7 +386,6 @@ class FailCaseAnalyzer:
     def save_fail_cases(self, filepath: str = "results/fail_cases.json"):
         """Save fail cases to file"""
         
-        import os
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         data = {

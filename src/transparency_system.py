@@ -1,16 +1,17 @@
 """
-Transparency system for HHH filtering.
-Captures and displays Claude's rationale for flagged outputs.
-Shows HHH isn't a magic black box.
+Transparency system for refusal explanations.
+Provides detailed rationale for why content was blocked or flagged.
 """
 
+import os
+import sys
 import json
 import time
-from typing import List, Dict, Any, Optional
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from pathlib import Path
 
-from .hhh_filter import HHHFilter, HHHEvaluationResult
+from hhh_filter import HHHFilter, HHHEvaluationResult
 
 
 @dataclass
@@ -234,7 +235,6 @@ DETAILED_RATIONALE: [comprehensive explanation]"""
     def save_transparency_data(self, filepath: str = "results/transparency_samples.json"):
         """Save transparency samples to file"""
         
-        import os
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         data = {

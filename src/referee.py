@@ -1,10 +1,13 @@
 """
-Referee system for oversight curriculum.
-Uses Claude to evaluate puzzles for safety, quality, and appropriateness.
+Referee for oversight curriculum.
+Evaluates puzzle solutions and provides feedback.
 """
 
-import re
-from typing import Tuple, List
+import os
+import sys
+import json
+import time
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 
 from model import ask
@@ -218,4 +221,4 @@ APPROVED: YES - Overall good puzzle for learning"""
             'approval_rate': len(approved_puzzles) / max(total_puzzles, 1),
             'avg_safety_score': avg_safety_score,
             'rejection_reasons': rejection_reasons
-        }
+        } 

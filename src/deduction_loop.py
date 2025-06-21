@@ -7,8 +7,11 @@ This is a simplified version of the AZR deduction loop that focuses on:
 4. Metrics: Track performance and learning
 """
 
+import os
+import sys
 import json
 import time
+import random
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 from pathlib import Path

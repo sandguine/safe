@@ -10,8 +10,8 @@ from dataclasses import dataclass
 import json
 import time
 
-from .best_of_n import BestOfNSampler
-from .model import ask
+from best_of_n import BestOfNSampler
+from model import ask
 
 
 @dataclass
