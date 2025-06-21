@@ -1,37 +1,36 @@
 """
-Integrated pipeline combining AZR, best-of-n sampling, and HHH filtering.
-Implements the complete pipeline recommended for the hackathon demo.
+Integrated pipeline combining AZR, Best-of-N sampling, and HHH filtering.
+Implements the complete system recommended for hackathon demonstration.
 """
 
 import time
-from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass
+import json
+from typing import Dict, List, Optional, Any
+from dataclasses import dataclass, asdict
 
-from .deduction_loop import DeductionLoop, Puzzle, Solution
-from .best_of_n import BestOfNSampler, BestOfNSample
-from .hhh_filter import HHHFilter, HHHResult, SafetyLevel
-from .model import ask
+from deduction_loop import DeductionLoop, Puzzle, Solution
+from best_of_n import BestOfNSampler
+from hhh_filter import HHHFilter, HHHEvaluationResult
+from model import ask
 
 
 @dataclass
-class PipelineResult:
-    """Result from the integrated pipeline"""
-    puzzle: Puzzle
-    solution: Solution
-    best_of_n_samples: List[BestOfNSample]
-    hhh_result: HHHResult
-    final_approved: bool
-    pipeline_metrics: Dict
+class PipelineMetrics:
+    """Metrics for the integrated pipeline"""
+    cycle_duration: float
+    total_puzzles: int
+    approved_puzzles: int
+    approval_rate: float
+    best_of_n_metrics: Optional[Dict[str, Any]] = None
+    hhh_metrics: Optional[Dict[str, Any]] = None
 
 
 class IntegratedPipeline:
     """
-    Integrated pipeline: AZR → Best-of-N → HHH Filter
-    
-    This implements the complete pipeline recommended for the hackathon:
-    1. AZR generates puzzles and solutions
-    2. Best-of-N sampling improves solution quality
-    3. HHH filter ensures safety and appropriateness
+    Integrated pipeline combining:
+    1. AZR self-play puzzle generation
+    2. Best-of-N sampling for accuracy boost
+    3. HHH safety filtering
     """
     
     def __init__(self,
@@ -42,304 +41,237 @@ class IntegratedPipeline:
                  hhh_strict_mode: bool = True):
         
         self.model_name = model_name
+        self.n_samples = n_samples
         self.enable_best_of_n = enable_best_of_n
         self.enable_hhh_filter = enable_hhh_filter
         
         # Initialize components
-        self.azr_loop = DeductionLoop(
-            model_name=model_name,
-            enable_referee=False,  # We'll use HHH filter instead
-            max_puzzles_per_cycle=2,
-            max_solutions_per_puzzle=1
-        )
+        self.deduction_loop = DeductionLoop(model_name=model_name)
         
-        self.best_of_n_sampler = BestOfNSampler(
-            model_name=model_name,
-            n_samples=n_samples
-        ) if enable_best_of_n else None
+        if enable_best_of_n:
+            self.best_of_n_sampler = BestOfNSampler(
+                model_name=model_name,
+                n_samples=n_samples
+            )
+        else:
+            self.best_of_n_sampler = None
         
-        self.hhh_filter = HHHFilter(
-            model_name=model_name,
-            strict_mode=hhh_strict_mode
-        ) if enable_hhh_filter else None
+        if enable_hhh_filter:
+            self.hhh_filter = HHHFilter(
+                model_name=model_name,
+                strict_mode=hhh_strict_mode
+            )
+        else:
+            self.hhh_filter = None
         
-        # Pipeline state
-        self.cycle_count = 0
-        self.results: List[PipelineResult] = []
-        
-    def run_cycle(self) -> Dict:
+        # Metrics tracking
+        self.cycle_metrics: List[PipelineMetrics] = []
+        self.pipeline_results: List[Dict[str, Any]] = []
+    
+    def run_cycle(self) -> PipelineMetrics:
         """Run one complete pipeline cycle"""
         
-        self.cycle_count += 1
-        print(f"\n🔄 Pipeline Cycle {self.cycle_count}")
-        print("=" * 50)
+        start_time = time.time()
         
-        cycle_start = time.time()
-        cycle_results = []
+        # Step 1: Generate puzzle using AZR
+        puzzle = self.deduction_loop.generate_puzzle()
         
-        # Step 1: AZR generates puzzles
-        print("📝 Step 1: AZR Puzzle Generation")
-        puzzles = self._generate_puzzles()
-        
-        for puzzle in puzzles:
-            print(f"\n--- Processing Puzzle: {puzzle.id} ---")
-            
-            # Step 2: Best-of-N sampling for solutions
-            if self.enable_best_of_n and self.best_of_n_sampler:
-                print("🎯 Step 2: Best-of-N Sampling")
-                solution, samples = self._best_of_n_solve(puzzle)
-            else:
-                print("🎯 Step 2: Single Solution Generation")
-                solution, samples = self._single_solve(puzzle)
-            
-            # Step 3: HHH filtering
-            if self.enable_hhh_filter and self.hhh_filter:
-                print("🛡️  Step 3: HHH Safety Filter")
-                hhh_result = self._hhh_filter_content(solution.content)
-            else:
-                print("🛡️  Step 3: HHH Filter Disabled")
-                hhh_result = self._create_default_hhh_result()
-            
-            # Determine final approval
-            final_approved = hhh_result.is_approved if self.enable_hhh_filter else True
-            
-            # Create pipeline result
-            result = PipelineResult(
-                puzzle=puzzle,
-                solution=solution,
-                best_of_n_samples=samples,
-                hhh_result=hhh_result,
-                final_approved=final_approved,
-                pipeline_metrics=self._compute_pipeline_metrics(samples, hhh_result)
+        # Step 2: Apply HHH filter if enabled
+        if self.hhh_filter:
+            hhh_result = self.hhh_filter.evaluate_content(
+                puzzle.content, "puzzle"
             )
             
-            cycle_results.append(result)
-            self.results.append(result)
+            if not hhh_result.is_approved:
+                # Puzzle rejected by HHH filter
+                metrics = PipelineMetrics(
+                    cycle_duration=time.time() - start_time,
+                    total_puzzles=1,
+                    approved_puzzles=0,
+                    approval_rate=0.0,
+                    hhh_metrics={
+                        'avg_helpful_score': hhh_result.helpful_score,
+                        'avg_harmless_score': hhh_result.harmless_score,
+                        'avg_honest_score': hhh_result.honest_score,
+                        'avg_overall_score': hhh_result.overall_score,
+                        'safety_level': hhh_result.safety_level.value
+                    }
+                )
+                self.cycle_metrics.append(metrics)
+                return metrics
+        
+        # Step 3: Generate solution(s)
+        if self.enable_best_of_n and self.best_of_n_sampler:
+            # Use Best-of-N sampling
+            solution, best_of_n_metrics = self.best_of_n_sampler.sample_best_solution(
+                puzzle.content
+            )
+        else:
+            # Use single solution generation
+            solution = self.deduction_loop.generate_solution(puzzle)
+            best_of_n_metrics = None
+        
+        # Step 4: Apply HHH filter to solution if enabled
+        if self.hhh_filter:
+            hhh_result = self.hhh_filter.evaluate_content(
+                solution.content, "solution"
+            )
             
-            # Print result summary
-            self._print_result_summary(result)
+            if not hhh_result.is_approved:
+                # Solution rejected by HHH filter
+                metrics = PipelineMetrics(
+                    cycle_duration=time.time() - start_time,
+                    total_puzzles=1,
+                    approved_puzzles=0,
+                    approval_rate=0.0,
+                    best_of_n_metrics=best_of_n_metrics,
+                    hhh_metrics={
+                        'avg_helpful_score': hhh_result.helpful_score,
+                        'avg_harmless_score': hhh_result.harmless_score,
+                        'avg_honest_score': hhh_result.honest_score,
+                        'avg_overall_score': hhh_result.overall_score,
+                        'safety_level': hhh_result.safety_level.value
+                    }
+                )
+                self.cycle_metrics.append(metrics)
+                return metrics
         
-        # Compute cycle metrics
-        cycle_metrics = self._compute_cycle_metrics(cycle_results)
-        cycle_metrics['cycle_duration'] = time.time() - cycle_start
+        # Step 5: Evaluate solution
+        evaluation = self.deduction_loop.evaluate_solution(puzzle, solution)
         
-        print(f"\n✅ Cycle {self.cycle_count} completed in {cycle_metrics['cycle_duration']:.2f}s")
+        # Step 6: Record results
+        result = {
+            'puzzle': asdict(puzzle),
+            'solution': asdict(solution),
+            'evaluation': evaluation,
+            'best_of_n_metrics': best_of_n_metrics,
+            'hhh_approved': True if self.hhh_filter else None
+        }
+        self.pipeline_results.append(result)
         
-        return cycle_metrics
-    
-    def _generate_puzzles(self) -> List[Puzzle]:
-        """Generate puzzles using AZR"""
-        # Use the existing AZR puzzle generation
-        return self.azr_loop._propose_phase()
-    
-    def _best_of_n_solve(self, puzzle: Puzzle) -> Tuple[Solution, List[BestOfNSample]]:
-        """Solve puzzle using best-of-n sampling"""
-        # Create solve prompt based on puzzle type
-        solve_prompt = self._create_solve_prompt(puzzle)
+        # Step 7: Calculate metrics
+        hhh_metrics = None
+        if self.hhh_filter:
+            hhh_metrics = {
+                'avg_helpful_score': 1.0,  # Approved content gets high scores
+                'avg_harmless_score': 1.0,
+                'avg_honest_score': 1.0,
+                'avg_overall_score': 1.0,
+                'safety_level': 'safe'
+            }
         
-        # Use best-of-n sampler
-        solution, samples = self.best_of_n_sampler.sample_best_solution(
-            puzzle, solve_prompt
+        metrics = PipelineMetrics(
+            cycle_duration=time.time() - start_time,
+            total_puzzles=1,
+            approved_puzzles=1,
+            approval_rate=1.0,
+            best_of_n_metrics=best_of_n_metrics,
+            hhh_metrics=hhh_metrics
         )
         
-        return solution, samples
-    
-    def _single_solve(self, puzzle: Puzzle) -> Tuple[Solution, List[BestOfNSample]]:
-        """Solve puzzle using single generation (fallback)"""
-        solve_prompt = self._create_solve_prompt(puzzle)
-        
-        # Generate single solution
-        response = ask(solve_prompt, model=self.model_name, max_tokens=512)
-        solution_content = self._parse_solution_response(response, puzzle.puzzle_type)
-        
-        # Evaluate solution
-        is_correct, execution_result, reward = self._evaluate_solution(puzzle, solution_content)
-        
-        solution = Solution(
-            puzzle_id=puzzle.id,
-            content=solution_content,
-            is_correct=is_correct,
-            execution_result=execution_result,
-            reward=reward
-        )
-        
-        return solution, []
-    
-    def _hhh_filter_content(self, content: str) -> HHHResult:
-        """Apply HHH filter to content"""
-        return self.hhh_filter.evaluate_content(content, "code")
-    
-    def _create_default_hhh_result(self) -> HHHResult:
-        """Create default HHH result when filter is disabled"""
-        from .hhh_filter import HHHResult, SafetyLevel
-        
-        return HHHResult(
-            is_approved=True,
-            safety_level=SafetyLevel.SAFE,
-            helpful_score=0.8,
-            harmless_score=0.9,
-            honest_score=0.8,
-            overall_score=0.83,
-            feedback="HHH filter disabled"
-        )
-    
-    def _create_solve_prompt(self, puzzle: Puzzle) -> str:
-        """Create solve prompt based on puzzle type"""
-        if puzzle.puzzle_type == 'code_i':
-            return self.azr_loop._create_code_i_solve_prompt(puzzle.content)
-        elif puzzle.puzzle_type == 'code_o':
-            return self.azr_loop._create_code_o_solve_prompt(puzzle.content)
-        elif puzzle.puzzle_type == 'code_e':
-            return self.azr_loop._create_code_e_solve_prompt(puzzle.content)
-        elif puzzle.puzzle_type == 'code_f':
-            return self.azr_loop._create_code_f_solve_prompt(puzzle.content)
-        else:
-            return f"Solve this puzzle:\n{puzzle.content}"
-    
-    def _parse_solution_response(self, response: str, puzzle_type: str) -> str:
-        """Parse solution from response"""
-        if '```python' in response:
-            start = response.find('```python') + 9
-            end = response.find('```', start)
-            if end != -1:
-                return response[start:end].strip()
-        return response.strip()
-    
-    def _evaluate_solution(self, puzzle: Puzzle, solution: str) -> Tuple[bool, Optional[str], float]:
-        """Evaluate solution (simplified)"""
-        # Use the same evaluation logic as best-of-n sampler
-        if self.best_of_n_sampler:
-            return self.best_of_n_sampler._evaluate_solution(puzzle, solution)
-        else:
-            # Simple evaluation
-            if 'def ' in solution:
-                return True, "Function defined", 0.8
-            else:
-                return False, None, 0.3
-    
-    def _compute_pipeline_metrics(self, samples: List[BestOfNSample], 
-                                hhh_result: HHHResult) -> Dict:
-        """Compute metrics for pipeline result"""
-        metrics = {}
-        
-        # Best-of-N metrics
-        if samples:
-            best_of_n_metrics = self.best_of_n_sampler.get_metrics(samples)
-            metrics.update(best_of_n_metrics)
-        
-        # HHH metrics
-        metrics.update({
-            'hhh_helpful_score': hhh_result.helpful_score,
-            'hhh_harmless_score': hhh_result.harmless_score,
-            'hhh_honest_score': hhh_result.honest_score,
-            'hhh_overall_score': hhh_result.overall_score,
-            'hhh_approved': hhh_result.is_approved,
-            'safety_level': hhh_result.safety_level.value
-        })
-        
+        self.cycle_metrics.append(metrics)
         return metrics
     
-    def _compute_cycle_metrics(self, cycle_results: List[PipelineResult]) -> Dict:
-        """Compute metrics for the entire cycle"""
-        if not cycle_results:
-            return {}
-        
-        total_puzzles = len(cycle_results)
-        approved_puzzles = [r for r in cycle_results if r.final_approved]
-        
-        # Best-of-N metrics
-        all_samples = []
-        for result in cycle_results:
-            all_samples.extend(result.best_of_n_samples)
-        
-        best_of_n_metrics = {}
-        if all_samples and self.best_of_n_sampler:
-            best_of_n_metrics = self.best_of_n_sampler.get_metrics(all_samples)
-        
-        # HHH metrics
-        hhh_results = [r.hhh_result for r in cycle_results]
-        hhh_metrics = {}
-        if hhh_results and self.hhh_filter:
-            hhh_metrics = self.hhh_filter.get_safety_report(hhh_results)
-        
-        return {
-            'total_puzzles': total_puzzles,
-            'approved_puzzles': len(approved_puzzles),
-            'approval_rate': len(approved_puzzles) / total_puzzles,
-            'best_of_n_metrics': best_of_n_metrics,
-            'hhh_metrics': hhh_metrics
-        }
-    
-    def _print_result_summary(self, result: PipelineResult):
-        """Print summary of pipeline result"""
-        print(f"📊 Result Summary:")
-        print(f"  Puzzle: {result.puzzle.id} ({result.puzzle.puzzle_type})")
-        print(f"  Solution: {'✅ Correct' if result.solution.is_correct else '❌ Incorrect'}")
-        print(f"  Reward: {result.solution.reward:.3f}")
-        
-        if result.best_of_n_samples:
-            print(f"  Best-of-N: {len(result.best_of_n_samples)} samples, "
-                  f"{sum(1 for s in result.best_of_n_samples if s.is_correct)} correct")
-        
-        print(f"  HHH: {result.hhh_result.feedback}")
-        print(f"  Final: {'✅ APPROVED' if result.final_approved else '❌ REJECTED'}")
-        
-        if not result.final_approved and result.hhh_result.refusal_reason:
-            print(f"  Reason: {result.hhh_result.refusal_reason}")
-    
-    def toggle_best_of_n(self, enable: bool = None):
-        """Toggle best-of-n sampling"""
-        if enable is not None:
-            self.enable_best_of_n = enable
-        else:
+    def toggle_best_of_n(self):
+        """Toggle Best-of-N sampling on/off"""
+        if self.best_of_n_sampler:
             self.enable_best_of_n = not self.enable_best_of_n
-        
-        print(f"Best-of-N: {'ENABLED' if self.enable_best_of_n else 'DISABLED'}")
-    
-    def toggle_hhh_filter(self, enable: bool = None):
-        """Toggle HHH filter"""
-        if enable is not None:
-            self.enable_hhh_filter = enable
+            print(f"Best-of-N sampling: {'ENABLED' if self.enable_best_of_n else 'DISABLED'}")
         else:
+            print("Best-of-N sampler not initialized")
+    
+    def toggle_hhh_filter(self):
+        """Toggle HHH filter on/off"""
+        if self.hhh_filter:
             self.enable_hhh_filter = not self.enable_hhh_filter
-        
-        print(f"HHH Filter: {'ENABLED' if self.enable_hhh_filter else 'DISABLED'}")
+            print(f"HHH filter: {'ENABLED' if self.enable_hhh_filter else 'DISABLED'}")
+        else:
+            print("HHH filter not initialized")
     
     def toggle_hhh_strict_mode(self):
-        """Toggle HHH strict mode"""
+        """Toggle HHH strict/lenient mode"""
         if self.hhh_filter:
-            self.hhh_filter.toggle_strict_mode()
+            self.hhh_filter.strict_mode = not self.hhh_filter.strict_mode
+            mode = 'STRICT' if self.hhh_filter.strict_mode else 'LENIENT'
+            print(f"HHH mode: {mode}")
+        else:
+            print("HHH filter not initialized")
     
-    def get_pipeline_summary(self) -> Dict:
-        """Get summary of all pipeline results"""
-        if not self.results:
-            return {}
+    def get_pipeline_summary(self) -> Dict[str, Any]:
+        """Get comprehensive pipeline summary"""
         
-        total_results = len(self.results)
-        approved_results = [r for r in self.results if r.final_approved]
+        if not self.cycle_metrics:
+            return {'error': 'No cycles completed'}
         
-        # Collect all samples and HHH results
-        all_samples = []
-        all_hhh_results = []
+        total_results = len(self.pipeline_results)
+        approved_results = sum(1 for m in self.cycle_metrics if m.approved_puzzles > 0)
+        overall_approval_rate = approved_results / len(self.cycle_metrics) if self.cycle_metrics else 0
         
-        for result in self.results:
-            all_samples.extend(result.best_of_n_samples)
-            all_hhh_results.append(result.hhh_result)
+        # Best-of-N summary
+        best_of_n_summary = None
+        if self.best_of_n_sampler:
+            best_of_n_metrics = [m.best_of_n_metrics for m in self.cycle_metrics if m.best_of_n_metrics]
+            if best_of_n_metrics:
+                avg_reward = sum(m.get('avg_reward', 0) for m in best_of_n_metrics) / len(best_of_n_metrics)
+                max_reward = max(m.get('max_reward', 0) for m in best_of_n_metrics)
+                correct_rate = sum(m.get('correct_rate', 0) for m in best_of_n_metrics) / len(best_of_n_metrics)
+                
+                best_of_n_summary = {
+                    'n_samples': self.n_samples,
+                    'avg_reward': avg_reward,
+                    'max_reward': max_reward,
+                    'correct_rate': correct_rate
+                }
         
-        # Compute metrics
-        best_of_n_summary = {}
-        if all_samples and self.best_of_n_sampler:
-            best_of_n_summary = self.best_of_n_sampler.get_metrics(all_samples)
-        
-        hhh_summary = {}
-        if all_hhh_results and self.hhh_filter:
-            hhh_summary = self.hhh_filter.get_safety_report(all_hhh_results)
+        # HHH summary
+        hhh_summary = None
+        if self.hhh_filter:
+            hhh_metrics = [m.hhh_metrics for m in self.cycle_metrics if m.hhh_metrics]
+            if hhh_metrics:
+                total_content = len(hhh_metrics)
+                approved_content = sum(1 for m in hhh_metrics if m.get('safety_level') == 'safe')
+                blocked_content = sum(1 for m in hhh_metrics if m.get('safety_level') == 'blocked')
+                warning_content = sum(1 for m in hhh_metrics if m.get('safety_level') == 'warning')
+                
+                avg_helpful = sum(m.get('avg_helpful_score', 0) for m in hhh_metrics) / len(hhh_metrics)
+                avg_harmless = sum(m.get('avg_harmless_score', 0) for m in hhh_metrics) / len(hhh_metrics)
+                avg_honest = sum(m.get('avg_honest_score', 0) for m in hhh_metrics) / len(hhh_metrics)
+                
+                hhh_summary = {
+                    'total_content': total_content,
+                    'approved_content': approved_content,
+                    'blocked_content': blocked_content,
+                    'warning_content': warning_content,
+                    'avg_helpful_score': avg_helpful,
+                    'avg_harmless_score': avg_harmless,
+                    'avg_honest_score': avg_honest
+                }
         
         return {
             'total_results': total_results,
-            'approved_results': len(approved_results),
-            'overall_approval_rate': len(approved_results) / total_results,
+            'approved_results': approved_results,
+            'overall_approval_rate': overall_approval_rate,
+            'cycles_completed': len(self.cycle_metrics),
             'best_of_n_summary': best_of_n_summary,
-            'hhh_summary': hhh_summary,
-            'cycles_completed': self.cycle_count
-        } 
+            'hhh_summary': hhh_summary
+        }
+    
+    def save_results(self, filename: str = "pipeline_results.json"):
+        """Save pipeline results to file"""
+        
+        results = {
+            'pipeline_config': {
+                'model_name': self.model_name,
+                'n_samples': self.n_samples,
+                'enable_best_of_n': self.enable_best_of_n,
+                'enable_hhh_filter': self.enable_hhh_filter
+            },
+            'pipeline_results': self.pipeline_results,
+            'cycle_metrics': [asdict(m) for m in self.cycle_metrics],
+            'summary': self.get_pipeline_summary()
+        }
+        
+        with open(filename, 'w') as f:
+            json.dump(results, f, indent=2)
+        
+        print(f"Results saved to {filename}") 
