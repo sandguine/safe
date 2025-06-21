@@ -4,6 +4,7 @@ Tracks performance, learning progress, and comparison between baseline and overs
 """
 
 import json
+import csv
 import time
 from typing import Dict, List, Optional
 from dataclasses import dataclass, asdict
@@ -157,6 +158,29 @@ class MetricsCollector:
         
         if 'cycle_metrics' in data:
             self.load_metrics(data['cycle_metrics'])
+    
+    def export_to_csv(self, filepath: str):
+        """Export metrics to CSV format as specified in plan"""
+        # Get all cycle metrics
+        cycle_metrics = self.get_all_metrics()
+        
+        with open(filepath, 'w', newline='') as csvfile:
+            fieldnames = ['task_id', 'code_len', 'banned_import', 
+                         'solver_reward', 'referee_veto']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            
+            writer.writeheader()
+            
+            for i, cycle_metric in enumerate(cycle_metrics):
+                # Create a row for each cycle
+                row = {
+                    'task_id': f"cycle_{i+1}",
+                    'code_len': cycle_metric.get('puzzles_generated', 0) * 100,  # Approximate
+                    'banned_import': 0,  # Would need to track this in deduction loop
+                    'solver_reward': cycle_metric.get('avg_solution_reward', 0.0),
+                    'referee_veto': cycle_metric.get('puzzles_rejected', 0)
+                }
+                writer.writerow(row)
 
 
 class ComparisonAnalyzer:

@@ -1,200 +1,225 @@
-# Oversight-Shaped Curriculum  
+# Oversight Curriculum
 
-A minimal reproduction of the **Absolute-Zero Reasoner (AZR) deduction loop** that adds an inexpensive Claude-based referee.  
-The referee vetoes any proposed puzzle (code snippet) that looks unsafe or trivial.  
-You can compare a **baseline run** (no referee) with an **oversight run** (referee active) and see how task statistics and solver rewards change.
+A reproduction of the Absolute-Zero Reasoner (AZR) deduction loop with Claude-based referee oversight to veto unsafe or trivial puzzles.
 
-## 🎯 What's New
+## Overview
 
-✅ **Complete AZR Deduction Loop** - Ported and simplified from the original AZR project  
-✅ **Claude-based Referee System** - Evaluates puzzles for safety, quality, and triviality  
-✅ **Comprehensive Metrics Framework** - Tracks performance and learning progress  
-✅ **Baseline vs Oversight Comparison** - Analyzes the impact of oversight on learning  
-✅ **End-to-End Demo Script** - Complete experiment runner with visualization  
+This project implements a simplified version of the AZR self-play system where:
+1. **PROPOSE**: Claude generates reasoning tasks (code snippets)
+2. **SOLVE**: Claude attempts to solve self-generated tasks  
+3. **Oversight**: Referee system filters unsafe/trivial content
+4. **Metrics**: Track performance and learning progress
 
-## 🚀 Quick Start
+The system compares baseline performance (no referee) vs oversight performance (with referee) to measure the impact of safety filtering.
 
-### 1. Setup
+## Quick Start
+
+### Prerequisites
+
+1. **API Key**: Create a `.env` file with your Claude API key:
+   ```bash
+   echo "CLAUDE_API_KEY=your-api-key-here" > .env
+   ```
+   
+   Get your API key from: https://console.anthropic.com/
+
+2. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Run Complete Experiment
+
+Execute the full oversight curriculum experiment:
 
 ```bash
-# Clone and enter the project
-git clone https://github.com/your-org/oversight_curriculum.git
-cd oversight_curriculum
-
-# Set your Anthropic API key
-export CLAUDE_API_KEY="sk-..."    # replace with your real key
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Verify setup
-python verify_setup.py
+./run_all.sh
 ```
 
-### 2. Run the Demo
+This will:
+- Run baseline experiment (no referee)
+- Run oversight experiment (with referee) 
+- Generate comparison analysis
+- Create visualizations
+- Run unit tests
+
+### Individual Components
+
+#### CLI Loop (Optimized for ≤15s execution)
 
 ```bash
-# Run complete baseline vs oversight experiment
-python run_demo.py
+# Baseline (no referee)
+python azr_loop.py --no_ref --cycles 10 --output results/baseline.csv
 
-# Or run a quick test
-python test_deduction_loop.py
+# Oversight (with referee)
+python azr_loop.py --with_ref --cycles 10 --output results/oversight.csv
 ```
 
-### 3. View Results
+#### Full Demo with Comparison
 
-Check the `results/` directory for:
-- `baseline_metrics.json` - Baseline run statistics
-- `oversight_metrics.json` - Oversight run statistics  
-- `comparison_report.txt` - Human-readable comparison
-- `learning_curves.png` - Learning progress visualization
-- `combined_results.json` - All data in one file
-
-## 📊 How It Works
-
-### The Deduction Loop
-
-The system implements the core AZR self-play mechanism:
-
-1. **PROPOSE Phase**: Claude generates programming puzzles (code_i, code_o, code_e, code_f)
-2. **SOLVE Phase**: Claude attempts to solve the self-generated puzzles
-3. **Oversight**: Referee evaluates and filters unsafe/trivial content
-4. **Learning**: System improves through both generation and solving
-
-### The Referee System
-
-The Claude-based referee evaluates each puzzle on:
-
-- **Safety** (0-10): No harmful code, security vulnerabilities, or inappropriate content
-- **Quality** (0-10): Educational value, appropriate complexity, clear problem statement  
-- **Triviality** (0-10): Not too simple or obvious, requires some thought
-
-Puzzles are approved only if they meet minimum thresholds on all criteria.
-
-### Metrics & Comparison
-
-The system tracks:
-- **Puzzle Generation**: Number generated, approved, rejected
-- **Solution Quality**: Success rate, average rewards
-- **Safety Scores**: Average puzzle safety ratings
-- **Learning Progress**: Performance over time
-
-## 🏗️ Architecture
-
-```
-src/
-├── model.py              # Claude API wrapper with caching
-├── deduction_loop.py     # Core AZR self-play implementation
-├── referee.py           # Safety and quality evaluation system
-└── metrics.py           # Performance tracking and comparison
-
-run_demo.py              # Main experiment runner
-test_deduction_loop.py   # Simple testing script
+```bash
+python run_demo.py --cycles 10 --puzzles_per_cycle 2 --solutions_per_puzzle 1
 ```
 
-## 🔧 Configuration
+#### Analysis
 
-Key parameters in `run_demo.py`:
-
-```python
-cycles = 10                    # Number of deduction cycles per experiment
-max_puzzles_per_cycle = 8      # Puzzles generated per cycle
-max_solutions_per_puzzle = 2   # Solutions attempted per puzzle
-model_name = "claude-3-5-sonnet-20241022"  # Claude model to use
+```bash
+python src/analysis.py --baseline results/baseline.csv --oversight results/oversight.csv
 ```
 
-## 📈 Example Output
+#### Unit Tests
 
-```
-=== OVERSIGHT CURRICULUM COMPARISON REPORT ===
-
-BASELINE RUN:
-  Total cycles: 10
-  Approval rate: 100.00%
-  Success rate: 75.00%
-  Avg reward: 0.234
-  Avg safety: 0.500
-
-OVERSIGHT RUN:
-  Total cycles: 10
-  Approval rate: 65.00%
-  Success rate: 85.00%
-  Avg reward: 0.312
-  Avg safety: 0.823
-
-CHANGES WITH OVERSIGHT:
-  Reward: +0.078 (+33.3%)
-  Safety: +0.323 (+64.6%)
-  Approval rate: -35.00% (-35.0%)
-  Success rate: +10.00% (+13.3%)
-
-OVERSIGHT IMPACT:
-  Metrics improved: 3/4
-  ✓ Reward improved
-  ✓ Safety improved
-  ✓ Success rate improved
+```bash
+python -m pytest tests/test_deduction_loop.py -v
 ```
 
-## 🎓 Research Applications
+## Configuration
 
-This implementation enables research on:
+### Hard-coded Puzzle Triplets
 
-- **AI Safety**: How oversight affects content generation
-- **Curriculum Learning**: Impact of filtering on learning dynamics
-- **Self-Play Systems**: Balancing exploration vs. safety in self-improving AI
-- **Evaluation Methods**: Comparing baseline vs. oversight approaches
+The system uses pre-defined puzzle triplets from `configs/deduction_mini.json`:
 
-## 🔬 Extending the System
+```json
+{
+  "puzzles": [
+    {
+      "id": "puzzle_1",
+      "type": "code_i", 
+      "content": "def add_numbers(a, b): return a + b",
+      "input": "add_numbers(5, 3)",
+      "output": "8"
+    }
+  ]
+}
+```
+
+### CLI Options
+
+- `--with_ref` / `--no_ref`: Enable/disable referee oversight
+- `--cycles`: Number of deduction cycles (default: 10)
+- `--config`: Use hard-coded config puzzles (default: True)
+- `--output`: Output CSV file path
+- `--skip_plots`: Skip plot generation for faster execution
+
+## Architecture
+
+### Core Components
+
+- **`src/deduction_loop.py`**: Main AZR loop implementation
+- **`src/referee.py`**: Claude-based safety referee
+- **`src/metrics.py`**: Metrics collection and comparison
+- **`src/model.py`**: Claude API wrapper
+- **`src/analysis.py`**: CSV analysis and visualization
+
+### Data Flow
+
+1. **Puzzle Generation**: Claude generates code puzzles
+2. **Referee Evaluation**: Safety and quality assessment
+3. **Solution Generation**: Claude solves approved puzzles
+4. **Metrics Collection**: Track performance metrics
+5. **Comparison Analysis**: Baseline vs oversight comparison
+
+## Output Files
+
+The system generates several output files in the `results/` directory:
+
+- `baseline_demo.csv`: Baseline experiment results
+- `oversight_demo.csv`: Oversight experiment results  
+- `comparison_plot.png`: Visual comparison
+- `baseline_metrics.json`: Detailed baseline metrics
+- `oversight_metrics.json`: Detailed oversight metrics
+- `comparison_report.txt`: Text comparison report
+- `combined_results.json`: All results combined
+
+### CSV Format
+
+The CSV files contain the following columns:
+- `task_id`: Cycle identifier
+- `code_len`: Approximate code length
+- `banned_import`: Number of banned imports (tracked)
+- `solver_reward`: Average solution reward
+- `referee_veto`: Number of puzzles vetoed
+
+## Metrics
+
+The system tracks several key metrics:
+
+- **Approval Rate**: Percentage of puzzles approved by referee
+- **Success Rate**: Percentage of solutions that are correct
+- **Average Reward**: Mean solution quality score
+- **Safety Score**: Average puzzle safety rating
+- **Veto Rate**: Percentage of cycles with vetoed content
+
+## Performance Optimization
+
+The system is optimized for ≤15s execution time:
+
+- Reduced puzzles per cycle (2 instead of 8)
+- Reduced solutions per puzzle (1 instead of 3)
+- Use of hard-coded config puzzles
+- Optional plot skipping
+- Minimal API calls
+
+## Research Applications
+
+This system enables research on:
+
+1. **Safety Filtering**: Impact of referee oversight on content quality
+2. **Learning Curves**: How oversight affects learning over time
+3. **Trade-offs**: Safety vs performance trade-offs
+4. **Curriculum Design**: Optimal puzzle selection strategies
+
+## Development
+
+### Running Tests
+
+```bash
+python -m pytest tests/ -v
+```
 
 ### Adding New Puzzle Types
 
-Extend `deduction_loop.py` with new puzzle types:
+1. Add puzzle type to `deduction_loop.py`
+2. Create corresponding prompt templates
+3. Update referee evaluation criteria
+4. Add test cases
 
-```python
-def _create_math_prompt(self) -> str:
-    return "Generate a mathematical problem..."
+### Extending Metrics
 
-def _create_math_solve_prompt(self, puzzle_content: str) -> str:
-    return f"Solve this math problem: {puzzle_content}"
+1. Add new metrics to `MetricsCollector`
+2. Update CSV export format
+3. Modify analysis scripts
+4. Update visualization code
+
+## Troubleshooting
+
+### Common Issues
+
+1. **API Key Not Set**: Ensure `.env` file exists with `CLAUDE_API_KEY=your-key-here`
+2. **Slow Execution**: Reduce cycles or puzzles per cycle
+3. **Import Errors**: Install all dependencies with `pip install -r requirements.txt`
+4. **Plot Errors**: Install matplotlib or use `--skip_plots` flag
+
+### Performance Tips
+
+- Use `--skip_plots` for faster execution
+- Reduce `--cycles` for quick testing
+- Use `--puzzles_per_cycle 1` for minimal execution
+- Ensure stable internet connection for API calls
+
+## License
+
+This project is for research purposes. Please ensure compliance with Anthropic's API terms of service.
+
+## Citation
+
+If you use this code in your research, please cite:
+
+```bibtex
+@misc{oversight_curriculum_2024,
+  title={Oversight Curriculum: AZR Deduction Loop with Claude Referee},
+  author={Your Name},
+  year={2024},
+  url={https://github.com/your-repo/oversight-curriculum}
+}
 ```
-
-### Customizing the Referee
-
-Modify `referee.py` to add new evaluation criteria:
-
-```python
-safety_criteria = SafetyCriteria(
-    banned_keywords=['your_keywords'],
-    banned_patterns=[r'your_patterns'],
-    min_complexity=0.2,
-    max_complexity=0.8,
-    require_educational_value=True
-)
-```
-
-### Advanced Metrics
-
-Extend `metrics.py` to track additional metrics:
-
-```python
-def custom_metric(self, data):
-    # Your custom analysis
-    return result
-```
-
-## 📚 References
-
-- **Absolute-Zero Reasoner**: [Paper](https://arxiv.org/abs/2505.03335) | [Code](https://github.com/LeapLabTHU/Absolute-Zero-Reasoner)
-- **Self-Play Learning**: [AlphaGo Zero](https://www.nature.com/articles/nature24270)
-- **AI Safety**: [Constitutional AI](https://arxiv.org/abs/2212.08073)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.

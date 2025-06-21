@@ -4,10 +4,10 @@ This is a simplified version of the AZR deduction loop that focuses on:
 1. PROPOSE: Generate reasoning tasks (code snippets)
 2. SOLVE: Attempt to solve self-generated tasks
 3. Oversight: Referee system to filter unsafe/trivial content
+4. Metrics: Track performance and learning
 """
 
 import json
-import random
 import time
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
@@ -73,6 +73,11 @@ class DeductionLoop:
         self.puzzles: List[Puzzle] = []
         self.solutions: List[Solution] = []
         
+        # Config puzzle support (for plan compliance)
+        self._use_config_puzzles = False
+        self._config_puzzles = []
+        self._config_puzzle_index = 0
+        
         # Setup logging
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
@@ -107,23 +112,56 @@ class DeductionLoop:
         return cycle_metrics
     
     def _propose_phase(self) -> List[Puzzle]:
-        """Generate puzzles using Claude"""
+        """Generate puzzles using Claude or config"""
         new_puzzles = []
         
-        # Generate different types of puzzles
-        puzzle_types = ['code_i', 'code_o', 'code_e', 'code_f']
-        
-        for puzzle_type in puzzle_types:
-            puzzles_to_generate = self.max_puzzles_per_cycle // len(puzzle_types)
+        if self._use_config_puzzles and self._config_puzzles:
+            # Use hard-coded config puzzles (plan compliance)
+            puzzles_to_generate = min(self.max_puzzles_per_cycle, 
+                                    len(self._config_puzzles) - self._config_puzzle_index)
             
             for i in range(puzzles_to_generate):
-                try:
-                    puzzle = self._generate_single_puzzle(puzzle_type)
-                    if puzzle:
-                        new_puzzles.append(puzzle)
-                        self.puzzles.append(puzzle)
-                except Exception as e:
-                    self.logger.error(f"Failed to generate {puzzle_type} puzzle: {e}")
+                if self._config_puzzle_index >= len(self._config_puzzles):
+                    break
+                    
+                config_puzzle = self._config_puzzles[self._config_puzzle_index]
+                self._config_puzzle_index += 1
+                
+                puzzle = Puzzle(
+                    id=config_puzzle['id'],
+                    content=config_puzzle['content'],
+                    puzzle_type=config_puzzle['type'],
+                    generation_step=self.cycle_count
+                )
+                
+                # Apply referee oversight if enabled
+                if self.enable_referee and self.referee:
+                    is_approved, feedback, safety_score = self.referee.evaluate_puzzle(puzzle)
+                    puzzle.is_approved = is_approved
+                    puzzle.referee_feedback = feedback
+                    puzzle.safety_score = safety_score
+                    
+                    if not is_approved:
+                        self.logger.info(f"Puzzle rejected by referee: {feedback}")
+                        continue
+                
+                new_puzzles.append(puzzle)
+                self.puzzles.append(puzzle)
+        else:
+            # Use dynamic puzzle generation (original implementation)
+            puzzle_types = ['code_i', 'code_o', 'code_e', 'code_f']
+            
+            for puzzle_type in puzzle_types:
+                puzzles_to_generate = self.max_puzzles_per_cycle // len(puzzle_types)
+                
+                for i in range(puzzles_to_generate):
+                    try:
+                        puzzle = self._generate_single_puzzle(puzzle_type)
+                        if puzzle:
+                            new_puzzles.append(puzzle)
+                            self.puzzles.append(puzzle)
+                    except Exception as e:
+                        self.logger.error(f"Failed to generate {puzzle_type} puzzle: {e}")
         
         return new_puzzles
     

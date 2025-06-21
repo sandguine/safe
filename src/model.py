@@ -1,64 +1,93 @@
+"""
+Claude API wrapper for oversight curriculum.
+"""
+
 import os
-import json
-import hashlib
 import time
 from pathlib import Path
-import requests
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Try to load from .env file
+try:
+    from dotenv import load_dotenv
+    # Load .env file from project root
+    env_path = Path(__file__).parent.parent / '.env'
+    load_dotenv(env_path)
+except ImportError:
+    # dotenv not installed, continue without it
+    pass
 
-API_URL = "https://api.anthropic.com/v1/messages"
-API_KEY = os.getenv("CLAUDE_API_KEY")
-CACHE_DIR = Path(".cache")
-CACHE_DIR.mkdir(exist_ok=True)
+import anthropic
 
 
-def ask(prompt: str,
-        model: str = "claude-3-5-sonnet-20241022",
-        max_tokens: int = 256,
-        retries: int = 3,
-        pause: float = 1.0) -> str:
-    """Return Claude's reply to *prompt*. Uses on-disk caching and retry."""
-    if not API_KEY:
-        raise RuntimeError("CLAUDE_API_KEY environment variable is not set")
+def get_api_key() -> str:
+    """Get Claude API key from .env file or environment variable"""
+    # First try to get from .env file
+    api_key = os.getenv("CLAUDE_API_KEY")
     
-    key = hashlib.sha256(prompt.encode()).hexdigest()
-    cache_path = CACHE_DIR / f"{key}.json"
+    if not api_key:
+        # Try alternative environment variable names
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+    
+    if not api_key:
+        raise ValueError(
+            "Claude API key not found. Please set CLAUDE_API_KEY in your .env file:\n"
+            "CLAUDE_API_KEY=your-api-key-here"
+        )
+    
+    return api_key
 
-    if cache_path.exists():
-        with cache_path.open() as fp:
-            cached = json.load(fp)
-        return cached["content"][0]["text"]
 
-    headers = {
-        "x-api-key": API_KEY,
-        "content-type": "application/json",
-        "anthropic-version": "2023-06-01"
-    }
-    body = {
-        "model": model,
-        "max_tokens": max_tokens,
-        "messages": [{"role": "user", "content": prompt}]
-    }
-
-    last_error = None
-    for _ in range(retries):
-        try:
-            resp = requests.post(API_URL, headers=headers,
-                                 json=body, timeout=60)
-            if resp.status_code == 200:
-                data = resp.json()
-                with cache_path.open("w") as fp:
-                    json.dump(data, fp)
-                return data["content"][0]["text"]
-            last_error = f"{resp.status_code}: {resp.text}"
-        except (requests.Timeout, requests.ConnectionError) as exc:
-            last_error = str(exc)
-        time.sleep(pause)
-
-    raise RuntimeError(
-        f"Anthropic request failed after {retries} attempts. "
-        f"Last error: {last_error}"
-    )
+def ask(prompt: str, 
+        model: str = "claude-3-5-sonnet-20241022",
+        max_tokens: int = 512,
+        temperature: float = 0.7) -> str:
+    """
+    Ask Claude a question and get the response.
+    
+    Args:
+        prompt: The prompt to send to Claude
+        model: The model to use
+        max_tokens: Maximum tokens to generate
+        temperature: Sampling temperature
+        
+    Returns:
+        Claude's response as a string
+    """
+    
+    try:
+        # Get API key
+        api_key = get_api_key()
+        
+        # Initialize client
+        client = anthropic.Anthropic(api_key=api_key)
+        
+        # Create message
+        message = client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+        
+        # Extract response
+        response = message.content[0].text
+        return response
+        
+    except anthropic.RateLimitError:
+        # Handle rate limiting
+        print("Rate limit hit, waiting 60 seconds...")
+        time.sleep(60)
+        return ask(prompt, model, max_tokens, temperature)  # Retry
+        
+    except anthropic.APIError as e:
+        print(f"API error: {e}")
+        raise
+        
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise
