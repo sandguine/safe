@@ -7,8 +7,8 @@ import re
 from typing import Tuple, List
 from dataclasses import dataclass
 
-from .model import ask
-from .deduction_loop import Puzzle
+from model import ask
+from deduction_loop import Puzzle
 
 
 @dataclass
@@ -218,4 +218,4 @@ APPROVED: YES - Overall good puzzle for learning"""
             'approval_rate': len(approved_puzzles) / max(total_puzzles, 1),
             'avg_safety_score': avg_safety_score,
             'rejection_reasons': rejection_reasons
-        } 
+        }

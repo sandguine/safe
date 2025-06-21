@@ -9,7 +9,7 @@ from pathlib import Path
 # Try to load from .env file
 try:
     from dotenv import load_dotenv
-    # Load .env file from project root
+    # Load .env file from project root (oversight_curriculum directory)
     env_path = Path(__file__).parent.parent / '.env'
     load_dotenv(env_path)
 except ImportError:

@@ -14,9 +14,9 @@ from dataclasses import dataclass
 from pathlib import Path
 import logging
 
-from .model import ask
-from .referee import Referee
-from .metrics import MetricsCollector
+from model import ask
+from referee import Referee
+from metrics import MetricsCollector
 
 
 @dataclass
