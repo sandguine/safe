@@ -1,48 +1,18 @@
 """
-Core deduction loop implementation for oversight curriculum.
-This is a simplified version of the AZR deduction loop that focuses on:
-1. PROPOSE: Generate reasoning tasks (code snippets)
-2. SOLVE: Attempt to solve self-generated tasks
-3. Oversight: Referee system to filter unsafe/trivial content
-4. Metrics: Track performance and learning
+Deduction loop for oversight curriculum.
+Implements the core deduction and oversight mechanism.
 """
 
-import os
-import sys
 import json
 import time
-import random
-from typing import Dict, List, Tuple, Optional
-from dataclasses import dataclass
-from pathlib import Path
 import logging
+import re
+from typing import Dict, List, Optional, Tuple
 
 from model import ask
 from referee import Referee
 from metrics import MetricsCollector
-
-
-@dataclass
-class Puzzle:
-    """Represents a puzzle/task in the deduction loop"""
-    id: str
-    content: str
-    puzzle_type: str  # 'code_i', 'code_o', 'code_e', 'code_f'
-    generation_step: int
-    is_approved: bool = True
-    referee_feedback: str = ""
-    complexity_score: float = 0.0
-    safety_score: float = 1.0
-
-
-@dataclass
-class Solution:
-    """Represents a solution to a puzzle"""
-    puzzle_id: str
-    content: str
-    is_correct: bool
-    execution_result: Optional[str] = None
-    reward: float = 0.0
+from models import Puzzle, Solution
 
 
 class DeductionLoop:
@@ -253,7 +223,7 @@ class DeductionLoop:
         if not solution_content:
             return None
         
-        # Evaluate solution (simplified - in real implementation would use code execution)
+        # Evaluate solution
         is_correct, execution_result, reward = self._evaluate_solution(puzzle, solution_content)
         
         solution = Solution(
@@ -267,169 +237,136 @@ class DeductionLoop:
         return solution
     
     def _evaluate_solution(self, puzzle: Puzzle, solution: str) -> Tuple[bool, str, float]:
-        """Evaluate a solution (simplified implementation)"""
-        # This is a simplified evaluation - in the real AZR system,
-        # this would involve actual code execution and testing
+        """Evaluate a solution for correctness and reward"""
         
-        # For now, use a simple heuristic based on solution length and content
-        if len(solution.strip()) < 10:
-            return False, "Solution too short", 0.0
+        # Simple evaluation - in practice, this would be more sophisticated
+        # For now, just check if the solution contains expected patterns
         
-        # Check if solution contains code-like patterns
-        code_indicators = ['def ', 'return ', 'if ', 'for ', 'while ', 'import ']
-        has_code = any(indicator in solution for indicator in code_indicators)
+        is_correct = False
+        execution_result = "Solution generated"
+        reward = 0.0
         
-        if not has_code:
-            return False, "No code detected", 0.0
+        # Basic correctness check based on puzzle type
+        if puzzle.puzzle_type == 'code_i':
+            # Check if solution contains input handling
+            if 'input(' in solution.lower() or 'sys.argv' in solution:
+                is_correct = True
+                reward = 0.8
+        elif puzzle.puzzle_type == 'code_o':
+            # Check if solution contains output
+            if 'print(' in solution.lower():
+                is_correct = True
+                reward = 0.7
+        elif puzzle.puzzle_type == 'code_e':
+            # Check if solution contains error handling
+            if 'try:' in solution.lower() or 'except' in solution.lower():
+                is_correct = True
+                reward = 0.9
+        elif puzzle.puzzle_type == 'code_f':
+            # Check if solution contains function definition
+            if 'def ' in solution.lower():
+                is_correct = True
+                reward = 0.8
         
-        # Simple reward based on solution quality
-        reward = min(1.0, len(solution) / 100.0)  # Normalize by length
-        
-        return True, "Solution executed successfully", reward
+        return is_correct, execution_result, reward
     
     def _compute_cycle_metrics(self, new_puzzles: List[Puzzle], new_solutions: List[Solution]) -> Dict:
         """Compute metrics for the current cycle"""
-        metrics = {
-            'cycle': self.cycle_count,
-            'puzzles_generated': len(new_puzzles),
-            'puzzles_approved': len([p for p in new_puzzles if p.is_approved]),
-            'puzzles_rejected': len([p for p in new_puzzles if not p.is_approved]),
-            'solutions_generated': len(new_solutions),
-            'solutions_correct': len([s for s in new_solutions if s.is_correct]),
-            'avg_solution_reward': sum(s.reward for s in new_solutions) / max(len(new_solutions), 1),
-            'avg_puzzle_safety': sum(p.safety_score for p in new_puzzles) / max(len(new_puzzles), 1),
+        
+        total_puzzles = len(self.puzzles)
+        approved_puzzles = sum(1 for p in self.puzzles if p.is_approved)
+        total_solutions = len(self.solutions)
+        correct_solutions = sum(1 for s in self.solutions if s.is_correct)
+        
+        return {
+            'cycle_number': self.cycle_count,
+            'new_puzzles': len(new_puzzles),
+            'new_solutions': len(new_solutions),
+            'total_puzzles': total_puzzles,
+            'approved_puzzles': approved_puzzles,
+            'approval_rate': approved_puzzles / total_puzzles if total_puzzles > 0 else 0.0,
+            'total_solutions': total_solutions,
+            'correct_solutions': correct_solutions,
+            'accuracy': correct_solutions / total_solutions if total_solutions > 0 else 0.0,
+            'avg_reward': sum(s.reward for s in self.solutions) / total_solutions if total_solutions > 0 else 0.0
         }
-        
-        # Update global metrics
-        self.metrics.update(metrics)
-        
-        return metrics
     
-    # Prompt templates for different puzzle types
     def _create_code_i_prompt(self) -> str:
-        return """Generate a Python function that takes an input and produces an output. 
-        The function should be interesting but not too complex.
-        
-        Format your response as:
-        ```python
-        def function_name(input):
-            # Your function implementation here
-            return output
-        ```
-        
-        Also provide 2-3 example input-output pairs to test the function."""
-    
+        """Create prompt for code input puzzle"""
+        return """Generate a Python programming puzzle that requires handling user input.
+The puzzle should be clear, educational, and appropriate for learning.
+Focus on input validation, type conversion, or interactive programs.
+Return only the puzzle description, no code solution."""
+
     def _create_code_o_prompt(self) -> str:
-        return """Generate a Python function that produces a specific output.
-        The function should be interesting and demonstrate good programming practices.
-        
-        Format your response as:
-        ```python
-        def function_name():
-            # Your function implementation here
-            return output
-        ```
-        
-        Also provide the expected output."""
-    
+        """Create prompt for code output puzzle"""
+        return """Generate a Python programming puzzle that focuses on output formatting.
+The puzzle should be clear, educational, and appropriate for learning.
+Focus on string formatting, data display, or report generation.
+Return only the puzzle description, no code solution."""
+
     def _create_code_e_prompt(self) -> str:
-        return """Generate a Python function that handles errors gracefully.
-        The function should demonstrate error handling and edge cases.
-        
-        Format your response as:
-        ```python
-        def function_name(input):
-            # Your function implementation with error handling
-            return output
-        ```
-        
-        Also provide examples of inputs that might cause errors."""
-    
+        """Create prompt for code error handling puzzle"""
+        return """Generate a Python programming puzzle that requires error handling.
+The puzzle should be clear, educational, and appropriate for learning.
+Focus on try-catch blocks, input validation, or robust programming.
+Return only the puzzle description, no code solution."""
+
     def _create_code_f_prompt(self) -> str:
-        return """Generate a complete Python program that solves a specific problem.
-        The program should be self-contained and demonstrate good programming practices.
-        
-        Format your response as:
-        ```python
-        # Your complete program here
-        def main():
-            # Main logic
-            pass
-        
-        if __name__ == "__main__":
-            main()
-        ```
-        
-        Also provide a brief description of what the program does."""
-    
-    # Solve prompt templates
+        """Create prompt for code function puzzle"""
+        return """Generate a Python programming puzzle that requires writing functions.
+The puzzle should be clear, educational, and appropriate for learning.
+Focus on function design, parameters, return values, or algorithms.
+Return only the puzzle description, no code solution."""
+
     def _create_code_i_solve_prompt(self, puzzle_content: str) -> str:
-        return f"""Solve this code puzzle by implementing the function:
+        """Create solve prompt for code input puzzle"""
+        return f"Solve this Python puzzle about input handling:\n\n{puzzle_content}\n\nProvide a complete Python solution:"
 
-{puzzle_content}
-
-Provide your solution in Python code."""
-    
     def _create_code_o_solve_prompt(self, puzzle_content: str) -> str:
-        return f"""Solve this code puzzle by implementing the function:
+        """Create solve prompt for code output puzzle"""
+        return f"Solve this Python puzzle about output formatting:\n\n{puzzle_content}\n\nProvide a complete Python solution:"
 
-{puzzle_content}
-
-Provide your solution in Python code."""
-    
     def _create_code_e_solve_prompt(self, puzzle_content: str) -> str:
-        return f"""Solve this code puzzle by implementing the function with proper error handling:
+        """Create solve prompt for code error handling puzzle"""
+        return f"Solve this Python puzzle about error handling:\n\n{puzzle_content}\n\nProvide a complete Python solution:"
 
-{puzzle_content}
-
-Provide your solution in Python code."""
-    
     def _create_code_f_solve_prompt(self, puzzle_content: str) -> str:
-        return f"""Solve this code puzzle by implementing the complete program:
+        """Create solve prompt for code function puzzle"""
+        return f"Solve this Python puzzle about functions:\n\n{puzzle_content}\n\nProvide a complete Python solution:"
 
-{puzzle_content}
-
-Provide your solution in Python code."""
-    
     def _parse_puzzle_response(self, response: str, puzzle_type: str) -> str:
-        """Parse Claude's response to extract puzzle content"""
-        # Simple parsing - extract code blocks
-        if '```python' in response:
-            start = response.find('```python') + 9
-            end = response.find('```', start)
-            if end != -1:
-                return response[start:end].strip()
-        
-        # Fallback: return the whole response
+        """Parse puzzle response from Claude"""
+        # Simple parsing - just return the response
+        # In practice, this would be more sophisticated
         return response.strip()
-    
+
     def _parse_solution_response(self, response: str, puzzle_type: str) -> str:
-        """Parse Claude's response to extract solution content"""
-        # Same parsing logic as puzzle response
-        return self._parse_puzzle_response(response, puzzle_type)
-    
+        """Parse solution response from Claude"""
+        # Simple parsing - just return the response
+        # In practice, this would be more sophisticated
+        return response.strip()
+
     def get_summary_stats(self) -> Dict:
-        """Get summary statistics across all cycles"""
-        return self.metrics.get_summary()
-    
+        """Get summary statistics"""
+        return self._compute_cycle_metrics([], [])
+
     def save_state(self, filepath: str):
-        """Save the current state to a file"""
+        """Save current state to file"""
         state = {
             'cycle_count': self.cycle_count,
-            'puzzles': [vars(p) for p in self.puzzles],
-            'solutions': [vars(s) for s in self.solutions],
-            'metrics': self.metrics.get_all_metrics()
+            'puzzles': [p.__dict__ for p in self.puzzles],
+            'solutions': [s.__dict__ for s in self.solutions]
         }
         
         with open(filepath, 'w') as f:
             json.dump(state, f, indent=2)
-    
+
     def load_state(self, filepath: str):
-        """Load state from a file"""
+        """Load state from file"""
         with open(filepath, 'r') as f:
             state = json.load(f)
         
         self.cycle_count = state['cycle_count']
         self.puzzles = [Puzzle(**p) for p in state['puzzles']]
-        self.solutions = [Solution(**s) for s in state['solutions']]
-        self.metrics.load_metrics(state['metrics']) 
+        self.solutions = [Solution(**s) for s in state['solutions']] 

@@ -99,13 +99,13 @@ class LiveDemo:
         """Display live metrics for the cycle"""
         
         print(f"\n📊 Live Metrics:")
-        print(f"  Puzzles: {cycle_metrics.get('total_puzzles', 0)}")
-        print(f"  Approved: {cycle_metrics.get('approved_puzzles', 0)}")
-        print(f"  Approval Rate: {cycle_metrics.get('approval_rate', 0):.1%}")
-        print(f"  Duration: {cycle_metrics.get('cycle_duration', 0):.2f}s")
+        print(f"  Puzzles: {cycle_metrics.total_puzzles}")
+        print(f"  Approved: {cycle_metrics.approved_puzzles}")
+        print(f"  Approval Rate: {cycle_metrics.approval_rate:.1%}")
+        print(f"  Duration: {cycle_metrics.cycle_duration:.2f}s")
         
         # Best-of-N metrics
-        best_of_n_metrics = cycle_metrics.get('best_of_n_metrics', {})
+        best_of_n_metrics = cycle_metrics.best_of_n_metrics
         if best_of_n_metrics:
             print(f"  Best-of-N:")
             print(f"    Samples: {best_of_n_metrics.get('n_samples', 0)}")
@@ -113,7 +113,7 @@ class LiveDemo:
             print(f"    Avg Reward: {best_of_n_metrics.get('avg_reward', 0):.3f}")
         
         # HHH metrics
-        hhh_metrics = cycle_metrics.get('hhh_metrics', {})
+        hhh_metrics = cycle_metrics.hhh_metrics
         if hhh_metrics:
             print(f"  HHH Filter:")
             print(f"    Helpful: {hhh_metrics.get('avg_helpful_score', 0):.3f}")

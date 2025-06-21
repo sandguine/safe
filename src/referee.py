@@ -7,11 +7,12 @@ import os
 import sys
 import json
 import time
-from typing import Dict, List, Any, Optional
+import re
+from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 
 from model import ask
-from deduction_loop import Puzzle
+from models import Puzzle
 
 
 @dataclass

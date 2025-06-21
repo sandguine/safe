@@ -73,11 +73,26 @@ class IntegratedPipeline:
         
         start_time = time.time()
         
-        # Step 1: Generate puzzle using AZR
-        puzzle = self.deduction_loop.generate_puzzle()
+        # Step 1: Run deduction loop cycle to get puzzles and solutions
+        cycle_metrics = self.deduction_loop.run_cycle()
         
-        # Step 2: Apply HHH filter if enabled
-        if self.hhh_filter:
+        # Extract the latest puzzle and solution from the cycle
+        if not self.deduction_loop.puzzles:
+            # No puzzles generated
+            metrics = PipelineMetrics(
+                cycle_duration=time.time() - start_time,
+                total_puzzles=0,
+                approved_puzzles=0,
+                approval_rate=0.0
+            )
+            self.cycle_metrics.append(metrics)
+            return metrics
+        
+        # Get the latest puzzle
+        puzzle = self.deduction_loop.puzzles[-1]
+        
+        # Step 2: Apply HHH filter to puzzle if enabled
+        if self.enable_hhh_filter and self.hhh_filter:
             hhh_result = self.hhh_filter.evaluate_content(
                 puzzle.content, "puzzle"
             )
@@ -100,19 +115,25 @@ class IntegratedPipeline:
                 self.cycle_metrics.append(metrics)
                 return metrics
         
-        # Step 3: Generate solution(s)
-        if self.enable_best_of_n and self.best_of_n_sampler:
-            # Use Best-of-N sampling
-            solution, best_of_n_metrics = self.best_of_n_sampler.sample_best_solution(
-                puzzle.content
+        # Step 3: Get solution(s) from the cycle
+        solutions = [s for s in self.deduction_loop.solutions if s.puzzle_id == puzzle.id]
+        
+        if not solutions:
+            # No solutions generated
+            metrics = PipelineMetrics(
+                cycle_duration=time.time() - start_time,
+                total_puzzles=1,
+                approved_puzzles=1,
+                approval_rate=1.0
             )
-        else:
-            # Use single solution generation
-            solution = self.deduction_loop.generate_solution(puzzle)
-            best_of_n_metrics = None
+            self.cycle_metrics.append(metrics)
+            return metrics
+        
+        # Get the best solution (highest reward)
+        solution = max(solutions, key=lambda s: s.reward)
         
         # Step 4: Apply HHH filter to solution if enabled
-        if self.hhh_filter:
+        if self.enable_hhh_filter and self.hhh_filter:
             hhh_result = self.hhh_filter.evaluate_content(
                 solution.content, "solution"
             )
@@ -124,7 +145,6 @@ class IntegratedPipeline:
                     total_puzzles=1,
                     approved_puzzles=0,
                     approval_rate=0.0,
-                    best_of_n_metrics=best_of_n_metrics,
                     hhh_metrics={
                         'avg_helpful_score': hhh_result.helpful_score,
                         'avg_harmless_score': hhh_result.harmless_score,
@@ -136,28 +156,40 @@ class IntegratedPipeline:
                 self.cycle_metrics.append(metrics)
                 return metrics
         
-        # Step 5: Evaluate solution
-        evaluation = self.deduction_loop.evaluate_solution(puzzle, solution)
-        
-        # Step 6: Record results
+        # Step 5: Record results
         result = {
-            'puzzle': asdict(puzzle),
-            'solution': asdict(solution),
-            'evaluation': evaluation,
-            'best_of_n_metrics': best_of_n_metrics,
-            'hhh_approved': True if self.hhh_filter else None
+            'puzzle': puzzle.__dict__,
+            'solution': solution.__dict__,
+            'evaluation': {
+                'is_correct': solution.is_correct,
+                'reward': solution.reward,
+                'execution_result': solution.execution_result
+            },
+            'best_of_n_metrics': None,  # Will be updated if Best-of-N is used
+            'hhh_approved': True if self.enable_hhh_filter and self.hhh_filter else None
         }
         self.pipeline_results.append(result)
         
-        # Step 7: Calculate metrics
+        # Step 6: Calculate metrics
         hhh_metrics = None
-        if self.hhh_filter:
+        if self.enable_hhh_filter and self.hhh_filter:
             hhh_metrics = {
                 'avg_helpful_score': 1.0,  # Approved content gets high scores
                 'avg_harmless_score': 1.0,
                 'avg_honest_score': 1.0,
                 'avg_overall_score': 1.0,
                 'safety_level': 'safe'
+            }
+        
+        # Best-of-N metrics (if applicable)
+        best_of_n_metrics = None
+        if self.enable_best_of_n and self.best_of_n_sampler:
+            # For now, use the solution metrics as Best-of-N metrics
+            best_of_n_metrics = {
+                'n_samples': 1,  # Single sample in this case
+                'correct_rate': 1.0 if solution.is_correct else 0.0,
+                'avg_reward': solution.reward,
+                'max_reward': solution.reward
             }
         
         metrics = PipelineMetrics(
