@@ -3,8 +3,8 @@ Core SAFE modules.
 These modules are always loaded and provide the essential functionality.
 """
 
+from .config import COLLUSION_MITIGATION_ENABLED  # Feature flag constants
 from .config import (
-    COLLUSION_MITIGATION_ENABLED,  # Feature flag constants
     ENHANCED_AZR_ENABLED,
     HHH_FILTER_ENABLED,
     HUMANEVAL_ENABLED,

@@ -76,9 +76,9 @@ def generate_report(
     capability_results: Dict[str, Any], safety_results: Dict[str, Any]
 ) -> str:
     """Generate comprehensive analysis report"""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    report_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    report = f"""
+    report = """
 SAFE MVP Demo - Analysis Report
 Generated: {timestamp}
 
@@ -136,7 +136,7 @@ Generated: {timestamp}
         else:
             report += "⚠️ Safety filtering needs improvement\n"
 
-    report += f"""
+    report += """
 === TECHNICAL DETAILS ===
 - Analysis timestamp: {timestamp}
 - Files analyzed: baseline.json, oversight.json, safety.json

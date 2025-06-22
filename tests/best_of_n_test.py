@@ -9,7 +9,11 @@ from unittest.mock import patch
 
 import pytest
 
-from oversight.best_of_n import BestOfNSampler, SamplingResult, run_best_of_n_demo
+from oversight.best_of_n import (
+    BestOfNSampler,
+    SamplingResult,
+    run_best_of_n_demo,
+)
 
 
 class TestBestOfNSampler:
@@ -37,7 +41,9 @@ class TestBestOfNSampler:
         with patch("oversight.best_of_n.ask") as mock_ask:
             mock_ask.return_value = "def test(): return 42"
 
-            solutions = await sampler._generate_solutions("Write a test function")
+            solutions = await sampler._generate_solutions(
+                "Write a test function"
+            )
 
             assert len(solutions) == 3
             assert all("def test(): return 42" in sol for sol in solutions)
@@ -55,7 +61,9 @@ class TestBestOfNSampler:
                 Exception("API Error"),
             ]
 
-            solutions = await sampler._generate_solutions("Write a test function")
+            solutions = await sampler._generate_solutions(
+                "Write a test function"
+            )
 
             assert len(solutions) == 1
             assert "def test(): return 42" in solutions[0]
@@ -68,7 +76,9 @@ class TestBestOfNSampler:
         with patch("oversight.best_of_n.ask") as mock_ask:
             mock_ask.side_effect = Exception("API Error")
 
-            solutions = await sampler._generate_solutions("Write a test function")
+            solutions = await sampler._generate_solutions(
+                "Write a test function"
+            )
 
             assert len(solutions) == 1
             assert "Default solution" in solutions[0]
@@ -137,7 +147,9 @@ class TestBestOfNSampler:
         scores = await sampler._score_solutions("test prompt", solutions)
 
         assert len(scores) == 3
-        assert scores[2] > scores[1] > scores[0]  # Longer solutions get higher scores
+        assert (
+            scores[2] > scores[1] > scores[0]
+        )  # Longer solutions get higher scores
 
     @pytest.mark.asyncio
     async def test_score_solutions_reward(self):
@@ -152,7 +164,9 @@ class TestBestOfNSampler:
         scores = await sampler._score_solutions("test prompt", solutions)
 
         assert len(scores) == 3
-        assert scores[2] > scores[1] > scores[0]  # Better code gets higher scores
+        assert (
+            scores[2] > scores[1] > scores[0]
+        )  # Better code gets higher scores
 
     @pytest.mark.asyncio
     async def test_sample_best_solution_integration(self):
@@ -186,7 +200,9 @@ class TestBestOfNSampler:
         with patch("oversight.best_of_n.ask") as mock_ask:
             mock_ask.return_value = "test solution"
 
-            best_solution, metrics = await sampler.sample_best_solution("test prompt")
+            best_solution, metrics = await sampler.sample_best_solution(
+                "test prompt"
+            )
 
             # Verify metric calculations
             scores = metrics["all_scores"]
@@ -242,7 +258,8 @@ class TestIntegrationPoints:
 
         # Verify that BestOfNSampler can use settings
         sampler = BestOfNSampler(
-            model_name=settings.model.model_name, temperature=settings.model.temperature
+            model_name=settings.model.model_name,
+            temperature=settings.model.temperature,
         )
 
         assert sampler.model_name == settings.model.model_name

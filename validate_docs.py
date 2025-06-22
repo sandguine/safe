@@ -55,7 +55,9 @@ class DocValidator:
 
         for file_path in required_files:
             if not (self.project_root / file_path).exists():
-                self.errors.append(f"Referenced file does not exist: {file_path}")
+                self.errors.append(
+                    f"Referenced file does not exist: {file_path}"
+                )
 
     def validate_commands(self):
         """Validate that commands in documentation work"""
@@ -122,7 +124,10 @@ class DocValidator:
             content = (self.project_root / doc_file).read_text()
 
             # Check for consistent output paths
-            if "demo/baseline.json" in content and "results/baseline.json" in content:
+            if (
+                "demo/baseline.json" in content
+                and "results/baseline.json" in content
+            ):
                 self.errors.append(f"Inconsistent output paths in {doc_file}")
 
     def check_language(self):
@@ -172,7 +177,9 @@ class DocValidator:
         elif not self.errors:
             print("\n✅ No errors found, but check warnings above.")
         else:
-            print(f"\n❌ Found {len(self.errors)} errors that need to be fixed.")
+            print(
+                f"\n❌ Found {len(self.errors)} errors that need to be fixed."
+            )
 
 
 def main():

@@ -20,10 +20,7 @@ from .errors import OversightError
 from .metrics import MetricsCollector
 
 if TYPE_CHECKING:
-    try:
-        from pydantic.v1 import BaseModel as _BM
-    except ImportError:
-        pass
+    pass
 
 
 def _get_deduction_loop_cls():
@@ -95,7 +92,9 @@ class OversightRunner:
         # HumanEval integration
         if FeatureFlags.is_enabled("HUMANEVAL"):
             try:
-                from ..features.humaneval_integration import AsyncHumanEvalRunner
+                from ..features.humaneval_integration import (
+                    AsyncHumanEvalRunner,
+                )
 
                 self.humaneval_runner = AsyncHumanEvalRunner()
                 self.humaneval_available = True
@@ -199,7 +198,9 @@ class OversightRunner:
             elif self.config.mode == ExecutionMode.HACKATHON:
                 return asyncio.run(self._run_hackathon())
             else:
-                raise OversightError(f"Unknown execution mode: {self.config.mode}")
+                raise OversightError(
+                    f"Unknown execution mode: {self.config.mode}"
+                )
         except Exception as e:
             raise OversightError(f"Runner execution failed: {e}") from e
 
@@ -233,10 +234,12 @@ class OversightRunner:
 
     @staticmethod
     def _analyze(base: MetricsCollector, over: MetricsCollector) -> dict:
-        bs, os = base.get_summary(), over.get_summary()
+        bs, os = (base.get_summary(), over.get_summary())
         return {
             "approval_rate_improvement": (os.approval_rate - bs.approval_rate),
-            "solution_reward_gain": (os.avg_solution_reward - bs.avg_solution_reward),
+            "solution_reward_gain": (
+                os.avg_solution_reward - bs.avg_solution_reward
+            ),
         }
 
     async def _run_oversight(self) -> MetricsCollector:
@@ -244,7 +247,9 @@ class OversightRunner:
         metrics = MetricsCollector()
         # Run oversight cycles with enhanced settings
         for _ in range(self.config.cycles):
-            cycle_metrics = await self.deduction_loop.run_cycle("oversight prompt")
+            cycle_metrics = await self.deduction_loop.run_cycle(
+                "oversight prompt"
+            )
             metrics.update(cycle_metrics)
         return metrics
 
@@ -257,7 +262,11 @@ class OversightRunner:
             [x for x in session.stats["skipped"] if "external" in x.keywords]
         )
         other_skips = len(
-            [x for x in session.stats["skipped"] if "external" not in x.keywords]
+            [
+                x
+                for x in session.stats["skipped"]
+                if "external" not in x.keywords
+            ]
         )
         return external_skips, other_skips
 
@@ -297,12 +306,14 @@ class OversightRunner:
         with open("artifacts/test_summary.json", "w") as f:
             json.dump(summary, f)
 
-        # Output detailed skip breakdown to GitHub Step Summary if running in CI
+        # Output detailed skip breakdown to GitHub Step Summary
+        # if running in CI
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
                 f.write("### Test Summary\n")
                 f.write(f"- Passed: {summary['passed']}\n")
                 f.write(f"- Failed: {summary['failed']}\n")
                 f.write(
-                    f"- Skipped: {total_skips}/2 (external: {external_skips}, other: {other_skips})\n"
+                    f"- Skipped: {total_skips}/2 "
+                    f"(external: {external_skips}, other: {other_skips})\n"
                 )

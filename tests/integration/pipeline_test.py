@@ -134,7 +134,9 @@ class TestOversightPipeline:
                 await runner.run_baseline()
 
     @pytest.mark.asyncio
-    async def test_pipeline_safety_violation(self, mock_settings, runner_config):
+    async def test_pipeline_safety_violation(
+        self, mock_settings, runner_config
+    ):
         """Test pipeline handling of safety violations"""
         # Mock deduction loop to simulate safety violation
         with patch("oversight.deduction_loop.DeductionLoop") as mock_loop:
@@ -168,7 +170,9 @@ class TestOversightPipeline:
                 await runner.run_baseline()
 
     @pytest.mark.asyncio
-    async def test_pipeline_demo_mode(self, mock_settings, mock_deduction_loop):
+    async def test_pipeline_demo_mode(
+        self, mock_settings, mock_deduction_loop
+    ):
         """Test demo mode execution"""
         # Create runner with demo config
         demo_config = RunnerConfig(
@@ -191,7 +195,9 @@ class TestOversightPipeline:
         assert mock_deduction_loop.call_count == 2  # baseline + oversight
 
     @pytest.mark.asyncio
-    async def test_pipeline_robust_mode(self, mock_settings, mock_deduction_loop):
+    async def test_pipeline_robust_mode(
+        self, mock_settings, mock_deduction_loop
+    ):
         """Test robust mode execution"""
         # Create runner with robust config
         robust_config = RunnerConfig(
@@ -213,7 +219,9 @@ class TestOversightPipeline:
 
             # Verify results
             assert isinstance(results, dict)
-            assert mock_deduction_loop.call_count == 6  # 3 cycles * 2 experiments
+            assert (
+                mock_deduction_loop.call_count == 6
+            )  # 3 cycles * 2 experiments
 
 
 class TestPipelineProperties:

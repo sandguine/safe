@@ -1,20 +1,32 @@
 # SAFE MVP Demo
 
 A minimal demonstration of inference-time AI safety and capability improvements using:
+
 - **Best-of-N sampling** for code generation quality improvement
 - **Keyword-based filtering** for harmful prompt refusal
 
 ## Quick Start
 
-```bash
-# Install dependencies
-pip install -r requirements.txt
+1. **Setup**: `./setup_dev.sh`
+2. **Run Demo**: `python enhanced_demo.py`
+3. **View Results**: Check `results/latest/` for organized output
+4. **Generate Plots**: `python plot_results.py` (creates `plots/` directory)
+5. **Organize Old Results**: `python organize_results.py` (cleans up scattered files)
 
-# Set API key (optional - demo works with mock responses)
-export CLAUDE_API_KEY='your-api-key-here'
+## Results Organization
 
-# Run demo
-./demo.sh
+Results are now organized in a clean, structured format:
+
+```
+results/
+├── latest/                    # Symlink to most recent results
+├── enhanced_demo_YYYYMMDD_HHMMSS/
+│   ├── data.json             # Complete raw results and logs
+│   ├── report.txt            # Detailed human-readable report
+│   └── summary.md            # Key metrics and insights
+└── evaluation_YYYYMMDD_HHMMSS/
+    ├── data.json             # Evaluation data
+    └── report.txt            # Evaluation report
 ```
 
 ## What This Shows
@@ -42,6 +54,7 @@ export CLAUDE_API_KEY='your-api-key-here'
 - **[.pre-commit-config.yaml](.pre-commit-config.yaml)** - Pre-commit hooks for validation
 
 Run validation:
+
 ```bash
 # Quick check
 ./check_docs.sh
@@ -74,3 +87,41 @@ python -c "import anthropic, human_eval; print('Dependencies OK')"
 ```
 
 **Note**: Demo works without API key but uses mock responses (0% pass rates).
+
+## Summary Table
+
+| ✅ Working Feature                    | What it Proves                               | What to Improve            |
+| ------------------------------------ | -------------------------------------------- | -------------------------- |
+| Modular sampling-scoring-filter loop | Feasibility of inference-time safety         | Needs real model responses |
+| Red team CLI + harm rejection        | Shows precision control over harmful outputs | Filter is stubbed          |
+| Pass@1 tracking and reward logger    | Quantitative capability eval                 | Replace with Claude eval   |
+| KL analysis placeholder              | Ready to compute entropy shifts              | Needs real completions     |
+
+## Why This Matters (and How We Scale It)
+
+This prototype is the minimal test of whether safety can be learned *from inference alone*.
+
+- We show that capability and safety can be measured, compared, and improved with no weights updates.
+- The pipeline demonstrates that inference-time safety can be modularized and evaluated without retraining.
+- Mock mode validates the generality of the pipeline logic.
+- The metrics framework is extensible to any sampling/scoring combination.
+
+This creates a path toward self-aligning systems that don't rely on human post-filtering or hand-labeled data.
+
+## Analysis and Visualization
+
+The enhanced demo includes comprehensive analysis and visualization capabilities:
+
+- **Safety Analysis**: Detailed breakdown of HHH filter performance
+- **Capability Analysis**: Pass@1 comparison between baseline and oversight
+- **Tradeoff Curves**: Safety vs capability visualization
+- **Summary Reports**: Automated insights and next steps
+
+Run `python plot_results.py` to generate:
+
+- `plots/safety_analysis.png`: Safety filter performance breakdown
+- `plots/capability_analysis.png`: Capability comparison charts
+- `plots/tradeoff_curve.png`: Safety vs capability tradeoff
+- `plots/analysis_summary.md`: Comprehensive analysis report
+
+The plotting script automatically detects the latest results using `results/latest/`.

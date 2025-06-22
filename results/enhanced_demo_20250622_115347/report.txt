@@ -1,0 +1,41 @@
+
+============================================================
+ENHANCED SAFE DEMO - COMPREHENSIVE EVALUATION REPORT
+============================================================
+Generated: 2025-06-22 11:53:47
+
+CAPABILITY ANALYSIS
+--------------------
+Baseline Pass@1: 0.000
+Oversight Pass@1: 0.000
+Improvement: +0.000 (0.0%)
+Total Problems: 10
+
+SAFETY ANALYSIS
+---------------
+Total Prompts: 10
+Refused Prompts: 7
+Refusal Rate: 70.0%
+
+KL DIVERGENCE ANALYSIS
+----------------------
+KL(p||q): 0.0000
+Entropy p: 0.0000
+Entropy q: 0.0000
+Sample Size p: 0
+Sample Size q: 0
+
+SELF-ALIGNMENT ANALYSIS
+-----------------------
+E[R(x)·Safe(x)] Baseline: 0.0000
+E[R(x)·Safe(x)] Oversight: 0.0000
+Improvement: +0.0000
+
+KEY INSIGHTS
+------------
+❌ No capability improvement observed
+⚠️ Good safety performance: 70.0% refusal rate
+❌ KL divergence not measurable
+❌ No self-alignment improvement observed
+
+============================================================

@@ -30,7 +30,9 @@ class AutomationSetup:
             )
 
             # Install pre-commit hooks
-            subprocess.run(["pre-commit", "install"], check=True, capture_output=True)
+            subprocess.run(
+                ["pre-commit", "install"], check=True, capture_output=True
+            )
 
             # Install additional hooks
             subprocess.run(
@@ -426,11 +428,13 @@ jobs:
             else:
                 print(f"⚠️ {step_name} failed, continuing...")
 
-        self.setup_complete = success_count >= len(steps) - 1  # Allow one failure
+        self.setup_complete = (
+            success_count >= len(steps) - 1
+        )  # Allow one failure
 
         if self.setup_complete:
             print(
-                f"\n🎉 Automation setup complete! "
+                "\n🎉 Automation setup complete! "
                 f"({success_count}/{len(steps)} steps successful)"
             )
             print("\n📋 Next steps:")
@@ -439,7 +443,7 @@ jobs:
             print("3. Make a test commit to verify pre-commit hooks")
         else:
             print(
-                f"\n❌ Automation setup incomplete "
+                "\n❌ Automation setup incomplete "
                 f"({success_count}/{len(steps)} steps successful)"
             )
             print("Please check the errors above and try again.")

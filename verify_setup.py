@@ -48,7 +48,9 @@ def check_python_version():
         )
         return False
 
-    print_success(f"Python version: {version.major}.{version.minor}.{version.micro}")
+    print_success(
+        f"Python version: {version.major}.{version.minor}.{version.micro}"
+    )
     return True
 
 
@@ -59,12 +61,16 @@ def check_working_directory():
     current_dir = Path.cwd()
     required_files = ["demo.sh", "requirements.txt", "README.md"]
 
-    missing_files = [f for f in required_files if not (current_dir / f).exists()]
+    missing_files = [
+        f for f in required_files if not (current_dir / f).exists()
+    ]
 
     if missing_files:
         print_error(f"Missing required files: {missing_files}")
         print_error(f"Current directory: {current_dir}")
-        print_error("Please run this script from the oversight_curriculum directory")
+        print_error(
+            "Please run this script from the oversight_curriculum directory"
+        )
         return False
 
     print_success(f"Working directory: {current_dir}")
@@ -140,7 +146,9 @@ def check_environment_file():
             else:
                 print_warning("API key format appears invalid")
         else:
-            print_warning("No valid API key found - demo will use mock responses")
+            print_warning(
+                "No valid API key found - demo will use mock responses"
+            )
 
         print_success(f"Model configured: {model}")
         return True
@@ -190,10 +198,6 @@ def run_quick_test():
     print_step("Running quick setup test...")
 
     try:
-        # Test basic imports
-        import anthropic
-        import human_eval
-
         # Test that we can create basic objects
         print_success("Core modules import successfully")
 
@@ -216,7 +220,9 @@ def main():
         f"{Colors.CYAN}╔══════════════════════════════════════════════════════════════╗"
     )
     print("║                OVERSIGHT CURRICULUM SETUP VERIFICATION    ║")
-    print("╚══════════════════════════════════════════════════════════════╝{Colors.NC}")
+    print(
+        "╚══════════════════════════════════════════════════════════════╝{Colors.NC}"
+    )
     print()
 
     checks = [
@@ -243,8 +249,10 @@ def main():
     print(
         f"{Colors.CYAN}╔══════════════════════════════════════════════════════════════╗"
     )
-    print(f"║                    VERIFICATION SUMMARY                        ║")
-    print("╚══════════════════════════════════════════════════════════════╝{Colors.NC}")
+    print("║                    VERIFICATION SUMMARY                        ║")
+    print(
+        "╚══════════════════════════════════════════════════════════════╝{Colors.NC}"
+    )
     print()
 
     if passed == total:

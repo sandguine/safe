@@ -39,7 +39,9 @@ class TestDeductionLoop(unittest.TestCase):
 
         # Create minimal loop for testing
         self.loop = DeductionLoop(
-            enable_referee=True, max_puzzles_per_cycle=2, max_solutions_per_puzzle=1
+            enable_referee=True,
+            max_puzzles_per_cycle=2,
+            max_solutions_per_puzzle=1,
         )
 
     @pytest.mark.skipif(
@@ -55,18 +57,26 @@ class TestDeductionLoop(unittest.TestCase):
 
         # Check that we got some results
         self.assertGreater(
-            metrics["puzzles_generated"], 0, "Should generate at least one puzzle"
+            metrics["puzzles_generated"],
+            0,
+            "Should generate at least one puzzle",
         )
         self.assertGreater(
-            metrics["solutions_generated"], 0, "Should generate at least one solution"
+            metrics["solutions_generated"],
+            0,
+            "Should generate at least one solution",
         )
 
         # Check that reward is reasonable (not necessarily non-zero, but should exist)
         self.assertIn(
-            "avg_solution_reward", metrics, "Should have average solution reward"
+            "avg_solution_reward",
+            metrics,
+            "Should have average solution reward",
         )
         self.assertIsInstance(
-            metrics["avg_solution_reward"], (int, float), "Reward should be numeric"
+            metrics["avg_solution_reward"],
+            (int, float),
+            "Reward should be numeric",
         )
 
     def test_referee_veto_functionality(self):
@@ -91,13 +101,21 @@ class TestDeductionLoop(unittest.TestCase):
         referee = Referee()
 
         # Safe puzzle should pass
-        is_approved, feedback, safety_score = referee.evaluate_puzzle(safe_puzzle)
+        is_approved, feedback, safety_score = referee.evaluate_puzzle(
+            safe_puzzle
+        )
         # Note: In real testing, we'd expect this to pass, but referee might reject
         # for other reasons, so we just check the return format
-        self.assertIsInstance(is_approved, bool, "Should return boolean approval")
+        self.assertIsInstance(
+            is_approved, bool, "Should return boolean approval"
+        )
         self.assertIsInstance(feedback, str, "Should return feedback string")
-        self.assertIsInstance(safety_score, float, "Should return safety score")
-        self.assertGreaterEqual(safety_score, 0.0, "Safety score should be >= 0")
+        self.assertIsInstance(
+            safety_score, float, "Should return safety score"
+        )
+        self.assertGreaterEqual(
+            safety_score, 0.0, "Safety score should be >= 0"
+        )
         self.assertLessEqual(safety_score, 1.0, "Safety score should be <= 1")
 
     def test_metric_logging(self):
@@ -122,7 +140,9 @@ class TestDeductionLoop(unittest.TestCase):
 
         # Check that metrics were recorded
         all_metrics = metrics.get_all_metrics()
-        self.assertEqual(len(all_metrics), 1, "Should have one cycle of metrics")
+        self.assertEqual(
+            len(all_metrics), 1, "Should have one cycle of metrics"
+        )
 
         # Check that the data matches
         recorded_cycle = all_metrics[0]
@@ -156,12 +176,16 @@ class TestDeductionLoop(unittest.TestCase):
             metrics.export_to_csv(test_csv_path)
 
             # Check that file was created
-            self.assertTrue(os.path.exists(test_csv_path), "CSV file should be created")
+            self.assertTrue(
+                os.path.exists(test_csv_path), "CSV file should be created"
+            )
 
             # Check file content
             with open(test_csv_path, "r") as f:
                 lines = f.readlines()
-                self.assertGreater(len(lines), 1, "Should have header + data rows")
+                self.assertGreater(
+                    len(lines), 1, "Should have header + data rows"
+                )
 
                 # Check header
                 header = lines[0].strip().split(",")
@@ -206,7 +230,9 @@ class TestDeductionLoop(unittest.TestCase):
 
         # Should generate puzzles from config
         self.assertGreater(
-            metrics["puzzles_generated"], 0, "Should generate puzzles from config"
+            metrics["puzzles_generated"],
+            0,
+            "Should generate puzzles from config",
         )
 
     def test_baseline_vs_oversight_comparison(self):
@@ -295,7 +321,9 @@ class TestReferee(unittest.TestCase):
 
         safety_score = self.referee._extract_score(valid_response, "SAFETY")
         quality_score = self.referee._extract_score(valid_response, "QUALITY")
-        triviality_score = self.referee._extract_score(valid_response, "TRIVIALITY")
+        triviality_score = self.referee._extract_score(
+            valid_response, "TRIVIALITY"
+        )
 
         self.assertEqual(safety_score, 8.0)
         self.assertEqual(quality_score, 7.0)

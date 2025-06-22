@@ -5,7 +5,6 @@ Provides the same functionality as run_robust.sh but works on Windows, macOS, an
 """
 
 import argparse
-import os
 import subprocess
 import sys
 import time
@@ -64,7 +63,9 @@ def validate_setup():
     print_step("Validating setup...")
 
     if Path("verify_setup.py").exists():
-        result = run_command("python verify_setup.py", capture_output=True, check=False)
+        result = run_command(
+            "python verify_setup.py", capture_output=True, check=False
+        )
         if result and result.returncode != 0:
             print_error("Setup validation failed")
             return False
@@ -93,7 +94,9 @@ CLAUDE_MODEL=claude-3-5-sonnet-20241022
 LOG_LEVEL=INFO
 """
         env_file.write_text(env_content)
-        print_warning("Please edit .env file and add your actual Claude API key")
+        print_warning(
+            "Please edit .env file and add your actual Claude API key"
+        )
 
     print_success("Environment setup complete")
     return True
@@ -125,7 +128,7 @@ def install_dependencies():
 
     if missing_deps:
         print_warning(f"Installing enhanced dependencies: {missing_deps}")
-        run_command(f"pip install python-dotenv requests pandas matplotlib")
+        run_command("pip install python-dotenv requests pandas matplotlib")
 
     print_success("All dependencies verified")
     return True
@@ -156,7 +159,7 @@ def generate_summary(timestamp, execution_time):
 
     summary_file = f"results/execution_summary_{timestamp}.txt"
 
-    summary_content = f"""OVERSIGHT CURRICULUM EXECUTION SUMMARY
+    summary_content = """OVERSIGHT CURRICULUM EXECUTION SUMMARY
 =====================================
 Timestamp: {datetime.now()}
 Execution Time: {execution_time:.1f} seconds
@@ -194,7 +197,7 @@ def cleanup():
         for file in temp_dir.glob("*"):
             try:
                 file.unlink()
-            except:
+            except Exception:
                 pass
 
     # Remove __pycache__ directories
@@ -203,7 +206,7 @@ def cleanup():
             import shutil
 
             shutil.rmtree(cache_dir)
-        except:
+        except Exception:
             pass
 
     print_success("Cleanup completed")
@@ -211,7 +214,9 @@ def cleanup():
 
 def main():
     """Main execution function"""
-    parser = argparse.ArgumentParser(description="Robust Oversight Curriculum Runner")
+    parser = argparse.ArgumentParser(
+        description="Robust Oversight Curriculum Runner"
+    )
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -229,7 +234,9 @@ def main():
     )
     print("║                OVERSIGHT CURRICULUM ROBUST RUN               ║")
     print("║                    Cross-Platform Python Version             ║")
-    print("╚══════════════════════════════════════════════════════════════╝{Colors.NC}")
+    print(
+        "╚══════════════════════════════════════════════════════════════╝{Colors.NC}"
+    )
     print()
 
     if args.dry_run:
@@ -274,7 +281,9 @@ def main():
         print(
             f"{Colors.GREEN}╔══════════════════════════════════════════════════════════════╗"
         )
-        print("║                    EXECUTION COMPLETE                        ║")
+        print(
+            "║                    EXECUTION COMPLETE                        ║"
+        )
         print(
             "╚══════════════════════════════════════════════════════════════╝{Colors.NC}"
         )
