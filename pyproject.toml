@@ -1,13 +1,13 @@
 [project]
-name = "oversight-curriculum"
+name = "safe"
 version = "1.0.0"
-description = "AI Safety & Reasoning System - Oversight Curriculum"
+description = "SAFE - AI Safety & Reasoning System"
 readme = "README.md"
 license = "MIT"
 authors = [
-    { name = "Oversight Curriculum Team", email = "team@example.com" }
+    { name = "SAFE Team", email = "team@example.com" }
 ]
-keywords = ["ai-safety", "reasoning", "oversight", "curriculum", "claude", "anthropic"]
+keywords = ["ai-safety", "reasoning", "safe", "claude", "anthropic"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -46,8 +46,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/oversight-curriculum/oversight-curriculum"
-Repository = "https://github.com/oversight-curriculum/oversight-curriculum"
+Homepage = "https://github.com/safe/safe"
+Repository = "https://github.com/safe/safe"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]

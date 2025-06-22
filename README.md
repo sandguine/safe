@@ -2,7 +2,7 @@
 
 ## What is the Oversight Curriculum Project?
 
-The Oversight Curriculum is a research project exploring AI safety and reasoning capabilities. It implements and evaluates various techniques for making AI systems both more capable and safer.
+The Oversight Curriculum is a research project exploring AI safety and reasoning capabilities. It implements various techniques for evaluating AI systems and includes experimental frameworks for AI safety evaluation. The project appears to be in development with some core functionality implemented.
 
 ### Core Components
 
@@ -51,7 +51,7 @@ python -m oversight run --mode demo
 # Run with more cycles
 python -m oversight run --mode demo --cycles 5
 
-# Run robust mode with full validation
+# Run robust mode with validation
 python -m oversight run --mode robust
 ```
 
