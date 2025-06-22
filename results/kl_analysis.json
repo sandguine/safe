@@ -7,34 +7,34 @@
       "avg_reward": 0.76,
       "kl_divergence": 0.0,
       "accuracy_improvement": 0.0,
-      "computation_time": 38.38624882698059
+      "computation_time": 35.424890995025635
     },
     {
       "n_samples": 4,
-      "avg_reward": 0.7525000000000001,
-      "kl_divergence": 0.0006245153721194474,
+      "avg_reward": 0.76,
+      "kl_divergence": 0.0,
       "accuracy_improvement": 0.0,
-      "computation_time": 152.18964099884033
+      "computation_time": 154.7355179786682
     },
     {
       "n_samples": 16,
       "avg_reward": 0.76,
       "kl_divergence": 0.0,
       "accuracy_improvement": 0.0,
-      "computation_time": 602.6898229122162
+      "computation_time": 618.2470552921295
     },
     {
       "n_samples": 64,
-      "avg_reward": 0.7581249999999999,
-      "kl_divergence": 3.6322599559753145e-05,
+      "avg_reward": 0.7590625,
+      "kl_divergence": 3.1105552615901682e-06,
       "accuracy_improvement": 0.0,
-      "computation_time": 2407.396113872528
+      "computation_time": 2369.764559984207
     }
   ],
   "base_results": {
     "avg_reward": 0.76,
     "accuracy": 0.4,
-    "computation_time": 38.38624882698059,
+    "computation_time": 35.424890995025635,
     "total_puzzles": 10,
     "correct_puzzles": 4,
     "rewards": [
