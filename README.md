@@ -4,12 +4,6 @@
 [![CI Status](https://github.com/example/oversight_curriculum/workflows/CI/badge.svg)](https://github.com/example/oversight_curriculum/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-![Status: Enterprise Ready](https://img.shields.io/badge/Status-Enterprise%20Ready%20🚀-brightgreen)
-![Tests: Passing](https://img.shields.io/badge/Tests-Passing-green)
-![Coverage: 85%+](https://img.shields.io/badge/Coverage-85%25+-green)
-![Code Quality: 10/10](https://img.shields.io/badge/Code%20Quality-10/10-brightgreen)
-![Cost: ~$5-15](https://img.shields.io/badge/Cost-~$5--15-green)
-
 ## 📋 **Overview**
 
 Advanced AI safety and reasoning system that combines **Absolute Zero Reasoner (AZR) self-play**, **best-of-n sampling**, and **HHH safety filtering** to create a robust oversight curriculum.
