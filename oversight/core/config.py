@@ -1,5 +1,5 @@
 """
-Core configuration management for oversight curriculum.
+Core configuration management for SAFE.
 Uses Pydantic for type-safe configuration loading and validation.
 Includes feature flag management for conditional module loading.
 """
@@ -18,7 +18,7 @@ except ImportError:
 
 
 class FeatureFlags:
-    """Feature flag management for oversight curriculum"""
+    """Feature flag management for SAFE"""
 
     @staticmethod
     def is_enabled(flag: str) -> bool:
@@ -118,7 +118,7 @@ class OversightConfig(BaseSettings):
         if not config_path.exists():
             raise FileNotFoundError(f"Config file not found: {config_path}")
 
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             config_data = yaml.safe_load(f)
 
         return cls(**config_data)

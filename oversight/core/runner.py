@@ -1,5 +1,5 @@
 """
-Main runner for oversight curriculum experiments.
+Main runner for SAFE experiments.
 Provides the core execution engine for AI safety evaluation.
 Uses feature flags for conditional module loading.
 """
@@ -76,7 +76,7 @@ class RunnerConfig:
 
 
 class OversightRunner:
-    """Main runner for oversight curriculum experiments."""
+    """Main runner for SAFE experiments."""
 
     def __init__(self, config: RunnerConfig):
         self.config = config

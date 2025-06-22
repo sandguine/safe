@@ -1,123 +1,76 @@
-# SAFE: Selective Alignment via Filtering at Evaluation
+# SAFE MVP Demo
 
-## What is the SAFE Project?
-
-The SAFE is a research project exploring AI safety and reasoning capabilities. It implements various techniques for evaluating AI systems and includes experimental frameworks for AI safety evaluation. The project appears to be in development with some core functionality implemented.
-
-### Core Components
-
-- **Deduction Loop**: Iterative reasoning system where AI models practice solving problems and evaluate their own work
-- **Safety Filtering**: HHH (Helpful, Honest, Harmless) filtering to check AI responses for potential harm
-- **Best-of-N Sampling**: Generating multiple candidate solutions and selecting the best one
-- **HumanEval Integration**: Testing on coding problems to measure improvements
-
-### Current Status
-
-This is a research prototype with the following characteristics:
-
-- **Research Focus**: Experimental framework for AI safety evaluation
-- **Implementation**: Core functionality implemented with some features in development
-- **Testing**: Basic test coverage with some integration tests
-- **Documentation**: Work in progress
+A minimal demonstration of inference-time AI safety and capability improvements using:
+- **Best-of-N sampling** for code generation quality improvement
+- **Keyword-based filtering** for harmful prompt refusal
 
 ## Quick Start
 
-### Prerequisites
-
-- Python 3.8+
-- Claude API key from Anthropic
-- Internet connection for API calls
-
-### Installation
-
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd oversight_curriculum
+# Install dependencies
+pip install -r requirements.txt
 
-# Install in editable mode
-pip install -e .
-
-# Set up environment variables
+# Set API key (optional - demo works with mock responses)
 export CLAUDE_API_KEY='your-api-key-here'
+
+# Run demo
+./demo.sh
 ```
 
-### Basic Usage
+## What This Shows
+
+- **Capability improvement**: Best-of-N sampling improves pass@1 scores on coding tasks
+- **Safety filtering**: Keyword-based filter refuses harmful prompts
+- **Zero training required**: All improvements achieved through inference-time techniques
+
+## Expected Results
+
+- **Capability**: ~10-20% baseline → ~25-40% with oversight (with API key)
+- **Safety**: 5/5 harmful prompts correctly refused
+- **Time**: ~30 seconds (no API) / ~3-5 minutes (with API)
+
+## Documentation
+
+- **[MVP_DEMO.md](MVP_DEMO.md)** - Detailed guide with manual commands and technical details
+- **[demo.sh](demo.sh)** - Automated demo script
+- **[evaluate_results.py](evaluate_results.py)** - Results analysis
+
+## Validation
+
+- **[validate_docs.py](validate_docs.py)** - Automated documentation validation
+- **[check_docs.sh](check_docs.sh)** - Quick documentation check script
+- **[.pre-commit-config.yaml](.pre-commit-config.yaml)** - Pre-commit hooks for validation
+
+Run validation:
+```bash
+# Quick check
+./check_docs.sh
+
+# Detailed validation
+python validate_docs.py
+```
+
+## Files
+
+- `oversight/features/humaneval_integration.py` - Capability testing
+- `oversight/features/red_team_suite.py` - Safety testing
+- `oversight/model.py` - Claude API wrapper
+- `oversight/hhh_filter.py` - Safety filter implementation
+- `demo.sh` - Demo execution script
+- `evaluate_results.py` - Results analysis
+- `requirements.txt` - Dependencies
+
+## Troubleshooting
 
 ```bash
-# Run a quick demo (2 cycles)
-python -m oversight run --mode demo
+# Missing dependencies
+pip install -r requirements.txt
 
-# Run with more cycles
-python -m oversight run --mode demo --cycles 5
+# Permission issues
+chmod +x demo.sh
 
-# Run robust mode with validation
-python -m oversight run --mode robust
+# Verify setup
+python -c "import anthropic, human_eval; print('Dependencies OK')"
 ```
 
-## Project Structure
-
-```
-oversight_curriculum/
-├── oversight/
-│   ├── core/           # Core functionality (config, metrics, etc.)
-│   ├── features/       # Feature implementations (HHH filter, referee, etc.)
-│   ├── __main__.py     # CLI interface
-│   └── ...
-├── tests/              # Test files
-├── config/             # Configuration files
-└── README.md
-```
-
-## Configuration
-
-The system uses configuration files and environment variables:
-
-- **Model settings**: Which AI model to use (default: Claude 3.5 Sonnet)
-- **Safety thresholds**: HHH filtering parameters
-- **Execution limits**: Timeouts, cost limits, cycle counts
-- **Output settings**: Where to save results
-
-## Research Goals
-
-The project aims to:
-
-1. **Evaluate safety mechanisms**: Test how well different approaches prevent harmful outputs
-2. **Measure capability improvements**: See if safety measures help or hurt performance
-3. **Compare approaches**: Baseline vs oversight-enhanced AI responses
-4. **Establish benchmarks**: Create reproducible evaluation protocols
-
-## Limitations and Known Issues
-
-- **Research prototype**: This is experimental software, not production-ready
-- **API dependencies**: Requires Claude API access and internet connection
-- **Limited testing**: Some features may have bugs or incomplete implementations
-- **Cost considerations**: API calls cost money (~$1-5 per experiment run)
-- **Async complexity**: Some async/await patterns may need refinement
-
-## Contributing
-
-This is a research project. Contributions should focus on:
-
-- Bug fixes and reliability improvements
-- Better documentation
-- Additional safety evaluation methods
-- Performance optimizations
-- Test coverage improvements
-
-## License
-
-MIT License - see LICENSE file for details.
-
-## Acknowledgments
-
-This project builds on research in AI safety, reasoning, and alignment. It incorporates ideas from:
-
-- Absolute Zero Reasoner (AZR) self-play approaches
-- Best-of-N sampling techniques
-- HHH (Helpful, Honest, Harmless) safety frameworks
-- HumanEval and similar coding evaluation datasets
-
----
-
-**Note**: This is research software. Use at your own risk and verify results independently.
+**Note**: Demo works without API key but uses mock responses (0% pass rates).

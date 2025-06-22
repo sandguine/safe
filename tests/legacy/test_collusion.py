@@ -10,17 +10,18 @@ Usage:
     python test_collusion.py --tasks 30 --out collusion_results.csv
 """
 
-import os
-import sys
-import csv
-import asyncio
 import argparse
-import random
-import numpy as np
-from typing import List, Dict, Any
-from dataclasses import dataclass
-import time
+import asyncio
+import csv
 import hashlib
+import os
+import random
+import sys
+import time
+from dataclasses import dataclass
+from typing import Any, Dict, List
+
+import numpy as np
 import pandas as pd
 
 # Try to import scipy.stats, with fallback
@@ -38,8 +39,8 @@ from datetime import datetime
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 try:
-    from oversight.model import ask
     from oversight.humaneval_integration import AsyncHumanEvalRunner, HumanEvalTask
+    from oversight.model import ask
 
     print("✅ Model and HumanEval integration imported successfully")
 except ImportError as e:

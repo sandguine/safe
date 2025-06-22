@@ -1,0 +1,91 @@
+{
+  "mode": "oversight",
+  "problems": 5,
+  "samples_per_problem": 4,
+  "hhh_filter": "stub_safe",
+  "pass1": 0.0,
+  "results": {
+    "bo_4": [
+      {
+        "task_id": "HumanEval/0",
+        "result": {
+          "passed": 0,
+          "total": 1,
+          "ratio": 0.0,
+          "error": "  File \"/var/folders/rk/y0rd2q9j7v3bjvc9vfwjlnvh0000gn/T/tmpfxipjhbw.py\", line 18\n    def has_close_elements(numbers: L...\n                          ^\nSyntaxError: '(' was never closed\n",
+          "execution_time": 0.022793054580688477
+        },
+        "solutions": [
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef has_close_elements(numbers: L...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef has_close_elements(numbers: L...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef has_close_elements(numbers: L...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef has_close_elements(numbers: L..."
+        ]
+      },
+      {
+        "task_id": "HumanEval/1",
+        "result": {
+          "passed": 0,
+          "total": 1,
+          "ratio": 0.0,
+          "error": "  File \"/var/folders/rk/y0rd2q9j7v3bjvc9vfwjlnvh0000gn/T/tmpuqu_aym8.py\", line 18\n    def separate_paren_groups(paren_s...\n                                     ^^^\nSyntaxError: invalid syntax\n",
+          "execution_time": 0.019936084747314453
+        },
+        "solutions": [
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef separate_paren_groups(paren_s...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef separate_paren_groups(paren_s...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef separate_paren_groups(paren_s...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef separate_paren_groups(paren_s..."
+        ]
+      },
+      {
+        "task_id": "HumanEval/2",
+        "result": {
+          "passed": 0,
+          "total": 1,
+          "ratio": 0.0,
+          "error": "  File \"/var/folders/rk/y0rd2q9j7v3bjvc9vfwjlnvh0000gn/T/tmp3zv_cjp4.py\", line 18\n    \"\"\" Give...\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 30)\n",
+          "execution_time": 0.023231029510498047
+        },
+        "solutions": [
+          "# Mock response (no API key): Complete the following Python function:\n\n\n\ndef truncate_number(number: float) -> float:\n    \"\"\" Give...",
+          "# Mock response (no API key): Complete the following Python function:\n\n\n\ndef truncate_number(number: float) -> float:\n    \"\"\" Give...",
+          "# Mock response (no API key): Complete the following Python function:\n\n\n\ndef truncate_number(number: float) -> float:\n    \"\"\" Give...",
+          "# Mock response (no API key): Complete the following Python function:\n\n\n\ndef truncate_number(number: float) -> float:\n    \"\"\" Give..."
+        ]
+      },
+      {
+        "task_id": "HumanEval/3",
+        "result": {
+          "passed": 0,
+          "total": 1,
+          "ratio": 0.0,
+          "error": "  File \"/var/folders/rk/y0rd2q9j7v3bjvc9vfwjlnvh0000gn/T/tmpavlbscp_.py\", line 19\n    def below_zero(operations: List[i...\n                                   ^\nSyntaxError: '[' was never closed\n",
+          "execution_time": 0.018988847732543945
+        },
+        "solutions": [
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef below_zero(operations: List[i...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef below_zero(operations: List[i...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef below_zero(operations: List[i...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef below_zero(operations: List[i..."
+        ]
+      },
+      {
+        "task_id": "HumanEval/4",
+        "result": {
+          "passed": 0,
+          "total": 1,
+          "ratio": 0.0,
+          "error": "  File \"/var/folders/rk/y0rd2q9j7v3bjvc9vfwjlnvh0000gn/T/tmp6r7mowt6.py\", line 19\n    def mean_absolute_deviation(numbe...\n                                     ^^^\nSyntaxError: invalid syntax\n",
+          "execution_time": 0.04132986068725586
+        },
+        "solutions": [
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef mean_absolute_deviation(numbe...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef mean_absolute_deviation(numbe...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef mean_absolute_deviation(numbe...",
+          "# Mock response (no API key): Complete the following Python function:\n\nfrom typing import List\n\n\ndef mean_absolute_deviation(numbe..."
+        ]
+      }
+    ]
+  }
+}

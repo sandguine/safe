@@ -11,6 +11,7 @@ Implements the refined plan requirements:
 5. Confidence-weighted voting across top candidates
 """
 
+import argparse
 import asyncio
 import json
 import os
@@ -178,7 +179,8 @@ class SecureSandbox:
 
 
 class AsyncHumanEvalRunner:
-    """Async runner for HumanEval tasks with rate limiting and progressive sampling"""
+    """Async runner for HumanEval tasks with rate limiting and progressive
+    sampling"""
 
     def __init__(
         self,
@@ -352,7 +354,7 @@ Provide only the function implementation, no explanations:"""
         """
         tasks_to_run = self.tasks[:max_tasks] if max_tasks else self.tasks
 
-        print(f"Running experiment on {len(tasks_to_run)} tasks with n={n_values}")
+        print(f"Running experiment on {len(tasks_to_run)} tasks with " f"n={n_values}")
 
         results = {}
 
@@ -361,7 +363,7 @@ Provide only the function implementation, no explanations:"""
             n_results = []
 
             for i, task in enumerate(tasks_to_run):
-                print(f"Task {i+1}/{len(tasks_to_run)}: {task.task_id}")
+                print(f"Task {i + 1}/{len(tasks_to_run)}: {task.task_id}")
 
                 result, solutions = await self.run_best_of_n(task, n, temperature)
                 n_results.append(
@@ -374,7 +376,7 @@ Provide only the function implementation, no explanations:"""
 
                 # Early exit if we have a perfect solution
                 if result.ratio >= 1.0:
-                    print(f"  ✓ Perfect solution found (ratio: {result.ratio:.3f})")
+                    print(f"  ✓ Perfect solution found " f"(ratio: {result.ratio:.3f})")
                 else:
                     print(
                         f"  - Partial solution (ratio: {result.ratio:.3f}, "
@@ -430,23 +432,76 @@ def save_results(results: Dict[str, Any], output_dir: str = "results"):
 
 async def main():
     """Main function for testing"""
+    parser = argparse.ArgumentParser(description="HumanEval Integration CLI")
+    parser.add_argument(
+        "--mode",
+        choices=["baseline", "oversight"],
+        default="baseline",
+        help="Execution mode",
+    )
+    parser.add_argument(
+        "--problems", type=int, default=5, help="Number of problems to test"
+    )
+    parser.add_argument(
+        "--samples-per-problem",
+        type=int,
+        default=1,
+        help="Number of samples per problem",
+    )
+    parser.add_argument(
+        "--hhh-filter",
+        choices=["none", "stub_safe", "real"],
+        default="none",
+        help="HHH filter mode",
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default="results/cap_baseline.json",
+        help="Output file path",
+    )
+    parser.add_argument(
+        "--temperature", type=float, default=0.7, help="Temperature for generation"
+    )
+
+    args = parser.parse_args()
+
+    # Create output directory
+    os.makedirs(os.path.dirname(args.output), exist_ok=True)
+
     runner = AsyncHumanEvalRunner(
         max_concurrent=5, requests_per_minute=30, progressive_sampling=True
     )
 
-    # Run on first 10 tasks for testing
+    # Run experiment
+    n_values = [args.samples_per_problem]
     results = await runner.run_experiment(
-        n_values=[1, 4], max_tasks=10, temperature=0.7
+        n_values=n_values, max_tasks=args.problems, temperature=args.temperature
     )
 
-    # Save results
-    save_results(results)
+    # Calculate pass@1
+    n_key = f"bo_{args.samples_per_problem}"
+    if n_key in results:
+        pass_at_1 = calculate_pass_at_k(results[n_key], 1)
 
-    # Print summary
-    for n_key, n_results in results.items():
-        n = int(n_key.split("_")[1])
-        pass_at_1 = calculate_pass_at_k(n_results, 1)
-        print(f"Best-of-{n}: pass@1 = {pass_at_1:.4f}")
+        # Create summary result
+        summary = {
+            "mode": args.mode,
+            "problems": args.problems,
+            "samples_per_problem": args.samples_per_problem,
+            "hhh_filter": args.hhh_filter,
+            "pass1": pass_at_1,
+            "results": results,
+        }
+
+        # Save results
+        with open(args.output, "w") as f:
+            json.dump(summary, f, indent=2, default=lambda x: x.__dict__)
+
+        print(f"Results saved to {args.output}")
+        print(f"Pass@1: {pass_at_1:.3f}")
+    else:
+        print("No results generated")
 
 
 if __name__ == "__main__":

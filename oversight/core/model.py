@@ -1,5 +1,5 @@
 """
-Model API wrapper for oversight curriculum.
+Model API wrapper for SAFE.
 Provides a simple interface for making API calls to language models.
 Uses feature flags to switch between live and stub implementations.
 """

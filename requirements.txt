@@ -1,17 +1,9 @@
-# Core dependencies for oversight curriculum
+# Minimal dependencies for SAFE MVP demo
 anthropic>=0.7.0
-pydantic>=2.0.0
-pydantic-settings>=2.0.0
-PyYAML>=6.0
-httpx>=0.24.0
-tenacity>=8.2.0
-structlog>=23.0.0
+human-eval>=1.0.0
+matplotlib>=3.7.0
+pandas>=2.0.0
+
+# Enhanced dependencies for robust execution
 python-dotenv>=1.0.0
 requests>=2.31.0
-
-# Testing (minimal)
-pytest>=7.4.0
-pytest-asyncio>=0.21.0
-
-# Optional: HumanEval for code evaluation
-# human-eval>=1.0.0

@@ -4,11 +4,11 @@ Unit tests for the deduction loop system.
 Tests core functionality as specified in the plan.
 """
 
+import asyncio
 import os
 import sys
 import unittest
 import warnings
-import asyncio
 from pathlib import Path
 
 # Silence Pydantic deprecation warnings
@@ -18,11 +18,11 @@ warnings.filterwarnings("ignore", message=".*PydanticDeprecatedSince20.*")
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import pytest
+
 from oversight.deduction_loop import DeductionLoop
+from oversight.metrics import ComparisonAnalyzer, MetricsCollector
 from oversight.models import Puzzle
 from oversight.referee import Referee
-from oversight.metrics import MetricsCollector
-from oversight.metrics import ComparisonAnalyzer
 
 # Mark all tests in this file as external (require API key)
 pytestmark = pytest.mark.external

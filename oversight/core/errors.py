@@ -1,5 +1,5 @@
 """
-Domain-specific exceptions and error handling for oversight curriculum.
+Domain-specific exceptions and error handling for SAFE.
 Provides custom exceptions and retry/back-off mechanisms for robust execution.
 """
 

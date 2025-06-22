@@ -1,5 +1,5 @@
 """
-Deduction loop implementation for oversight curriculum.
+Deduction loop implementation for SAFE.
 Provides iterative reasoning and safety evaluation capabilities.
 """
 

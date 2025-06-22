@@ -1,5 +1,5 @@
 """
-Metrics collection and analysis for oversight curriculum.
+Metrics collection and analysis for SAFE.
 Provides tools for tracking experiment performance and safety metrics.
 """
 

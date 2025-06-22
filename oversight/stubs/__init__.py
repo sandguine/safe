@@ -1,6 +1,6 @@
 """
-Stub implementations for oversight curriculum.
-Used when features are disabled or in fast development mode.
+Stub implementations for SAFE.
+Used when feature flags are disabled to provide mock functionality.
 """
 
 from .model_stub import ask, ask_with_retry
