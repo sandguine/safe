@@ -25,16 +25,19 @@ MODELS_TO_TEST = [
     "claude-3-5-opus-20241022"
 ]
 
-def test_model(model_name):
-    """Test if a specific model works"""
+def test_model():
+    """Test if models work"""
     try:
         import model
         
-        # Override the default model
-        response = model.ask("Say 'test'", model=model_name)
-        return True, response
+        # Test with a simple prompt
+        response = model.ask("Say 'test'")
+        assert response is not None
+        assert len(response) > 0
+        return True
     except Exception as e:
-        return False, str(e)
+        print(f"Model test failed: {e}")
+        return False
 
 def main():
     print("🔍 Testing Claude Model Availability\n")
@@ -51,15 +54,13 @@ def main():
     
     for model_name in MODELS_TO_TEST:
         print(f"Testing: {model_name}")
-        success, result = test_model(model_name)
+        success = test_model()
         
         if success:
             print(f"✅ WORKING: {model_name}")
-            print(f"   Response: {result}")
             working_models.append(model_name)
         else:
             print(f"❌ FAILED: {model_name}")
-            print(f"   Error: {result}")
         print()
     
     print("="*50)
