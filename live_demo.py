@@ -8,6 +8,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
+import asyncio
 
 # Load environment variables from .env file
 try:
@@ -64,6 +65,62 @@ class LiveDemo:
         self.demo_cycles = 0
         self.live_mode = True
         
+    async def ask_with_retry(self, model, prompt: str, max_attempts: int = 3, base_delay: float = 1.0):
+        """Ask model with retry logic and exponential backoff"""
+        
+        for attempt in range(max_attempts):
+            try:
+                response = await model.ask(prompt)
+                return response
+            
+            except Exception as e:
+                if attempt == max_attempts - 1:
+                    # Last attempt failed
+                    raise RuntimeError(f"API failed after {max_attempts} attempts: {e}")
+                
+                # Calculate delay with exponential backoff
+                delay = base_delay * (2 ** attempt)
+                print(f"⚠️  API attempt {attempt + 1} failed: {e}")
+                print(f"   Retrying in {delay:.1f} seconds...")
+                
+                await asyncio.sleep(delay)
+        
+        # This should never be reached due to the raise above
+        raise RuntimeError("Unexpected retry loop exit")
+
+    async def run_demo_task(self, task_id: str, prompt: str, model, timeout: int = 30):
+        """Run a single demo task with timeout and retry logic"""
+        
+        try:
+            # Use retry logic for API calls
+            response = await asyncio.wait_for(
+                self.ask_with_retry(model, prompt),
+                timeout=timeout
+            )
+            
+            return {
+                'task_id': task_id,
+                'status': 'success',
+                'response': response,
+                'error': None
+            }
+        
+        except asyncio.TimeoutError:
+            return {
+                'task_id': task_id,
+                'status': 'timeout',
+                'response': None,
+                'error': f'Task timed out after {timeout} seconds'
+            }
+        
+        except Exception as e:
+            return {
+                'task_id': task_id,
+                'status': 'error',
+                'response': None,
+                'error': str(e)
+            }
+
     def run_demo(self, cycles: int = 3):
         """Run the live demo"""
         
@@ -270,19 +327,26 @@ class LiveDemo:
         print(f"\n🔴 Red-teaming demo complete!")
 
 
-def parse_args():
-    """Parse command line arguments"""
-    parser = argparse.ArgumentParser(description='AZR Live Demo')
-    parser.add_argument('--cycles', type=int, default=3,
-                       help='Number of demo cycles (default: 3)')
-    parser.add_argument('--n_samples', type=int, default=16,
-                       help='Number of best-of-n samples (default: 16)')
+def parse_arguments():
+    """Parse command line arguments for live demo"""
+    parser = argparse.ArgumentParser(description='Live Demo - AZR with Progressive Sampling')
+    
     parser.add_argument('--model', type=str, default='claude-3-5-sonnet-20241022',
                        help='Model to use (default: claude-3-5-sonnet-20241022)')
-    parser.add_argument('--red_team', action='store_true',
-                       help='Run red-teaming demonstration')
-    parser.add_argument('--no_interactive', action='store_true',
-                       help='Disable interactive controls')
+    parser.add_argument('--n_samples', type=int, default=4,
+                       help='Number of samples for progressive sampling (default: 4)')
+    parser.add_argument('--progressive', action='store_true', default=True,
+                       help='Enable progressive sampling (default: True)')
+    parser.add_argument('--max_tasks', type=int, default=10,
+                       help='Maximum number of tasks to run (default: 10)')
+    parser.add_argument('--timeout', type=int, default=30,
+                       help='Timeout per task in seconds (default: 30)')
+    parser.add_argument('--verbose', action='store_true',
+                       help='Enable verbose logging')
+    parser.add_argument('--record', action='store_true',
+                       help='Record demo session')
+    parser.add_argument('--output', type=str, default='live_demo_results.json',
+                       help='Output file for results (default: live_demo_results.json)')
     
     return parser.parse_args()
 
@@ -290,7 +354,7 @@ def parse_args():
 def main():
     """Main demo function"""
     
-    args = parse_args()
+    args = parse_arguments()
     
     # Create demo
     demo = LiveDemo(

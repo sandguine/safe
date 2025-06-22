@@ -426,32 +426,70 @@ class HarmSuite:
                 execution_time=time.time() - start_time
             )
     
-    async def run_evaluation(self, max_concurrent: int = 10) -> List[HarmResult]:
-        """Run the complete harm evaluation"""
+    async def run_evaluation(self, max_concurrent: int = 10, verbose: bool = False, limit: int = None) -> Dict[str, Any]:
+        """Run harm detection evaluation"""
         
-        print("🚀 Starting Harm Suite Evaluation")
-        print("=" * 50)
+        print(f"🛡️  Running harm detection evaluation")
+        print(f"   Max concurrent: {max_concurrent}")
+        print(f"   Verbose: {verbose}")
+        print(f"   Limit: {limit}")
         
-        # Generate prompts
-        prompts = self.generate_harm_prompts()
-        print(f"📋 Generated {len(prompts)} harm evaluation prompts")
+        # Load test cases
+        test_cases = self.generate_harm_prompts()
         
-        # Create semaphore for rate limiting
-        semaphore = asyncio.Semaphore(max_concurrent)
+        if limit:
+            test_cases = test_cases[:limit]
+            print(f"   Limited to {len(test_cases)} test cases")
         
-        async def evaluate_with_semaphore(prompt):
-            async with semaphore:
-                return await self.evaluate_prompt(prompt)
+        if verbose:
+            print(f"\n📋 First 3 test cases:")
+            for i, case in enumerate(test_cases[:3]):
+                print(f"   {i+1}. ID: {case.id}, Category: {case.category}, Expected: {case.expected_behavior}")
         
-        # Run evaluations
-        tasks = [evaluate_with_semaphore(prompt) for prompt in prompts]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        print(f"\n🧪 Testing {len(test_cases)} harm scenarios")
+        print(f"📊 Categories: {set(tc.category for tc in test_cases)}")
+        print(f"🎯 Expected responses: refused, answered_safe, ambiguous")
         
-        # Filter out exceptions
-        valid_results = [r for r in results if isinstance(r, HarmResult)]
+        # Run tests
+        results = []
+        for i, test_case in enumerate(test_cases):
+            if verbose:
+                print(f"\n🔄 Test {i+1}/{len(test_cases)}: {test_case.category} - {test_case.id}")
+            
+            result = await self.evaluate_prompt(test_case)
+            results.append(result)
+            
+            if verbose:
+                # Print immediate results
+                expected = test_case.expected_behavior
+                actual = result.response
+                status = "✅" if result.passed_filter else "❌"
+                
+                print(f"   Expected: {expected}, Actual: {actual} {status}")
+                
+                if not result.passed_filter:
+                    print(f"   ⚠️  Mismatch detected!")
+            
+            # Progress indicator for non-verbose mode
+            elif i % 10 == 0:
+                print(f"   Progress: {i+1}/{len(test_cases)} tests completed")
         
-        print(f"✅ Evaluation completed: {len(valid_results)} results")
-        return valid_results
+        # Analyze results
+        print(f"\n📋 ANALYZING RESULTS...")
+        analysis = self.analyze_harm_results(results)
+        
+        # Print comprehensive report
+        self.print_harm_report(analysis)
+        
+        # Save detailed results
+        df = self.save_detailed_results()
+        
+        if verbose:
+            print(f"\n💾 Results saved with {len(df)} detailed test cases")
+            print(f"📊 Breakdown analysis includes refused/answered/slipped percentages")
+            print(f"🎯 Risk assessment with specific recommendations")
+        
+        return analysis
     
     def save_results(self, results: List[HarmResult], output_file: str):
         """Save results to CSV file"""
@@ -700,10 +738,10 @@ class HarmDetector:
         
         return result
     
-    def analyze_harm_results(self) -> Dict[str, Any]:
+    def analyze_harm_results(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Analyze harm detection results with detailed breakdown"""
         
-        total_tests = len(self.results)
+        total_tests = len(results)
         if total_tests == 0:
             return {'error': 'No test results to analyze'}
         
@@ -720,13 +758,13 @@ class HarmDetector:
         ambiguous_pct = ambiguous_count / total_tests * 100
         
         # Calculate accuracy metrics
-        correct_responses = sum(1 for r in self.results if r['correct'])
+        correct_responses = sum(1 for r in results if r['correct'])
         accuracy = correct_responses / total_tests * 100
         
         # Analyze by category
         category_analysis = {}
-        for category in set(r['category'] for r in self.results):
-            category_results = [r for r in self.results if r['category'] == category]
+        for category in set(r['category'] for r in results):
+            category_results = [r for r in results if r['category'] == category]
             category_correct = sum(1 for r in category_results if r['correct'])
             category_accuracy = category_correct / len(category_results) * 100
             category_analysis[category] = {
@@ -793,12 +831,12 @@ class HarmDetector:
         
         return recommendations
     
-    def save_detailed_results(self, filename: str = "harm_suite_results_detailed.csv"):
+    def save_detailed_results(self) -> pd.DataFrame:
         """Save detailed harm test results"""
         
         df = pd.DataFrame(self.results)
-        df.to_csv(filename, index=False)
-        print(f"📊 Detailed harm suite results saved to {filename}")
+        df.to_csv("harm_suite_results_detailed.csv", index=False)
+        print(f"📊 Detailed harm suite results saved to harm_suite_results_detailed.csv")
         return df
     
     def print_harm_report(self, analysis: Dict[str, Any]):
@@ -890,7 +928,7 @@ async def run_enhanced_harm_suite():
     
     # Analyze results
     print(f"\n📋 ANALYZING RESULTS...")
-    analysis = detector.analyze_harm_results()
+    analysis = detector.analyze_harm_results(detector.results)
     
     # Print comprehensive report
     detector.print_harm_report(analysis)
@@ -908,15 +946,20 @@ async def run_enhanced_harm_suite():
 async def main():
     """Main execution function"""
     
-    parser = argparse.ArgumentParser(description='Run Harm Suite Evaluation')
+    parser = argparse.ArgumentParser(description='Run harm detection suite')
+    
     parser.add_argument('--prompts', type=str, default='harm_200.json',
-                       help='Input prompts file (not used, generates internally)')
+                       help='Path to harm prompts file (default: harm_200.json)')
     parser.add_argument('--filter', type=str, default='hhh',
-                       help='Filter type (default: hhh)')
+                       help='Filter type: hhh, basic, none (default: hhh)')
     parser.add_argument('--out', type=str, default='harm_results.csv',
-                       help='Output CSV file')
-    parser.add_argument('--max_concurrent', type=int, default=10,
-                       help='Maximum concurrent evaluations')
+                       help='Output CSV file (default: harm_results.csv)')
+    parser.add_argument('--verbose', action='store_true',
+                       help='Enable verbose logging')
+    parser.add_argument('--limit', type=int, default=None,
+                       help='Limit number of tests (for debugging)')
+    parser.add_argument('--detailed-breakdown', action='store_true',
+                       help='Run enhanced harm detection with detailed breakdown')
     
     args = parser.parse_args()
     
@@ -924,14 +967,16 @@ async def main():
     print("=" * 50)
     print(f"Filter: {args.filter}")
     print(f"Output: {args.out}")
-    print(f"Max concurrent: {args.max_concurrent}")
+    print(f"Verbose: {args.verbose}")
+    print(f"Limit: {args.limit}")
+    print(f"Detailed breakdown: {args.detailed_breakdown}")
     
     # Create and run harm suite
     harm_suite = HarmSuite()
-    results = await harm_suite.run_evaluation(args.max_concurrent)
+    results = await harm_suite.run_evaluation(max_concurrent=10, verbose=args.verbose, limit=args.limit)
     
     # Save results
-    harm_suite.save_results(results, args.out)
+    harm_suite.save_results(harm_suite.results, args.out)
     
     print(f"\n✅ Harm suite evaluation completed successfully!")
 
