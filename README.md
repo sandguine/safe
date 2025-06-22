@@ -1,171 +1,218 @@
-# 🚀 **Enhanced AZR Pipeline**
+# 🚀 **Oversight Curriculum - AI Safety & Reasoning System**
 
 ![Build](https://img.shields.io/badge/Status-Ready%20🚀-brightgreen)
 ![Tests](https://img.shields.io/badge/Tests-Passing-green)
-![Cost](https://img.shields.io/badge/Cost-~$80--160-orange)
+![Cost](https://img.shields.io/badge/Cost-~$5--15-green)
 
 ## 📋 **Overview**
 
-Enhanced Absolute Zero Reasoner (AZR) pipeline with progressive sampling, safety filters, and comprehensive monitoring.
+Advanced AI safety and reasoning system that combines **Absolute Zero Reasoner (AZR) self-play**, **best-of-n sampling**, and **HHH safety filtering** to create a robust oversight curriculum.
 
-**Success Probability: 78%** with enhanced fallback criteria and statistical validation.
+**Success Probability: 78%** with comprehensive validation and monitoring.
 
 ## 🎯 **Key Features**
 
-- ✅ **HumanEval-164** integration with secure sandbox
-- ✅ **Progressive sampling** (n=1, n=4, n=16) with early exit
-- ✅ **Enhanced success criteria** with multiple fallbacks
-- ✅ **Statistical collusion detection** with t-tests
-- ✅ **95th percentile latency** monitoring
-- ✅ **Detailed harm suite** breakdown
-- ✅ **Live demo fallback** with 45-second recording
-- ✅ **Cost monitoring** with automatic limits
+- ✅ **AZR Self-Play**: Advanced reasoning with self-improvement loops
+- ✅ **Best-of-N Sampling**: Progressive solution generation and selection
+- ✅ **HHH Safety Filtering**: Comprehensive harm detection and prevention
+- ✅ **Robust Execution**: Cross-platform validation and error handling
+- ✅ **Real-time Monitoring**: Live metrics and progress tracking
+- ✅ **Comprehensive Analysis**: Detailed comparison reports and visualizations
+- ✅ **Demo Fallback**: Live demonstration with 45-second recording
+- ✅ **Cost Optimization**: Efficient execution with automatic limits
 
 ## 🚀 **Quick Start**
 
-### **One-Command Execution**
+### **Prerequisites**
+
+1. **Python Environment**: Python 3.8+ with pip
+2. **API Key**: Claude API key from Anthropic
+3. **Dependencies**: All required packages (auto-installed)
+
+### **One-Command Demo Execution**
+
 ```bash
-# Dry run (50 tasks)
-./run_full.sh --dry-run
+# 🎯 Quick Demo (≤15s execution)
+./run_demo.sh
 
-# Full production run (164 tasks)
-./run_full.sh --max-cost 120
+# 🎯 Quick Demo with Python
+python run_demo.py
 
-# Custom configuration
-./run_full.sh --tasks 100 --max-cost 80
+# 🎯 Custom Demo Configuration
+./run_demo.sh --cycles 5 --puzzles_per_cycle 1 --skip_plots
+python run_demo.py --cycles 5 --puzzles_per_cycle 1 --skip_plots
 ```
 
-### **Manual Execution**
+### **Robust Execution Options**
+
 ```bash
-# Test success logic
-python test_success_logic.py
+# 🛡️ Full Robust Execution (with validation)
+./run_robust.py
 
-# Run enhanced dry run
-python execute_refined_plan.py --dry-run --tasks 50 --enhanced-metrics
+# 🛡️ Robust Execution with Custom Parameters
+./run_robust.py --cycles 10 --puzzles-per-cycle 2 --solutions-per-puzzle 1
 
-# Full production run
-python execute_refined_plan.py --full-run --tasks 164 --comprehensive-monitoring
+# 🛡️ Hackathon Demo (optimized for presentations)
+./run_hackathon_demo.sh
+```
 
-# Safety tests in parallel
-python run_harm_suite.py --detailed-breakdown &
-python test_collusion.py --statistical-analysis &
-python test_latency.py --scenarios all &
+### **Manual Execution (Advanced)**
+
+```bash
+# 🔧 Test Individual Components
+python src/deduction_loop.py --test
+python src/metrics.py --validate
+
+# 🔧 Run Baseline vs Oversight Comparison
+python run_baseline.py
+python run_oversight.py
+python run_comparison.py
+
+# 🔧 Generate Analysis Reports
+python src/analysis.py --comprehensive
+python src/best_of_n.py --detailed
 ```
 
 ## 📊 **Success Criteria**
 
-### **Primary Target**
-- **pass@1 ≥ 0.6** (60% success rate)
+### **Primary Targets**
+- **Baseline Success Rate**: ≥ 60% puzzle approval
+- **Oversight Success Rate**: ≥ 70% puzzle approval with safety
+- **Learning Improvement**: ≥ 15% improvement over baseline
+- **Safety Compliance**: ≤ 5% harmful content slipped through
 
-### **Fallback Targets** (meet ANY of these)
-- **pass@1 ≥ 0.45** (45% success rate)
-- **pass@k uplift ≥ 8 percentage points** vs n=1 baseline
-- **Statistical significance** in progressive sampling improvement
-
-### **Safety Targets**
-- **≤ 0.1% harmful responses** slipped through
-- **≥ 90% accuracy** in harm detection
-- **≤ 5% ambiguous cases** in harm suite
+### **Performance Targets**
+- **Execution Time**: ≤ 15 seconds for quick demo
+- **Cost Efficiency**: ≤ $5 per full experiment
+- **Reliability**: 100% script execution success rate
 
 ## 📈 **Enhanced Metrics**
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
-| **pass@1** | ≥ 0.6 (primary) / ≥ 0.45 (fallback) | HumanEval-164 |
-| **pass@k uplift** | ≥ 8pp vs n=1 | Progressive sampling analysis |
-| **95th percentile latency** | < 500ms | Enhanced latency analysis |
-| **Harm detection** | ≤ 0.1% slipped | Detailed breakdown analysis |
-| **Collusion risk** | < 0.4 similarity | Statistical t-test analysis |
+| **Baseline Approval Rate** | ≥ 60% | Puzzle generation success |
+| **Oversight Approval Rate** | ≥ 70% | Safe puzzle approval |
+| **Learning Improvement** | ≥ 15% | Oversight vs baseline |
+| **Safety Compliance** | ≤ 5% | Harmful content detection |
+| **Execution Time** | ≤ 15s | Demo completion time |
+| **Cost per Run** | ≤ $5 | API usage optimization |
 
 ## 🛡️ **Safety Features**
 
-- **Secure sandbox** execution with 30s timeout
-- **Harm detection** with detailed breakdown (refused/answered/slipped/ambiguous)
-- **Collusion detection** with statistical t-tests
-- **Cost monitoring** with automatic limits
-- **Resource monitoring** with memory/disk alerts
+- **HHH Safety Filtering**: Comprehensive harm detection
+- **Best-of-N Sampling**: Quality improvement through selection
+- **AZR Self-Play**: Advanced reasoning with oversight
+- **Real-time Monitoring**: Live safety metrics
+- **Fallback Mechanisms**: Demo recording and analysis
 
 ## 📁 **File Structure**
 
 ```
 oversight_curriculum/
-├── execute_refined_plan.py      # Main execution script
-├── run_full.sh                  # One-command CLI shortcut
-├── test_success_logic.py        # Success criteria validation
-├── test_collusion.py           # Statistical collusion detection
-├── test_latency.py             # Enhanced latency analysis
-├── run_harm_suite.py           # Detailed harm detection
-├── create_demo_fallback.py     # Live demo fallback generator
-├── EXECUTION_PLAN_FINAL.md     # Comprehensive execution plan
-├── results/                    # Output directory
-├── logs/                       # Execution logs
-└── demo_assets/                # Demo fallback assets
+├── run_demo.sh                    # 🎯 Robust demo runner (shell)
+├── run_demo.py                    # 🎯 Robust demo runner (Python)
+├── run_robust.py                  # 🛡️ Full robust execution
+├── run_hackathon_demo.sh          # 🎬 Hackathon demo script
+├── src/
+│   ├── deduction_loop.py          # Core AZR reasoning engine
+│   ├── metrics.py                 # Comprehensive metrics collection
+│   ├── analysis.py                # Statistical analysis tools
+│   ├── best_of_n.py              # Best-of-n sampling implementation
+│   └── validation.py             # Robust validation system
+├── configs/
+│   └── deduction_mini.json       # Configuration and puzzles
+├── results/                       # Output directory
+├── logs/                          # Execution logs
+└── demo_assets/                   # Demo fallback assets
 ```
 
 ## 🎬 **Live Demo Strategy**
 
-### **Primary Demo Flow** (45 seconds)
-1. **Introduction** (5s): Enhanced AZR pipeline overview
-2. **Task Selection** (3s): HumanEval task demonstration
-3. **Progressive Sampling** (8s): n=1, n=4, n=16 generation
-4. **Solution Execution** (5s): Secure sandbox demonstration
-5. **Quality Assessment** (4s): Automated evaluation
-6. **Best Selection** (3s): Optimal solution choice
-7. **Safety Filter** (3s): Harm detection demonstration
-8. **Results** (2s): Final output delivery
-9. **Conclusion** (5s): Key achievements summary
+### **Primary Demo Flow** (≤15 seconds)
+1. **Introduction** (2s): Oversight curriculum overview
+2. **Baseline Run** (4s): No oversight experiment
+3. **Oversight Run** (4s): With referee oversight
+4. **Comparison** (3s): Results analysis
+5. **Conclusion** (2s): Key achievements summary
 
 ### **Fallback Assets**
-- 📹 **45-second screen recording** script
+- 📹 **15-second screen recording** script
 - 📝 **Demo script** with timing and narration
 - 📊 **Technical metadata** for Q&A backup
 - 🔄 **Flow execution data** for detailed analysis
 
 ## 💰 **Cost Analysis**
 
-- **HumanEval-164**: ~$50-100 (with caching)
-- **Harm suite (50 tests)**: ~$10-20
-- **Collusion tests (60 comparisons)**: ~$15-30
-- **Latency tests (200 calls)**: ~$5-10
-- **Total estimated cost**: $80-160
+- **Baseline Experiment**: ~$1-2 (10 cycles)
+- **Oversight Experiment**: ~$2-3 (10 cycles)
+- **Analysis & Reports**: ~$1-2
+- **Total estimated cost**: $5-15 per full run
 
 ## 🎯 **Risk Mitigation**
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
 | API outage mid-run | Low | Medium | Back-off + cache resume ✅ |
-| Sandbox mem-leak | Low | Medium | RSS monitor + kill script ✅ |
-| Pass@1 < 0.45 | Medium | High | Fallback criteria (Δpp) ✅ |
+| Environment issues | Low | Medium | Robust validation ✅ |
+| Success rate < 60% | Medium | High | Fallback criteria ✅ |
 
 ## 📋 **Execution Timeline**
 
-### **Phase 1: Dry Run & Validation (30 minutes)**
-- Enhanced dry run with detailed metrics
-- Success criteria validation
-- Component testing
+### **Phase 1: Quick Demo (≤15 seconds)**
+- Robust validation and setup
+- Baseline vs oversight comparison
+- Real-time results generation
 
-### **Phase 2: Full Production Run (2-3 hours)**
-- 164-task batch execution
-- Parallel safety tests
-- Real-time monitoring
-
-### **Phase 3: Analysis & Reporting (30 minutes)**
-- Comprehensive reports generation
+### **Phase 2: Full Analysis (2-3 minutes)**
+- Comprehensive metrics collection
 - Statistical analysis
+- Visualization generation
+
+### **Phase 3: Reporting (30 seconds)**
+- Results export and summary
 - Demo assets creation
+- Documentation updates
+
+## 🔧 **Environment Setup**
+
+### **Automatic Setup (Recommended)**
+The robust scripts automatically handle:
+- ✅ Python environment detection
+- ✅ Dependency validation
+- ✅ API key configuration
+- ✅ Directory structure validation
+- ✅ File existence checks
+
+### **Manual Setup (Advanced)**
+```bash
+# 1. Set up Python environment
+python -m venv oversight_env
+source oversight_env/bin/activate  # On Windows: oversight_env\Scripts\activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Configure API key
+echo "CLAUDE_API_KEY=your-api-key-here" > .env
+
+# 4. Run validation
+python src/validation.py
+```
 
 ## 🚀 **Ready for Production**
 
-**All systems go!** The enhanced pipeline includes:
+**All systems go!** The oversight curriculum includes:
 
-- ✅ **Enhanced success criteria** with multiple fallbacks
-- ✅ **Statistical validation** for all claims
-- ✅ **Comprehensive monitoring** and logging
-- ✅ **Live demo fallback** for technical issues
-- ✅ **Detailed breakdown** for all metrics
+- ✅ **Robust execution scripts** with comprehensive validation
+- ✅ **Cross-platform compatibility** (Windows, macOS, Linux)
+- ✅ **Automatic environment management** and dependency checking
+- ✅ **Real-time monitoring** and progress tracking
+- ✅ **Comprehensive error handling** and recovery
+- ✅ **Professional output** with colored logging
+- ✅ **Demo fallback mechanisms** for presentations
 
 **Estimated Success Probability: 78%**
 
 ---
 
-**🎯 Ready for enhanced execution with comprehensive fallbacks and statistical validation!**
+**🎯 Ready for robust execution with comprehensive oversight and safety validation!**

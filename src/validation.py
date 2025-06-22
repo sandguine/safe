@@ -233,7 +233,20 @@ LOG_LEVEL=INFO
                     if line and not line.startswith('#'):
                         # Extract package name (remove version specifiers)
                         package = line.split('==')[0].split('>=')[0].split('<=')[0].split('~=')[0]
-                        packages.append(package)
+                        
+                        # Convert package names to import names
+                        package_mapping = {
+                            'charset-normalizer': 'charset_normalizer',
+                            'python-dateutil': 'python_dateutil',
+                            'python-dotenv': 'dotenv',
+                            'markupsafe': 'markupsafe',
+                            'jinja2': 'jinja2',
+                            'fonttools': 'fonttools',
+                            'pillow': 'PIL'
+                        }
+                        
+                        import_name = package_mapping.get(package, package)
+                        packages.append(import_name)
         except Exception as e:
             self.log(f"Error parsing requirements: {e}", "ERROR")
         return packages

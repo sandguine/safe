@@ -14,6 +14,13 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
+# Use miniforge Python if available, otherwise fall back to system python3
+if [ -f "/Users/sandy/miniforge3/bin/python3" ]; then
+    PYTHON_CMD="/Users/sandy/miniforge3/bin/python3"
+else
+    PYTHON_CMD="python3"
+fi
+
 # Default settings
 DRY_RUN=false
 MAX_COST=120
@@ -67,7 +74,7 @@ echo ""
 
 # Step 1: Run standardized validation
 echo -e "${PURPLE}[STEP]${NC} [$(date +%H:%M:%S)] run_full.sh: Running validation..."
-python3 -c "
+$PYTHON_CMD -c "
 import sys
 sys.path.insert(0, 'src')
 from validation import validate_script
@@ -103,9 +110,9 @@ if ! command -v tmux &> /dev/null; then
     echo "Execution started at: $(date)" | tee -a "$LOG_FILE"
     
     if [ "$DRY_RUN" = true ]; then
-        python execute_refined_plan.py --dry-run --tasks "$TASKS" --max-cost "$MAX_COST" 2>&1 | tee -a "$LOG_FILE"
+        $PYTHON_CMD execute_refined_plan.py --dry-run --tasks "$TASKS" --max-cost "$MAX_COST" 2>&1 | tee -a "$LOG_FILE"
     else
-        python execute_refined_plan.py --full-run --tasks "$TASKS" --max-cost "$MAX_COST" 2>&1 | tee -a "$LOG_FILE"
+        $PYTHON_CMD execute_refined_plan.py --full-run --tasks "$TASKS" --max-cost "$MAX_COST" 2>&1 | tee -a "$LOG_FILE"
     fi
     
     echo "Execution completed at: $(date)" | tee -a "$LOG_FILE"
@@ -138,9 +145,9 @@ else
     
     # Start the execution
     if [ "$DRY_RUN" = true ]; then
-        tmux send-keys -t "$SESSION_NAME:main" "python execute_refined_plan.py --dry-run --tasks $TASKS --max-cost $MAX_COST 2>&1 | tee -a $LOG_FILE" Enter
+        tmux send-keys -t "$SESSION_NAME:main" "$PYTHON_CMD execute_refined_plan.py --dry-run --tasks $TASKS --max-cost $MAX_COST 2>&1 | tee -a $LOG_FILE" Enter
     else
-        tmux send-keys -t "$SESSION_NAME:main" "python execute_refined_plan.py --full-run --tasks $TASKS --max-cost $MAX_COST 2>&1 | tee -a $LOG_FILE" Enter
+        tmux send-keys -t "$SESSION_NAME:main" "$PYTHON_CMD execute_refined_plan.py --full-run --tasks $TASKS --max-cost $MAX_COST 2>&1 | tee -a $LOG_FILE" Enter
     fi
     
     # Create monitoring window
@@ -151,9 +158,9 @@ else
     # Create safety tests window
     tmux new-window -t "$SESSION_NAME" -n "safety"
     tmux send-keys -t "$SESSION_NAME:safety" "echo '🛡️  Running Safety Tests in Parallel'" Enter
-    tmux send-keys -t "$SESSION_NAME:safety" "python run_harm_suite.py --detailed-breakdown &" Enter
-    tmux send-keys -t "$SESSION_NAME:safety" "python test_collusion.py --statistical-analysis &" Enter
-    tmux send-keys -t "$SESSION_NAME:safety" "python test_latency.py --scenarios all &" Enter
+    tmux send-keys -t "$SESSION_NAME:safety" "$PYTHON_CMD run_harm_suite.py --detailed-breakdown &" Enter
+    tmux send-keys -t "$SESSION_NAME:safety" "$PYTHON_CMD test_collusion.py --statistical-analysis &" Enter
+    tmux send-keys -t "$SESSION_NAME:safety" "$PYTHON_CMD test_latency.py --scenarios all &" Enter
     tmux send-keys -t "$SESSION_NAME:safety" "wait" Enter
     
     echo -e "${GREEN}✅ tmux session created successfully!${NC}"
