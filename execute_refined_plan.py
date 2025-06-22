@@ -57,9 +57,16 @@ class RefinedPlanExecutor:
     """Executes the complete refined plan"""
     
     def __init__(self):
-        self.start_time = time.time()
+        self.config = {}
         self.max_duration = 4 * 60 * 60  # 4 hours
         self.results = {}
+        self.current_cost = 0.0
+        self.max_cost = float('inf')
+        self.cost_per_call = 0.002  # Estimated cost per API call in USD
+        self.total_calls = 0
+        
+        print(f"💰 Cost monitoring enabled: max_cost=${self.max_cost:.2f}")
+        print(f"   Estimated cost per call: ${self.cost_per_call:.4f}")
         
     def create_production_config(self, num_tasks: int = 164, n_samples: int = 16) -> AZRConfig:
         """Create production configuration for the refined plan"""
@@ -358,6 +365,28 @@ class RefinedPlanExecutor:
             'assessment': assessment
         }
 
+    def check_cost_limit(self, additional_calls: int = 1) -> bool:
+        """Check if adding more calls would exceed cost limit"""
+        projected_cost = self.current_cost + (additional_calls * self.cost_per_call)
+        
+        if projected_cost > self.max_cost:
+            print(f"⚠️  Cost limit reached: ${self.current_cost:.2f} + ${additional_calls * self.cost_per_call:.2f} = ${projected_cost:.2f} > ${self.max_cost:.2f}")
+            return False
+        
+        return True
+    
+    def update_cost(self, calls_made: int):
+        """Update current cost based on calls made"""
+        cost_increment = calls_made * self.cost_per_call
+        self.current_cost += cost_increment
+        self.total_calls += calls_made
+        
+        print(f"💰 Cost update: +${cost_increment:.2f} (${self.current_cost:.2f} total, {self.total_calls} calls)")
+        
+        # Check if approaching limit
+        if self.current_cost > self.max_cost * 0.8:
+            print(f"⚠️  Approaching cost limit: ${self.current_cost:.2f} / ${self.max_cost:.2f} (80%)")
+
 
 def parse_arguments():
     """Parse command line arguments"""
@@ -373,6 +402,12 @@ def parse_arguments():
                        help='Output file for results (default: auto-generated)')
     parser.add_argument('--cache', type=str, default=None,
                        help='Cache directory for results (not implemented yet)')
+    parser.add_argument('--max-cost', type=float, default=float('inf'),
+                       help='Maximum cost in USD (default: no limit)')
+    parser.add_argument('--dry-run', action='store_true',
+                       help='Dry run mode (no actual API calls)')
+    parser.add_argument('--tasks', type=int, default=None,
+                       help='Alternative to --num_tasks for compatibility')
     
     return parser.parse_args()
 
@@ -382,18 +417,29 @@ async def main():
     
     args = parse_arguments()
     
+    # Handle alternative argument names
+    if args.tasks is not None:
+        args.num_tasks = args.tasks
+    
     print("🚀 REFINED PLAN EXECUTOR")
     print("=" * 50)
     print(f"Mode: {args.mode}")
     print(f"Tasks: {args.num_tasks}")
     print(f"N samples: {args.n_samples}")
+    print(f"Max cost: ${args.max_cost:.2f}")
+    print(f"Dry run: {args.dry_run}")
     if args.save:
         print(f"Output: {args.save}")
     
     executor = RefinedPlanExecutor()
     
+    # Set cost limit
+    executor.max_cost = args.max_cost
+    if args.max_cost != float('inf'):
+        print(f"💰 Cost monitoring enabled: max_cost=${args.max_cost:.2f}")
+    
     try:
-        if args.mode == 'test':
+        if args.mode == 'test' or args.dry_run:
             print("🧪 Running in TEST mode")
             results = await executor.run_testing_experiment(args.num_tasks)
         else:

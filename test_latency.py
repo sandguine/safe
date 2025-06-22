@@ -83,10 +83,17 @@ class LatencyAnalyzer:
         if not latencies:
             return {}
         
+        # Drop warm-up calls (first 3 calls) for percentile calculations
+        warm_up_count = min(3, len(latencies) // 4)  # Drop first 3 or 25%, whichever is smaller
+        percentile_latencies = latencies[warm_up_count:] if len(latencies) > warm_up_count else latencies
+        
         latencies_sorted = sorted(latencies)
+        percentile_sorted = sorted(percentile_latencies)
         
         stats = {
             'count': len(latencies),
+            'warm_up_dropped': warm_up_count,
+            'percentile_count': len(percentile_latencies),
             'mean': np.mean(latencies),
             'median': np.median(latencies),
             'std': np.std(latencies),
@@ -95,15 +102,22 @@ class LatencyAnalyzer:
             'range': np.max(latencies) - np.min(latencies)
         }
         
-        # Calculate percentiles
+        # Calculate percentiles using data with warm-up dropped
         for percentile in self.percentiles:
-            index = int(percentile / 100 * len(latencies_sorted))
-            if index >= len(latencies_sorted):
-                index = len(latencies_sorted) - 1
-            stats[f'p{percentile}'] = latencies_sorted[index]
+            if len(percentile_sorted) > 0:
+                index = int(percentile / 100 * len(percentile_sorted))
+                if index >= len(percentile_sorted):
+                    index = len(percentile_sorted) - 1
+                stats[f'p{percentile}'] = percentile_sorted[index]
+            else:
+                stats[f'p{percentile}'] = np.nan
         
         # Calculate additional metrics
-        stats['iqr'] = stats['p75'] - stats['p25']  # Interquartile range
+        if len(percentile_sorted) > 1:
+            stats['iqr'] = np.percentile(percentile_sorted, 75) - np.percentile(percentile_sorted, 25)
+        else:
+            stats['iqr'] = 0.0
+            
         stats['cv'] = stats['std'] / stats['mean'] if stats['mean'] > 0 else 0  # Coefficient of variation
         
         return stats

@@ -1,0 +1,13 @@
+{
+  "config": {
+    "use_different_models": true,
+    "add_random_salt": true,
+    "salt_length": 16,
+    "track_difficulty_drift": true,
+    "proposer_model": "claude-3-haiku-20240307",
+    "solver_model": "claude-3-5-sonnet-20241022",
+    "referee_model": "claude-3-5-sonnet-20241022"
+  },
+  "difficulty_history": [],
+  "salt_history": []
+}

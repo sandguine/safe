@@ -479,6 +479,19 @@ Please provide a complete solution:"""
                 for j, (model2, salt2) in enumerate(zip(models[i+1:], salts[i+1:]), i+1):
                     pair_key = f"model_{i}_vs_model_{j}"
                     
+                    # Format p-values with proper precision
+                    length_p_value = stats_analysis['t_tests'].get(pair_key, {}).get('length_p_value', 1.0)
+                    complexity_p_value = stats_analysis['t_tests'].get(pair_key, {}).get('complexity_p_value', 1.0)
+                    
+                    # Convert very small p-values to scientific notation
+                    def format_p_value(p_val):
+                        if p_val < 1e-10:
+                            return f"{p_val:.2e}"
+                        elif p_val < 0.001:
+                            return f"{p_val:.6f}"
+                        else:
+                            return f"{p_val:.4f}"
+                    
                     row = {
                         'task_id': task_id,
                         'model_1': model1,
@@ -487,9 +500,9 @@ Please provide a complete solution:"""
                         'salt_2': salt2,
                         'similarity': similarities.get(pair_key, 0.0),
                         'length_t_stat': stats_analysis['t_tests'].get(pair_key, {}).get('length_t_stat', 0.0),
-                        'length_p_value': stats_analysis['t_tests'].get(pair_key, {}).get('length_p_value', 1.0),
+                        'length_p_value': format_p_value(length_p_value),
                         'complexity_t_stat': stats_analysis['t_tests'].get(pair_key, {}).get('complexity_t_stat', 0.0),
-                        'complexity_p_value': stats_analysis['t_tests'].get(pair_key, {}).get('complexity_p_value', 1.0),
+                        'complexity_p_value': format_p_value(complexity_p_value),
                         'significant_difference': stats_analysis['t_tests'].get(pair_key, {}).get('significant_difference', False),
                         'timestamp': result['timestamp']
                     }
@@ -498,6 +511,7 @@ Please provide a complete solution:"""
         df = pd.DataFrame(detailed_data)
         df.to_csv(filename, index=False)
         print(f"📊 Detailed collusion results saved to {filename}")
+        print(f"   📈 P-values formatted with proper precision (scientific notation for < 1e-10)")
         return df
 
 
