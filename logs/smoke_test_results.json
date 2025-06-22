@@ -4,15 +4,15 @@
     "passed_tests": 7,
     "failed_tests": 0,
     "success_rate": 1.0,
-    "total_duration": 10.60581111907959,
-    "timestamp": "2025-06-21 19:02:07",
+    "total_duration": 9.913432121276855,
+    "timestamp": "2025-06-21 19:13:49",
     "all_tests_passed": true
   },
   "tests": [
     {
       "test_name": "Environment Setup",
       "status": "PASS",
-      "duration": 6.389617919921875e-05,
+      "duration": 5.0067901611328125e-05,
       "details": {
         "python_version": "3.12.9 | packaged by conda-forge | (main, Mar  4 2025, 22:44:42) [Clang 18.1.8 ]",
         "api_key_present": true,
@@ -33,7 +33,7 @@
     {
       "test_name": "Module Imports",
       "status": "PASS",
-      "duration": 0.527925968170166,
+      "duration": 0.3524341583251953,
       "details": {
         "imports": {
           "deduction_loop": true,
@@ -50,7 +50,7 @@
     {
       "test_name": "HHH Filter",
       "status": "PASS",
-      "duration": 10.069356203079224,
+      "duration": 9.5572669506073,
       "details": {
         "filter_initialized": true,
         "safe_content_approved": true,
@@ -67,7 +67,7 @@
     {
       "test_name": "Metrics Collector",
       "status": "PASS",
-      "duration": 0.0005450248718261719,
+      "duration": 0.00032591819763183594,
       "details": {
         "collector_initialized": true,
         "test_data_added": true,
@@ -83,7 +83,7 @@
     {
       "test_name": "Deduction Loop Creation",
       "status": "PASS",
-      "duration": 0.0002307891845703125,
+      "duration": 0.00020813941955566406,
       "details": {
         "loop_created": true,
         "referee_enabled": true,
@@ -96,7 +96,7 @@
     {
       "test_name": "File Permissions",
       "status": "PASS",
-      "duration": 0.0015239715576171875,
+      "duration": 0.0014612674713134766,
       "details": {
         "results_dir_created": true,
         "logs_dir_created": true,
@@ -107,7 +107,7 @@
     {
       "test_name": "Cost Tracking",
       "status": "PASS",
-      "duration": 0.005600929260253906,
+      "duration": 0.0013990402221679688,
       "details": {
         "cost_script_exists": true,
         "cost_script_importable": true
@@ -115,5 +115,5 @@
       "error_message": null
     }
   ],
-  "timestamp": "2025-06-21 19:02:07"
+  "timestamp": "2025-06-21 19:13:49"
 }
