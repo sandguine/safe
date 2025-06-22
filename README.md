@@ -1,10 +1,11 @@
 # 🚀 **Oversight Curriculum - AI Safety & Reasoning System**
 
-![Build](https://img.shields.io/badge/Status-Enterprise%20Ready%20🚀-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-Passing-green)
-![Coverage](https://img.shields.io/badge/Coverage-85%25+-green)
-![Code Quality](https://img.shields.io/badge/Code%20Quality-10/10-brightgreen)
-![Cost](https://img.shields.io/badge/Cost-~$5--15-green)
+![PyPI version](https://img.shields.io/pypi/v/oversight-curriculum?label=PyPI%20version&color=blue)
+![Build status](https://img.shields.io/badge/Status-Enterprise%20Ready%20🚀-brightgreen?label=Build%20status)
+![Test status](https://img.shields.io/badge/Tests-Passing-green?label=Test%20status)
+![Code coverage](https://img.shields.io/badge/Coverage-85%25+-green?label=Code%20coverage)
+![Code quality](https://img.shields.io/badge/Code%20Quality-10/10-brightgreen?label=Code%20quality)
+![Cost estimate](https://img.shields.io/badge/Cost-~$5--15-green?label=Cost%20estimate)
 
 ## 📋 **Overview**
 
