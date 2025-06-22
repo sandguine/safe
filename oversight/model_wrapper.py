@@ -108,9 +108,7 @@ else:
     class Model:
         def __init__(self, model_name: str = "claude-3-5-sonnet-20241022"):
             self.model_name = model_name
-            self.client = anthropic.Anthropic(
-                api_key=os.getenv("CLAUDE_API_KEY")
-            )
+            self.client = anthropic.Anthropic(api_key=os.getenv("CLAUDE_API_KEY"))
 
         def complete(self, prompt: str, **kwargs):
             response = self.client.messages.create(

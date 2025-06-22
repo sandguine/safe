@@ -8,11 +8,11 @@ import asyncio
 import sys
 from pathlib import Path
 
-# Add oversight_curriculum to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from oversight.config import get_execution_config, load_settings
 from oversight.runner import ExecutionMode, OversightRunner, RunnerConfig
+
+# Add oversight_curriculum to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -28,9 +28,7 @@ Examples:
         """,
     )
 
-    subparsers = parser.add_subparsers(
-        dest="command", help="Available commands"
-    )
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Run command
     run_parser = subparsers.add_parser("run", help="Run oversight experiments")
@@ -43,15 +41,11 @@ Examples:
     run_parser.add_argument(
         "--cycles", type=int, help="Number of cycles (overrides config)"
     )
-    run_parser.add_argument(
-        "--config", type=str, help="Configuration file path"
-    )
+    run_parser.add_argument("--config", type=str, help="Configuration file path")
     run_parser.add_argument(
         "--output-dir", type=str, help="Output directory (overrides config)"
     )
-    run_parser.add_argument(
-        "--model", type=str, help="Model name (overrides config)"
-    )
+    run_parser.add_argument("--model", type=str, help="Model name (overrides config)")
     run_parser.add_argument(
         "--enable-referee",
         action="store_true",
@@ -82,9 +76,7 @@ Examples:
     )
 
     # Config command
-    config_parser = subparsers.add_parser(
-        "config", help="Configuration management"
-    )
+    config_parser = subparsers.add_parser("config", help="Configuration management")
     config_parser.add_argument(
         "--show", action="store_true", help="Show current configuration"
     )
@@ -97,9 +89,7 @@ Examples:
 
     # Test command
     test_parser = subparsers.add_parser("test", help="Run tests")
-    test_parser.add_argument(
-        "--unit", action="store_true", help="Run unit tests"
-    )
+    test_parser.add_argument("--unit", action="store_true", help="Run unit tests")
     test_parser.add_argument(
         "--integration", action="store_true", help="Run integration tests"
     )
@@ -126,22 +116,13 @@ def load_runner_config(args: argparse.Namespace) -> RunnerConfig:
         mode=ExecutionMode(args.mode),
         cycles=args.cycles or exec_config.max_iterations,
         max_puzzles_per_cycle=getattr(exec_config, "max_puzzles_per_cycle", 1),
-        max_solutions_per_puzzle=getattr(
-            exec_config, "max_solutions_per_puzzle", 1
-        ),
+        max_solutions_per_puzzle=getattr(exec_config, "max_solutions_per_puzzle", 1),
         enable_referee=not args.disable_referee
-        and (
-            args.enable_referee or getattr(exec_config, "enable_referee", True)
-        ),
+        and (args.enable_referee or getattr(exec_config, "enable_referee", True)),
         enable_hhh_filter=not args.disable_hhh
-        and (
-            args.enable_hhh or getattr(exec_config, "enable_hhh_filter", False)
-        ),
+        and (args.enable_hhh or getattr(exec_config, "enable_hhh_filter", False)),
         enable_best_of_n=not args.disable_best_of_n
-        and (
-            args.enable_best_of_n
-            or getattr(exec_config, "enable_best_of_n", False)
-        ),
+        and (args.enable_best_of_n or getattr(exec_config, "enable_best_of_n", False)),
         model_name=args.model or settings.model.model_name,
         output_dir=args.output_dir or str(exec_config.output_dir),
     )
@@ -163,11 +144,11 @@ async def run_command(args: argparse.Namespace) -> int:
 
         # Run based on mode
         if args.mode == "demo":
-            results = await runner.run_demo()
+            await runner.run_demo()
         elif args.mode == "robust":
-            results = await runner.run_robust()
+            await runner.run_robust()
         else:
-            results = await runner.run_comparison()
+            await runner.run_comparison()
 
         print("Execution completed successfully!")
         print(f"Results saved to: {config.output_dir}")
@@ -213,7 +194,6 @@ def config_command(args: argparse.Namespace) -> int:
 def test_command(args: argparse.Namespace) -> int:
     """Execute the test command"""
     import subprocess
-    import sys
 
     try:
         cmd = ["pytest"]
@@ -226,13 +206,13 @@ def test_command(args: argparse.Namespace) -> int:
             cmd.extend(["tests/"])
 
         if args.coverage:
-            cmd.extend(["--cov=src", "--cov-report=html", "--cov-report=term"])
+            cmd.extend(["--cov=oversight", "--cov-report=html"])
 
         if args.verbose:
             cmd.append("-v")
 
         # Run pytest
-        result = subprocess.run(cmd, cwd=Path(__file__).parent.parent)
+        result = subprocess.run(cmd, check=False)
         return result.returncode
 
     except Exception as e:
@@ -249,14 +229,22 @@ def main() -> int:
         parser.print_help()
         return 1
 
-    if args.command == "run":
-        return asyncio.run(run_command(args))
-    elif args.command == "config":
-        return config_command(args)
-    elif args.command == "test":
-        return test_command(args)
-    else:
-        print(f"Unknown command: {args.command}", file=sys.stderr)
+    try:
+        if args.command == "run":
+            return asyncio.run(run_command(args))
+        elif args.command == "config":
+            return config_command(args)
+        elif args.command == "test":
+            return test_command(args)
+        else:
+            print(f"Unknown command: {args.command}", file=sys.stderr)
+            return 1
+
+    except KeyboardInterrupt:
+        print("\nInterrupted by user", file=sys.stderr)
+        return 1
+    except Exception as e:
+        print(f"Unexpected error: {e}", file=sys.stderr)
         return 1
 
 

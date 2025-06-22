@@ -30,7 +30,6 @@ except ImportError:
     print("Warning: human-eval not installed. Run: pip install human-eval")
     HUMAN_EVAL = None
 
-from oversight.metrics import MetricsCollector
 
 # Local imports
 from oversight.model import ask
@@ -75,9 +74,7 @@ class SecureSandbox:
 
         try:
             # Create temporary file for the solution
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".py", delete=False
-            ) as f:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
                 # Write the complete solution
                 full_code = f"{task.prompt}\n{solution_code}\n{task.test}"
                 f.write(full_code)
@@ -160,9 +157,7 @@ class SecureSandbox:
         # Memory limit - skip RLIMIT_AS on macOS (Darwin) to avoid segfault
         if platform.system() != "Darwin":
             memory_bytes = self.memory_limit_mb * 1024 * 1024
-            resource.setrlimit(
-                resource.RLIMIT_AS, (memory_bytes, memory_bytes)
-            )
+            resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
 
         # Disable core dumps
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
@@ -255,9 +250,7 @@ Provide only the function implementation, no explanations:"""
                     print(f"Error generating solution for {task.task_id}: {e}")
                     return ""
 
-    def evaluate_solution(
-        self, task: HumanEvalTask, solution: str
-    ) -> ExecutionResult:
+    def evaluate_solution(self, task: HumanEvalTask, solution: str) -> ExecutionResult:
         """Evaluate solution using secure sandbox"""
         return self.sandbox.execute_solution(task, solution)
 
@@ -274,9 +267,7 @@ Provide only the function implementation, no explanations:"""
 
         # Generate initial solutions
         print(f"Generating {initial_n} solutions for {task.task_id}...")
-        tasks = [
-            self.generate_solution(task, temperature) for _ in range(initial_n)
-        ]
+        tasks = [self.generate_solution(task, temperature) for _ in range(initial_n)]
         initial_solutions = await asyncio.gather(*tasks)
         solutions.extend(initial_solutions)
 
@@ -298,13 +289,10 @@ Provide only the function implementation, no explanations:"""
         # If no perfect solution and we need more samples
         if n > initial_n and self.progressive_sampling:
             remaining_n = n - initial_n
-            print(
-                f"No perfect solution found, generating {remaining_n} more..."
-            )
+            print(f"No perfect solution found, generating {remaining_n} more...")
 
             additional_tasks = [
-                self.generate_solution(task, temperature)
-                for _ in range(remaining_n)
+                self.generate_solution(task, temperature) for _ in range(remaining_n)
             ]
             additional_solutions = await asyncio.gather(*additional_tasks)
             solutions.extend(additional_solutions)
@@ -345,9 +333,7 @@ Provide only the function implementation, no explanations:"""
         weighted_passed = sum(r.passed * r.ratio for r in top_4)
         weighted_total = sum(r.total * r.ratio for r in top_4)
 
-        final_ratio = (
-            weighted_passed / weighted_total if weighted_total > 0 else 0.0
-        )
+        final_ratio = weighted_passed / weighted_total if weighted_total > 0 else 0.0
 
         return ExecutionResult(
             passed=int(weighted_passed),
@@ -366,9 +352,7 @@ Provide only the function implementation, no explanations:"""
         """
         tasks_to_run = self.tasks[:max_tasks] if max_tasks else self.tasks
 
-        print(
-            f"Running experiment on {len(tasks_to_run)} tasks with n={n_values}"
-        )
+        print(f"Running experiment on {len(tasks_to_run)} tasks with n={n_values}")
 
         results = {}
 
@@ -379,9 +363,7 @@ Provide only the function implementation, no explanations:"""
             for i, task in enumerate(tasks_to_run):
                 print(f"Task {i+1}/{len(tasks_to_run)}: {task.task_id}")
 
-                result, solutions = await self.run_best_of_n(
-                    task, n, temperature
-                )
+                result, solutions = await self.run_best_of_n(task, n, temperature)
                 n_results.append(
                     {
                         "task_id": task.task_id,
@@ -392,9 +374,7 @@ Provide only the function implementation, no explanations:"""
 
                 # Early exit if we have a perfect solution
                 if result.ratio >= 1.0:
-                    print(
-                        f"  ✓ Perfect solution found (ratio: {result.ratio:.3f})"
-                    )
+                    print(f"  ✓ Perfect solution found (ratio: {result.ratio:.3f})")
                 else:
                     print(
                         f"  - Partial solution (ratio: {result.ratio:.3f}, "
@@ -435,15 +415,9 @@ def save_results(results: Dict[str, Any], output_dir: str = "results"):
         for n_key, n_results in results.items():
             n = int(n_key.split("_")[1])
             pass_at_1 = calculate_pass_at_k(n_results, 1)
-            avg_ratio = sum(r["result"].ratio for r in n_results) / len(
-                n_results
-            )
-            avg_passed = sum(r["result"].passed for r in n_results) / len(
-                n_results
-            )
-            avg_total = sum(r["result"].total for r in n_results) / len(
-                n_results
-            )
+            avg_ratio = sum(r["result"].ratio for r in n_results) / len(n_results)
+            avg_passed = sum(r["result"].passed for r in n_results) / len(n_results)
+            avg_total = sum(r["result"].total for r in n_results) / len(n_results)
 
             f.write(
                 f"{n},{pass_at_1:.4f},{avg_ratio:.4f},{avg_passed:.2f},"

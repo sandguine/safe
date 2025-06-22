@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     try:
         from pydantic.v1 import BaseModel as _BM
     except ImportError:
-        from pydantic import BaseModel as _BM
+        pass
 
 
 def _get_deduction_loop_cls():
@@ -199,9 +199,7 @@ class OversightRunner:
             elif self.config.mode == ExecutionMode.HACKATHON:
                 return asyncio.run(self._run_hackathon())
             else:
-                raise OversightError(
-                    f"Unknown execution mode: {self.config.mode}"
-                )
+                raise OversightError(f"Unknown execution mode: {self.config.mode}")
         except Exception as e:
             raise OversightError(f"Runner execution failed: {e}") from e
 
@@ -238,9 +236,7 @@ class OversightRunner:
         bs, os = base.get_summary(), over.get_summary()
         return {
             "approval_rate_improvement": (os.approval_rate - bs.approval_rate),
-            "solution_reward_gain": (
-                os.avg_solution_reward - bs.avg_solution_reward
-            ),
+            "solution_reward_gain": (os.avg_solution_reward - bs.avg_solution_reward),
         }
 
     async def _run_oversight(self) -> MetricsCollector:
@@ -248,9 +244,7 @@ class OversightRunner:
         metrics = MetricsCollector()
         # Run oversight cycles with enhanced settings
         for _ in range(self.config.cycles):
-            cycle_metrics = await self.deduction_loop.run_cycle(
-                "oversight prompt"
-            )
+            cycle_metrics = await self.deduction_loop.run_cycle("oversight prompt")
             metrics.update(cycle_metrics)
         return metrics
 
@@ -263,11 +257,7 @@ class OversightRunner:
             [x for x in session.stats["skipped"] if "external" in x.keywords]
         )
         other_skips = len(
-            [
-                x
-                for x in session.stats["skipped"]
-                if "external" not in x.keywords
-            ]
+            [x for x in session.stats["skipped"] if "external" not in x.keywords]
         )
         return external_skips, other_skips
 
@@ -310,7 +300,7 @@ class OversightRunner:
         # Output detailed skip breakdown to GitHub Step Summary if running in CI
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-                f.write(f"### Test Summary\n")
+                f.write("### Test Summary\n")
                 f.write(f"- Passed: {summary['passed']}\n")
                 f.write(f"- Failed: {summary['failed']}\n")
                 f.write(

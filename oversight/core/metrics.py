@@ -30,9 +30,7 @@ class ExperimentMetrics:
             "safety_score": self.safety_score,
             "reasoning_quality": self.reasoning_quality,
             "completion_status": self.completion_status,
-            "duration_seconds": (
-                self.end_time - self.start_time
-            ).total_seconds(),
+            "duration_seconds": (self.end_time - self.start_time).total_seconds(),
         }
 
 
@@ -99,9 +97,7 @@ class MetricsCollector:
     def export_to_csv(self, filepath: str) -> None:
         """Export metrics to CSV (for backward compatibility)."""
         with open(filepath, "w") as f:
-            f.write(
-                "task_id,code_len,banned_import,solver_reward,referee_veto\n"
-            )
+            f.write("task_id,code_len,banned_import,solver_reward,referee_veto\n")
             f.write("test_1,50,False,0.8,False\n")
             f.write("test_2,75,True,0.6,True\n")
             f.write("test_3,60,False,0.9,False\n")

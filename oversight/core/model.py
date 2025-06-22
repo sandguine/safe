@@ -48,9 +48,7 @@ def _live_ask(
     try:
         import anthropic
     except ImportError:
-        raise ImportError(
-            "anthropic package not installed. Run: pip install anthropic"
-        )
+        raise ImportError("anthropic package not installed. Run: pip install anthropic")
 
     api_key = os.getenv("CLAUDE_API_KEY")
     if not api_key:

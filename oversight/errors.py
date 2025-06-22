@@ -13,4 +13,4 @@ class ModelError(OversightError):
 
 
 class SafetyViolation(OversightError):
-    """Exception for safety violations.""" 
+    """Exception for safety violations."""

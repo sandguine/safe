@@ -18,9 +18,7 @@ except ImportError:
 class ModelConfig(BaseSettings):
     """Configuration for model settings."""
 
-    model_name: str = Field(
-        default="gpt-4", description="Model to use for reasoning"
-    )
+    model_name: str = Field(default="gpt-4", description="Model to use for reasoning")
     temperature: float = Field(
         default=0.1, ge=0.0, le=2.0, description="Sampling temperature"
     )
@@ -58,15 +56,9 @@ class ExecutionConfig(BaseSettings):
     max_iterations: int = Field(
         default=10, gt=0, description="Maximum reasoning iterations"
     )
-    timeout_seconds: int = Field(
-        default=300, gt=0, description="Timeout in seconds"
-    )
-    enable_logging: bool = Field(
-        default=True, description="Enable detailed logging"
-    )
-    output_dir: Path = Field(
-        default=Path("./output"), description="Output directory"
-    )
+    timeout_seconds: int = Field(default=300, gt=0, description="Timeout in seconds")
+    enable_logging: bool = Field(default=True, description="Enable detailed logging")
+    output_dir: Path = Field(default=Path("./output"), description="Output directory")
 
     class Config:
         env_prefix = "EXEC_"

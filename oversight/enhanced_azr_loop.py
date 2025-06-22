@@ -16,24 +16,16 @@ Implements the refined plan with:
 import asyncio
 import json
 import os
-import resource
-import subprocess
-import sys
-import tempfile
 import time
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 from oversight.humaneval_integration import (
     AsyncHumanEvalRunner,
-    ExecutionResult,
-    HumanEvalTask,
 )
 from oversight.metrics import MetricsCollector
 
 # Local imports
-from oversight.model import ask
 
 
 @dataclass
@@ -113,9 +105,7 @@ class EnhancedAZRLoop:
 
         self.results[f"cycle_{cycle_num}"] = cycle_data
 
-        print(
-            f"✅ Cycle {cycle_num} completed in {cycle_data['duration']:.2f}s"
-        )
+        print(f"✅ Cycle {cycle_num} completed in {cycle_data['duration']:.2f}s")
         print(f"📈 Best pass@1: {cycle_metrics['best_pass_at_1']:.4f}")
 
         return cycle_data
@@ -135,27 +125,19 @@ class EnhancedAZRLoop:
             metrics[f"pass_at_1_n{n}"] = pass_at_1
 
             # Average ratio
-            avg_ratio = sum(r["result"].ratio for r in n_results) / len(
-                n_results
-            )
+            avg_ratio = sum(r["result"].ratio for r in n_results) / len(n_results)
             metrics[f"avg_ratio_n{n}"] = avg_ratio
 
             # Average passed tests
-            avg_passed = sum(r["result"].passed for r in n_results) / len(
-                n_results
-            )
+            avg_passed = sum(r["result"].passed for r in n_results) / len(n_results)
             metrics[f"avg_passed_n{n}"] = avg_passed
 
             # Average total tests
-            avg_total = sum(r["result"].total for r in n_results) / len(
-                n_results
-            )
+            avg_total = sum(r["result"].total for r in n_results) / len(n_results)
             metrics[f"avg_total_n{n}"] = avg_total
 
         # Best performance across all n values
-        best_pass_at_1 = max(
-            metrics[f"pass_at_1_n{n}"] for n in self.config.n_values
-        )
+        best_pass_at_1 = max(metrics[f"pass_at_1_n{n}"] for n in self.config.n_values)
         metrics["best_pass_at_1"] = best_pass_at_1
 
         return metrics
@@ -171,8 +153,8 @@ class EnhancedAZRLoop:
     async def run_experiment(self, cycles: int = 3) -> Dict[str, Any]:
         """Run the complete enhanced AZR experiment"""
 
-        print(f"🚀 Starting Enhanced AZR Experiment")
-        print(f"📋 Configuration:")
+        print("🚀 Starting Enhanced AZR Experiment")
+        print("📋 Configuration:")
         print(f"   - Cycles: {cycles}")
         print(f"   - Tasks: {self.config.max_tasks}")
         print(f"   - N values: {self.config.n_values}")
@@ -217,7 +199,7 @@ class EnhancedAZRLoop:
 
         self._save_final_results(final_results)
 
-        print(f"\n🎉 Experiment completed!")
+        print("\n🎉 Experiment completed!")
         print(f"⏱️  Total duration: {final_results['total_duration']:.2f}s")
         print(f"📊 Final best pass@1: {final_metrics['best_pass_at_1']:.4f}")
 
@@ -238,8 +220,7 @@ class EnhancedAZRLoop:
 
             # Get best ratio from this cycle
             best_ratio = max(
-                cycle_data["metrics"][f"avg_ratio_n{n}"]
-                for n in self.config.n_values
+                cycle_data["metrics"][f"avg_ratio_n{n}"] for n in self.config.n_values
             )
             all_ratios.append(best_ratio)
 
@@ -317,9 +298,7 @@ async def main():
     # Print summary
     print("\n📋 Final Summary:")
     print(f"   Best pass@1: {results['final_metrics']['best_pass_at_1']:.4f}")
-    print(
-        f"   Average pass@1: {results['final_metrics']['avg_pass_at_1']:.4f}"
-    )
+    print(f"   Average pass@1: {results['final_metrics']['avg_pass_at_1']:.4f}")
     print(f"   Best ratio: {results['final_metrics']['best_ratio']:.4f}")
     print(f"   Total cycles: {results['final_metrics']['total_cycles']}")
 
