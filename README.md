@@ -1,8 +1,8 @@
-# Oversight Curriculum - AI Safety Research Project
+# SAFE: Selective Alignment via Filtering at Evaluation
 
-## What is the Oversight Curriculum Project?
+## What is the SAFE Project?
 
-The Oversight Curriculum is a research project exploring AI safety and reasoning capabilities. It implements various techniques for evaluating AI systems and includes experimental frameworks for AI safety evaluation. The project appears to be in development with some core functionality implemented.
+The SAFE is a research project exploring AI safety and reasoning capabilities. It implements various techniques for evaluating AI systems and includes experimental frameworks for AI safety evaluation. The project appears to be in development with some core functionality implemented.
 
 ### Core Components
 
