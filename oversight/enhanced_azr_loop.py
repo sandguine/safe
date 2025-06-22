@@ -26,9 +26,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 # Local imports
-from model import ask
-from metrics import MetricsCollector
-from humaneval_integration import AsyncHumanEvalRunner, HumanEvalTask, ExecutionResult
+from oversight.model import ask
+from .metrics import MetricsCollector
+from .humaneval_integration import AsyncHumanEvalRunner, HumanEvalTask, ExecutionResult
 
 
 @dataclass

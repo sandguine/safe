@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from model import ask
+from oversight.model import ask
 
 
 class ModelRole(Enum):

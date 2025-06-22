@@ -12,6 +12,7 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import json
+from oversight.model import ask
 
 # Try to import dotenv, but don't fail if not available
 try:

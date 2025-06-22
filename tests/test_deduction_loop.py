@@ -7,14 +7,25 @@ Tests core functionality as specified in the plan.
 import os
 import sys
 import unittest
+import warnings
+import asyncio
 from pathlib import Path
+
+# Silence Pydantic deprecation warnings
+warnings.filterwarnings("ignore", message=".*PydanticDeprecatedSince20.*")
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from deduction_loop import DeductionLoop, Puzzle, Solution
-from referee import Referee
-from metrics import MetricsCollector
+import pytest
+from oversight.deduction_loop import DeductionLoop
+from oversight.models import Puzzle, Solution
+from oversight.referee import Referee
+from oversight.metrics import MetricsCollector
+from oversight.metrics import ComparisonAnalyzer
+
+# Mark all tests in this file as external (require API key)
+pytestmark = pytest.mark.external
 
 
 class TestDeductionLoop(unittest.TestCase):
@@ -33,24 +44,36 @@ class TestDeductionLoop(unittest.TestCase):
             max_solutions_per_puzzle=1
         )
     
+    @pytest.mark.skipif(
+        not os.getenv("CLAUDE_API_KEY"), 
+        reason="CLAUDE_API_KEY required for external API calls"
+    )
     def test_single_proposer_solver_reward(self):
         """Test that single proposer → solver → reward returns non-zero"""
         # This test verifies the core AZR loop functionality
         
         # Run one cycle
-        metrics = self.loop.run_cycle()
+        metrics = asyncio.run(self.loop.run_cycle())
         
         # Check that we got some results
-        self.assertGreater(metrics['puzzles_generated'], 0, 
-                          "Should generate at least one puzzle")
-        self.assertGreater(metrics['solutions_generated'], 0, 
-                          "Should generate at least one solution")
+        self.assertGreater(
+            metrics['puzzles_generated'], 0, 
+            "Should generate at least one puzzle"
+        )
+        self.assertGreater(
+            metrics['solutions_generated'], 0, 
+            "Should generate at least one solution"
+        )
         
         # Check that reward is reasonable (not necessarily non-zero, but should exist)
-        self.assertIn('avg_solution_reward', metrics, 
-                     "Should have average solution reward")
-        self.assertIsInstance(metrics['avg_solution_reward'], (int, float), 
-                            "Reward should be numeric")
+        self.assertIn(
+            'avg_solution_reward', metrics, 
+            "Should have average solution reward"
+        )
+        self.assertIsInstance(
+            metrics['avg_solution_reward'], (int, float), 
+            "Reward should be numeric"
+        )
     
     def test_referee_veto_functionality(self):
         """Test that referee properly vetoes unsafe content"""
@@ -181,7 +204,7 @@ class TestDeductionLoop(unittest.TestCase):
         self.loop._config_puzzle_index = 0
         
         # Run a cycle with config puzzles
-        metrics = self.loop.run_cycle()
+        metrics = asyncio.run(self.loop.run_cycle())
         
         # Should generate puzzles from config
         self.assertGreater(metrics['puzzles_generated'], 0, 
@@ -218,7 +241,6 @@ class TestDeductionLoop(unittest.TestCase):
         })
         
         # Compare runs
-        from metrics import ComparisonAnalyzer
         analyzer = ComparisonAnalyzer()
         analyzer.set_baseline(baseline_metrics)
         analyzer.set_oversight(oversight_metrics)

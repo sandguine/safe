@@ -11,11 +11,12 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 try:
-    from enhanced_azr_loop import EnhancedAZRLoop, AZRConfig
+    from oversight.enhanced_azr_loop import EnhancedAZRLoop, AZRConfig
     print("✅ Enhanced AZR loop imported successfully")
 except ImportError as e:
     print(f"❌ Import error: {e}")
     sys.exit(1)
+
 
 async def test_enhanced_azr():
     """Test the enhanced AZR loop with a small sample"""

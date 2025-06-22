@@ -24,7 +24,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 try:
-    from humaneval_integration import AsyncHumanEvalRunner
+    from oversight.humaneval_integration import AsyncHumanEvalRunner
     print("✅ HumanEval integration imported successfully")
 except ImportError as e:
     print(f"❌ Import error: {e}")

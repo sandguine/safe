@@ -11,7 +11,7 @@ from dataclasses import dataclass, asdict
 from deduction_loop import DeductionLoop, Puzzle, Solution
 from best_of_n import BestOfNSampler
 from hhh_filter import HHHFilter, HHHEvaluationResult
-from model import ask
+from oversight.model import ask
 
 
 @dataclass
@@ -68,13 +68,13 @@ class IntegratedPipeline:
         self.cycle_metrics: List[PipelineMetrics] = []
         self.pipeline_results: List[Dict[str, Any]] = []
     
-    def run_cycle(self) -> PipelineMetrics:
+    async def run_cycle(self) -> PipelineMetrics:
         """Run one complete pipeline cycle"""
         
         start_time = time.time()
         
         # Step 1: Run deduction loop cycle to get puzzles and solutions
-        cycle_metrics = self.deduction_loop.run_cycle()
+        cycle_metrics = await self.deduction_loop.run_cycle()
         
         # Extract the latest puzzle and solution from the cycle
         if not self.deduction_loop.puzzles:

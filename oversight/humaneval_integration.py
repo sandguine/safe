@@ -30,8 +30,8 @@ except ImportError:
     HUMAN_EVAL = None
 
 # Local imports
-from model import ask
-from metrics import MetricsCollector
+from oversight.model import ask
+from .metrics import MetricsCollector
 
 
 @dataclass

@@ -11,7 +11,7 @@ import json
 import time
 
 from best_of_n import BestOfNSampler
-from model import ask
+from oversight.model import ask
 
 
 @dataclass

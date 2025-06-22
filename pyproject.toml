@@ -25,13 +25,13 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Build Tools",
-    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Build Tools"
 ]
 requires-python = ">=3.8"
 dependencies = [
     "anthropic>=0.7.0",
     "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
     "PyYAML>=6.0",
     "httpx>=0.24.0",
     "tenacity>=8.2.0",
@@ -83,10 +83,10 @@ where = ["."]
 include = ["oversight*"]
 
 [tool.setuptools.package-data]
-"oversight*" = ["docs/*.svg", "config/*.yaml"]
+oversight = ["docs/*.svg", "config/*.yaml"]
 
 [tool.setuptools.exclude-package-data]
-"oversight*" = ["tests*", "scripts/legacy*"]
+oversight = ["tests*", "scripts/legacy*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "oversight.__version__"}
@@ -125,10 +125,12 @@ ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
+    "F401",  # unused import (shims)
 ]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
+"tests/test_deduction_loop.py" = ["F401", "E402"]
 
 [tool.mypy]
 python_version = "3.8"
@@ -146,23 +148,8 @@ warn_unreachable = true
 strict_equality = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py", "*_test.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = [
-    "--strict-markers",
-    "--strict-config",
-    "--cov=oversight",
-    "--cov-report=term-missing",
-    "--cov-report=html",
-    "--cov-report=xml",
-]
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "integration: marks tests as integration tests",
-    "unit: marks tests as unit tests",
-]
+testpaths = ["oversight_curriculum/tests"]
+addopts   = "-q -p pytest_asyncio"
 
 [tool.coverage.run]
 source = ["oversight"]

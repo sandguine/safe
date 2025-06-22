@@ -13,6 +13,7 @@ __description__ = "AI Safety & Reasoning System"
 from .runner import OversightRunner, RunnerConfig, ExecutionMode
 from .config import load_settings, get_settings
 from .errors import OversightError, ModelError, SafetyViolation
+from .metrics import MetricsCollector, ComparisonAnalyzer
 
 __all__ = [
     "OversightRunner",
@@ -22,5 +23,7 @@ __all__ = [
     "get_settings",
     "OversightError",
     "ModelError",
-    "SafetyViolation"
+    "SafetyViolation",
+    "MetricsCollector",
+    "ComparisonAnalyzer"
 ] 

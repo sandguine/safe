@@ -11,7 +11,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 try:
-    from humaneval_integration import AsyncHumanEvalRunner, save_results, calculate_pass_at_k
+    from oversight.humaneval_integration import AsyncHumanEvalRunner, save_results, calculate_pass_at_k
     print("✅ HumanEval integration imported successfully")
 except ImportError as e:
     print(f"❌ Import error: {e}")

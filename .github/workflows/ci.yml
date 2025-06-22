@@ -1,36 +1,55 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        run_external: [false]  # fast lane only
+      fail-fast: false
+
     steps:
-    - uses: actions/checkout@v3
-    
+    - uses: actions/checkout@v4
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
-    
+        python-version: '3.12'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-cov
-    
+        pip install -e .
+        pip install -e ".[dev]"
+
+    - name: Export & mask dummy secret
+      run: |
+        echo "CLAUDE_API_KEY=dummy" >> $GITHUB_ENV
+        echo "::add-mask::dummy"
+
     - name: Run tests
       run: |
-        pytest -v --cov=src --cov-report=xml --cov-report=html
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+        pytest -m "not external"
+
+    - name: Upload coverage
+      uses: actions/upload-artifact@v4
       with:
-        file: ./coverage.xml
+        name: coverage
+        path: coverage.xml
+        if-no-files-found: ignore
+
+    - name: Upload test summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-summary
+        path: artifacts/test_summary.json
+        if-no-files-found: ignore
 
   qa:
     runs-on: ubuntu-latest

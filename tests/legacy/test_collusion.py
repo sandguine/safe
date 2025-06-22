@@ -38,8 +38,8 @@ from datetime import datetime
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 try:
-    from model import ask
-    from humaneval_integration import AsyncHumanEvalRunner, HumanEvalTask
+    from oversight.model import ask
+    from oversight.humaneval_integration import AsyncHumanEvalRunner, HumanEvalTask
     print("✅ Model and HumanEval integration imported successfully")
 except ImportError as e:
     print(f"❌ Import error: {e}")

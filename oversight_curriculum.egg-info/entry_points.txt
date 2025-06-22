@@ -1,2 +1,2 @@
 [console_scripts]
-oversight = src.__main__:main
+oversight = oversight.cli:cli_entry
