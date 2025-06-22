@@ -1,0 +1,620 @@
+{
+  "test_demo_timing.py": {
+    "size_bytes": 3696,
+    "modified_time": 1750556309.0577416,
+    "hash": "81ea42fc44ea0876d11570964d43ecfe",
+    "line_count": 114
+  },
+  "run_harm_suite.py": {
+    "size_bytes": 40493,
+    "modified_time": 1750553134.703976,
+    "hash": "21cababd4485f7a4e0eccb30241a48fa",
+    "line_count": 994
+  },
+  "verify_setup.py": {
+    "size_bytes": 4312,
+    "modified_time": 1750554613.6676135,
+    "hash": "c833c6d2edcbb447962e213e45244f47",
+    "line_count": 144
+  },
+  "run_demo.py": {
+    "size_bytes": 25837,
+    "modified_time": 1750556040.580115,
+    "hash": "31b124d4f0a695985996ba10fe8b1a41",
+    "line_count": 660
+  },
+  "quick_test.py": {
+    "size_bytes": 894,
+    "modified_time": 1750533241.1532123,
+    "hash": "28e77225f856d1680e501672ee9285f1",
+    "line_count": 34
+  },
+  "generate_deliverables.py": {
+    "size_bytes": 17977,
+    "modified_time": 1750545687.8011155,
+    "hash": "b961c1a85b8d934d68ba2333e411bae6",
+    "line_count": 467
+  },
+  "test_latency.py": {
+    "size_bytes": 11867,
+    "modified_time": 1750551870.8306901,
+    "hash": "3442625970eb74aabc2567e331e1eb80",
+    "line_count": 316
+  },
+  "test_success_logic.py": {
+    "size_bytes": 8726,
+    "modified_time": 1750551870.8307352,
+    "hash": "257a06a35c3ec976a85e59a59b1179b1",
+    "line_count": 227
+  },
+  "run_robust.py": {
+    "size_bytes": 24217,
+    "modified_time": 1750550837.9647102,
+    "hash": "84ad72f90b3b6b45250948fb74ee53f9",
+    "line_count": 598
+  },
+  "test_deduction_loop.py": {
+    "size_bytes": 2571,
+    "modified_time": 1750535091.1350682,
+    "hash": "cc6c110a0cca5c1afda027ec56b99405",
+    "line_count": 97
+  },
+  "test_humaneval.py": {
+    "size_bytes": 1949,
+    "modified_time": 1750549947.4940872,
+    "hash": "1009a15dedf5425dd200d352350b932a",
+    "line_count": 66
+  },
+  "execute_refined_plan.py": {
+    "size_bytes": 19375,
+    "modified_time": 1750552031.4523463,
+    "hash": "7a9beb283f789eeddb70f1eb77e4ef0f",
+    "line_count": 473
+  },
+  "create_demo_fallback.py": {
+    "size_bytes": 10900,
+    "modified_time": 1750551639.4324393,
+    "hash": "300d9b49bb5a5a19a0e9f88ac6fe36ec",
+    "line_count": 316
+  },
+  "test_simple.py": {
+    "size_bytes": 864,
+    "modified_time": 1750547619.241565,
+    "hash": "a89199d74638b28a5e768d53a5434a59",
+    "line_count": 36
+  },
+  "live_demo.py": {
+    "size_bytes": 14605,
+    "modified_time": 1750553154.980577,
+    "hash": "98b10152eb7e1078108710b02e7c13e4",
+    "line_count": 388
+  },
+  "azr_loop.py": {
+    "size_bytes": 6386,
+    "modified_time": 1750549326.842898,
+    "hash": "9e347deb10ae9b327079c64b89b4949c",
+    "line_count": 187
+  },
+  "cost_watch.py": {
+    "size_bytes": 6584,
+    "modified_time": 1750555931.329937,
+    "hash": "fde7248863f382abe902545c257a17e3",
+    "line_count": 180
+  },
+  "tune_hhh.py": {
+    "size_bytes": 9938,
+    "modified_time": 1750555781.7661152,
+    "hash": "5a890974060b32f025bdfa3c8a658106",
+    "line_count": 257
+  },
+  "test_collusion.py": {
+    "size_bytes": 23974,
+    "modified_time": 1750551870.8306773,
+    "hash": "187b23f8e425b3bae21ec894fcea9e8f",
+    "line_count": 633
+  },
+  "test_metric_counter.py": {
+    "size_bytes": 5330,
+    "modified_time": 1750553134.7039957,
+    "hash": "d4661dfb6afddc75048852c1d72f8e18",
+    "line_count": 155
+  },
+  "test_models.py": {
+    "size_bytes": 2301,
+    "modified_time": 1750533667.9108615,
+    "hash": "41f7485d33e36460e00113020fb30a44",
+    "line_count": 82
+  },
+  "test_api.py": {
+    "size_bytes": 2272,
+    "modified_time": 1750533387.6934688,
+    "hash": "39b78dc550658aa6f47019c169562bb5",
+    "line_count": 86
+  },
+  "test_enhanced_azr.py": {
+    "size_bytes": 2093,
+    "modified_time": 1750550161.3711686,
+    "hash": "8bf030373fbe46b5b90e79623cdd0332",
+    "line_count": 67
+  },
+  "run_safe.py": {
+    "size_bytes": 17890,
+    "modified_time": 1750549047.5881922,
+    "hash": "7d439ab9943337e230df8112cd55a42c",
+    "line_count": 460
+  },
+  "tests/test_deduction_loop.py": {
+    "size_bytes": 10375,
+    "modified_time": 1750540085.5265865,
+    "hash": "bb8c5a775073f4feeff5c2406fbb4d4b",
+    "line_count": 283
+  },
+  "scripts/changelog_tracker.py": {
+    "size_bytes": 14472,
+    "modified_time": 1750557010.3304899,
+    "hash": "76d2155ed45d72e6a61bf123f995dce0",
+    "line_count": 418
+  },
+  "scripts/smoke_test.py": {
+    "size_bytes": 14004,
+    "modified_time": 1750556897.8412,
+    "hash": "79ae5d7c65ed1bc307c6af97d9619212",
+    "line_count": 412
+  },
+  "scripts/progress_monitor.py": {
+    "size_bytes": 18692,
+    "modified_time": 1750557287.958527,
+    "hash": "193db123e00532d33e6ba1f78bbc2d6a",
+    "line_count": 467
+  },
+  "scripts/blocker_tracker.py": {
+    "size_bytes": 15707,
+    "modified_time": 1750557010.3304687,
+    "hash": "f9e48206ff439ab6a2dcbd67576ae126",
+    "line_count": 409
+  },
+  "scripts/nightly_benchmark.py": {
+    "size_bytes": 13475,
+    "modified_time": 1750556899.6900299,
+    "hash": "762b916dea59c834736e99f30362b6cc",
+    "line_count": 384
+  },
+  "scripts/safety_dashboard.py": {
+    "size_bytes": 12980,
+    "modified_time": 1750557606.5714533,
+    "hash": "9799b52bbc821307e7704909c4f34d27",
+    "line_count": 346
+  },
+  "src/metrics.py": {
+    "size_bytes": 11659,
+    "modified_time": 1750540083.8470397,
+    "hash": "d6955e423d59defb7c8623fa141dc773",
+    "line_count": 293
+  },
+  "src/red_team_suite.py": {
+    "size_bytes": 22951,
+    "modified_time": 1750545769.5108762,
+    "hash": "3ae9e9479f8ac0e730185c4df4c030f8",
+    "line_count": 543
+  },
+  "src/analysis.py": {
+    "size_bytes": 6987,
+    "modified_time": 1750540089.327723,
+    "hash": "26a9bc1aedcb2eee7b36ea66582633e0",
+    "line_count": 197
+  },
+  "src/referee.py": {
+    "size_bytes": 8071,
+    "modified_time": 1750547011.3379235,
+    "hash": "1f2c751430d52220810e645671a6eb4b",
+    "line_count": 225
+  },
+  "src/models.py": {
+    "size_bytes": 691,
+    "modified_time": 1750546438.8825324,
+    "hash": "c7972a9a0c83efe2960a3a929dc3c727",
+    "line_count": 30
+  },
+  "src/kl_analysis.py": {
+    "size_bytes": 12208,
+    "modified_time": 1750550418.5848403,
+    "hash": "8f91a58685b577200b01477db2563158",
+    "line_count": 337
+  },
+  "src/humaneval_integration.py": {
+    "size_bytes": 15454,
+    "modified_time": 1750549989.4214234,
+    "hash": "398bad7d81accceb793336fce0e78cf1",
+    "line_count": 444
+  },
+  "src/fail_case_analysis.py": {
+    "size_bytes": 17689,
+    "modified_time": 1750545766.0710588,
+    "hash": "6bf5c2331ffa75b4ab9e7f0d0764653b",
+    "line_count": 443
+  },
+  "src/model.py": {
+    "size_bytes": 2356,
+    "modified_time": 1750545605.6032567,
+    "hash": "1fdabb8ccb7ccc19134efc039b52e318",
+    "line_count": 93
+  },
+  "src/deduction_loop.py": {
+    "size_bytes": 15966,
+    "modified_time": 1750556151.0309505,
+    "hash": "60eae300bdcbac14e3f97754a0ccbbe5",
+    "line_count": 380
+  },
+  "src/hhh_filter.py": {
+    "size_bytes": 10780,
+    "modified_time": 1750542451.4637222,
+    "hash": "d9a31713dcdb7d29187fe5c9a8da408a",
+    "line_count": 307
+  },
+  "src/enhanced_azr_loop.py": {
+    "size_bytes": 10554,
+    "modified_time": 1750550149.4035313,
+    "hash": "916ab70d2bb4783d9c9354a64ed903c2",
+    "line_count": 301
+  },
+  "src/collusion_mitigation.py": {
+    "size_bytes": 12409,
+    "modified_time": 1750545745.4632285,
+    "hash": "7445bab07d58351ed982ee3ad413a77a",
+    "line_count": 343
+  },
+  "src/integrated_pipeline.py": {
+    "size_bytes": 12192,
+    "modified_time": 1750546863.4867902,
+    "hash": "39b7d2aeff71544579fd5256e7ae5536",
+    "line_count": 309
+  },
+  "src/best_of_n.py": {
+    "size_bytes": 8788,
+    "modified_time": 1750542451.4637432,
+    "hash": "2594a170c19f992a2f22170cb8c090f1",
+    "line_count": 270
+  },
+  "src/transparency_system.py": {
+    "size_bytes": 14720,
+    "modified_time": 1750545751.2557414,
+    "hash": "ed547cfb3957787cc694b52ed546d5cd",
+    "line_count": 358
+  },
+  "src/validation.py": {
+    "size_bytes": 17012,
+    "modified_time": 1750554540.0472572,
+    "hash": "e4975ab875bbb7c66b520ba7d4e22971",
+    "line_count": 419
+  },
+  "OVERNIGHT_ACTION_PLAN.md": {
+    "size_bytes": 7911,
+    "modified_time": 1750555847.250642,
+    "hash": "1eae96ef8e1b902fcfab63c214dc3233",
+    "line_count": 261
+  },
+  "QUICK_FIXES_SUMMARY.md": {
+    "size_bytes": 4235,
+    "modified_time": 1750553234.4097915,
+    "hash": "cf4568acccf51480862940a1e9f3b8bc",
+    "line_count": 129
+  },
+  "VALIDATION_STANDARDIZATION.md": {
+    "size_bytes": 7096,
+    "modified_time": 1750554088.636982,
+    "hash": "4047de0dc21aca1e650d902b0ef5e5bb",
+    "line_count": 168
+  },
+  "README.md": {
+    "size_bytes": 7659,
+    "modified_time": 1750555976.9791148,
+    "hash": "83fa62bd4f5c32d018cfc80bda390863",
+    "line_count": 225
+  },
+  "EXECUTION_PLAN_FINAL.md": {
+    "size_bytes": 10678,
+    "modified_time": 1750551670.22294,
+    "hash": "1ecdb9d46a43c15d20cfda3f58f62eff",
+    "line_count": 338
+  },
+  "ROBUST_EXECUTION_GUIDE.md": {
+    "size_bytes": 7488,
+    "modified_time": 1750548270.4975088,
+    "hash": "f81b8b801a5f524cb14942e7d0f8bbbf",
+    "line_count": 322
+  },
+  "LAUNCH_CHECKLIST.md": {
+    "size_bytes": 1575,
+    "modified_time": 1750555988.9217587,
+    "hash": "7907d38e555f26a9974f432869c8b3e2",
+    "line_count": 56
+  },
+  "OBJECTIVE_PROGRESS_SIGNALS.md": {
+    "size_bytes": 9990,
+    "modified_time": 1750557080.4745955,
+    "hash": "82c60dac743241c78ecc81058a40a780",
+    "line_count": 406
+  },
+  "REFINED_PLAN_EXECUTION_SUMMARY.md": {
+    "size_bytes": 6531,
+    "modified_time": 1750551135.4257264,
+    "hash": "8bd0a085240af509502995c8b5052d0d",
+    "line_count": 230
+  },
+  "IMPLEMENTATION_PLAN.md": {
+    "size_bytes": 7318,
+    "modified_time": 1750552518.643818,
+    "hash": "150352d74171505fc90184ee5c335ad5",
+    "line_count": 240
+  },
+  "SETUP_GUIDE.md": {
+    "size_bytes": 1426,
+    "modified_time": 1750532671.35733,
+    "hash": "6cafdcee3ddda9ab53564235147ca673",
+    "line_count": 61
+  },
+  "interim_50.json": {
+    "size_bytes": 159563,
+    "modified_time": 1750553401.5536363,
+    "hash": "67abb18f70aa3222418dda5f3536ba3f",
+    "line_count": 1773
+  },
+  "test_metric_counter_results.json": {
+    "size_bytes": 248,
+    "modified_time": 1750553161.4876626,
+    "hash": "987770d793817bab95ebbf771fff0d97",
+    "line_count": 14
+  },
+  "results/transparency_samples.json": {
+    "size_bytes": 4113,
+    "modified_time": 1750552263.8973746,
+    "hash": "f154ca3c10f5874e5a6dd359cca8f447",
+    "line_count": 97
+  },
+  "results/enhanced_azr_cycle_2_20250621_171110.json": {
+    "size_bytes": 32535,
+    "modified_time": 1750551070.718522,
+    "hash": "1c9fd252b62407455b703486aae3df4f",
+    "line_count": 362
+  },
+  "results/enhanced_azr_final_20250621_171110.json": {
+    "size_bytes": 68400,
+    "modified_time": 1750551070.7198048,
+    "hash": "0b3c50e05bbcdbb6f9655662d39bf362",
+    "line_count": 753
+  },
+  "results/enhanced_azr_cycle_1_20250621_165808.json": {
+    "size_bytes": 9458,
+    "modified_time": 1750550288.006799,
+    "hash": "0c6957fd828e2e07f72bf328b5eb6c02",
+    "line_count": 107
+  },
+  "results/enhanced_azr_cycle_2_20250621_175001.json": {
+    "size_bytes": 76042,
+    "modified_time": 1750553401.5474396,
+    "hash": "822b770c7d52b0085f902dd19d2b5f06",
+    "line_count": 872
+  },
+  "results/refined_plan_test_20250621_171110.json": {
+    "size_bytes": 68400,
+    "modified_time": 1750551070.721379,
+    "hash": "0b3c50e05bbcdbb6f9655662d39bf362",
+    "line_count": 753
+  },
+  "results/enhanced_azr_final_20250621_175001.json": {
+    "size_bytes": 159563,
+    "modified_time": 1750553401.5503597,
+    "hash": "67abb18f70aa3222418dda5f3536ba3f",
+    "line_count": 1773
+  },
+  "results/collusion_mitigation.json": {
+    "size_bytes": 342,
+    "modified_time": 1750552253.7873864,
+    "hash": "53141bc85c4ae40c24ecd980992f51da",
+    "line_count": 13
+  },
+  "results/refined_plan_test_20250621_173038.json": {
+    "size_bytes": 20425,
+    "modified_time": 1750552238.491755,
+    "hash": "e5494e9b7fbbb9a796b06eb6dd275633",
+    "line_count": 243
+  },
+  "results/enhanced_azr_final_20250621_173038.json": {
+    "size_bytes": 20425,
+    "modified_time": 1750552238.4908032,
+    "hash": "e5494e9b7fbbb9a796b06eb6dd275633",
+    "line_count": 243
+  },
+  "results/enhanced_azr_cycle_2_20250621_173038.json": {
+    "size_bytes": 9482,
+    "modified_time": 1750552238.490079,
+    "hash": "359a6094d031f9996e80b5df4059dc6f",
+    "line_count": 107
+  },
+  "results/enhanced_azr_cycle_1_20250621_170416.json": {
+    "size_bytes": 32367,
+    "modified_time": 1750550656.9305313,
+    "hash": "7f60be233cdaf4fd81eeff7b301dfd28",
+    "line_count": 362
+  },
+  "results/enhanced_azr_cycle_1_20250621_173312.json": {
+    "size_bytes": 75941,
+    "modified_time": 1750552392.5654616,
+    "hash": "a03d8c2d8cb74da6f9e5f799ab62b9bc",
+    "line_count": 872
+  },
+  "results/test.json": {
+    "size_bytes": 16,
+    "modified_time": 1750546647.0810344,
+    "hash": "6fea748a18de84b63635af2c8ab89d41",
+    "line_count": 1
+  },
+  "results/fail_cases.json": {
+    "size_bytes": 1294,
+    "modified_time": 1750552273.7090983,
+    "hash": "97e9dc81bcab0aae4eac497fcfafa638",
+    "line_count": 29
+  },
+  "results/kl_analysis.json": {
+    "size_bytes": 1093,
+    "modified_time": 1750551357.9265168,
+    "hash": "ca91c78af7a0e82ff32db7cd43f2cb48",
+    "line_count": 53
+  },
+  "results/enhanced_azr_cycle_2_20250621_170010.json": {
+    "size_bytes": 9426,
+    "modified_time": 1750550410.5620518,
+    "hash": "6011624c6c9f2b2c4e325e42effb6a61",
+    "line_count": 107
+  },
+  "results/enhanced_azr_final_20250621_170010.json": {
+    "size_bytes": 20342,
+    "modified_time": 1750550410.5627396,
+    "hash": "7c078591aa9ce2111e397b11b39fabc2",
+    "line_count": 243
+  },
+  "results/humaneval_results_20250621_165414.json": {
+    "size_bytes": 6065,
+    "modified_time": 1750550054.4926677,
+    "hash": "f5cd9f5d30e8bac1bc6e056741935eda",
+    "line_count": 93
+  },
+  "results/enhanced_azr_cycle_1_20250621_172854.json": {
+    "size_bytes": 9485,
+    "modified_time": 1750552134.930266,
+    "hash": "04ad7c10a24cbc179fd18140f138a964",
+    "line_count": 107
+  },
+  "configs/deduction_mini.json": {
+    "size_bytes": 2462,
+    "modified_time": 1750538762.9344065,
+    "hash": "ede7abd06f476beb086278dfdcfdb108",
+    "line_count": 71
+  },
+  ".cache/27bb4c8c21d72fe2c5cd989d757597a19ebf1257a952a507e35e544cc63a8d22.json": {
+    "size_bytes": 354,
+    "modified_time": 1750533639.202233,
+    "hash": "6167908d48ee3095f2caa725eeafff97",
+    "line_count": 1
+  },
+  ".cache/a53eeb0942a19f73446ed626e8890be030e1545a7ab34bc8743fa8ce1e80c539.json": {
+    "size_bytes": 357,
+    "modified_time": 1750533697.2565503,
+    "hash": "5581f51a3090ea654312ccb68006b480",
+    "line_count": 1
+  },
+  "results/benchmarks/benchmark_20250621.json": {
+    "size_bytes": 3313,
+    "modified_time": 1750558555.5809302,
+    "hash": "06e860fc8feaca8a9e01d402b7ac6843",
+    "line_count": 120
+  },
+  "requirements.txt": {
+    "size_bytes": 754,
+    "modified_time": 1750555931.3299525,
+    "hash": "4a53b49c46ddb59fe45adb0a2de4425d",
+    "line_count": 45
+  },
+  "commit_msg.txt": {
+    "size_bytes": 521,
+    "modified_time": 1750533796.496352,
+    "hash": "099550f7c072662d6667aeef87017fac",
+    "line_count": 11
+  },
+  "results/fail_case_appendix.txt": {
+    "size_bytes": 897,
+    "modified_time": 1750552273.7096398,
+    "hash": "95fe8fb0f84d21a448eddce5781cb048",
+    "line_count": 36
+  },
+  "results/transparency_summary.txt": {
+    "size_bytes": 889,
+    "modified_time": 1750552263.8980782,
+    "hash": "d29382c147d5a317e60678d09e6dd5ea",
+    "line_count": 28
+  },
+  "results/refined_plan_test_analysis_20250621_175001.txt": {
+    "size_bytes": 158,
+    "modified_time": 1750553401.553903,
+    "hash": "109ad1fc75ca9905c6e19fc4ab672ce4",
+    "line_count": 6
+  },
+  "results/execution_summary_20250621_163738.txt": {
+    "size_bytes": 832,
+    "modified_time": 1750549058.3476093,
+    "hash": "e7139a67e7d1efc8093a2f2e70f81620",
+    "line_count": 18
+  },
+  "results/refined_plan_test_analysis_20250621_171110.txt": {
+    "size_bytes": 157,
+    "modified_time": 1750551070.72167,
+    "hash": "9a631504218681d7edf0f684ad5f637c",
+    "line_count": 6
+  },
+  "results/refined_plan_test_analysis_20250621_173038.txt": {
+    "size_bytes": 157,
+    "modified_time": 1750552238.4920242,
+    "hash": "45637431805b275b10a7b9a3f790996d",
+    "line_count": 6
+  },
+  "results/comprehensive_report.txt": {
+    "size_bytes": 2066,
+    "modified_time": 1750552273.7111003,
+    "hash": "0f8c17f3c0ffeca179a89c458fac9918",
+    "line_count": 60
+  },
+  "results/kl_analysis_report.txt": {
+    "size_bytes": 503,
+    "modified_time": 1750551357.9266338,
+    "hash": "f9c33152b6e4b01ad73dce2485f78be6",
+    "line_count": 20
+  },
+  "results/collusion_mitigation_report.txt": {
+    "size_bytes": 311,
+    "modified_time": 1750552253.7880611,
+    "hash": "7f9105c6a3d0001f11dd41643aeacd7b",
+    "line_count": 14
+  },
+  "results/transparency_samples_report.txt": {
+    "size_bytes": 3325,
+    "modified_time": 1750552263.8978424,
+    "hash": "85159c805404058be1c0bfab833e5d57",
+    "line_count": 126
+  },
+  "run_all.sh": {
+    "size_bytes": 1802,
+    "modified_time": 1750554382.6916862,
+    "hash": "b022520648286758717fb36a0dde3214",
+    "line_count": 52
+  },
+  "run_demo.sh": {
+    "size_bytes": 8106,
+    "modified_time": 1750555013.943885,
+    "hash": "cf442b36f5ea9a67c369496ec0ba60ee",
+    "line_count": 287
+  },
+  "run_deliverables.sh": {
+    "size_bytes": 1731,
+    "modified_time": 1750554028.9024403,
+    "hash": "6a07435f99066ce51980410a900bd090",
+    "line_count": 48
+  },
+  "run_robust.sh": {
+    "size_bytes": 13330,
+    "modified_time": 1750549156.111275,
+    "hash": "cb885afbabed818c73706b067c51063b",
+    "line_count": 424
+  },
+  "run_full.sh": {
+    "size_bytes": 7303,
+    "modified_time": 1750554379.6506891,
+    "hash": "053e537b18573c5ee76006ae850ae76b",
+    "line_count": 192
+  },
+  "run_hackathon_demo.sh": {
+    "size_bytes": 7623,
+    "modified_time": 1750554382.7050636,
+    "hash": "5065e419f637bffe747424705a02e291",
+    "line_count": 234
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "experiment_config": {
+    "max_tasks": 5,
+    "n_values": [
+      1,
+      4
+    ],
+    "max_concurrent": 2,
+    "requests_per_minute": 15,
+    "progressive_sampling": true,
+    "temperature": 0.7,
+    "use_chain_of_thought": true,
+    "timeout_seconds": 5,
+    "memory_limit_mb": 512,
+    "exponential_backoff": true,
+    "max_retries": 3
+  },
+  "cycles": 2,
+  "total_duration": 245.74416375160217,
+  "cycle_results": {
+    "cycle_1": {
+      "cycle": 1,
+      "timestamp": 1750550288.006231,
+      "duration": 123.18826222419739,
+      "humaneval_results": {
+        "bo_1": [
+          {
+            "task_id": "HumanEval/0",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.004182100296020508)",
+            "solutions": [
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/1",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.006641864776611328)",
+            "solutions": [
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current_group = \"\"\n    depth = 0\n    \n    for char in paren_string:\n        if char == '(':\n            depth += 1\n            current_group += char\n        elif char == ')':\n            depth -= 1\n            current_group += char\n            if depth == 0:\n                result.append(current_group)\n                current_group = \"\"\n                \n    return result"
+            ]
+          },
+          {
+            "task_id": "HumanEval/2",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.004244089126586914)",
+            "solutions": [
+              "def truncate_number(number: float) -> float:\n    return number - int(number)"
+            ]
+          },
+          {
+            "task_id": "HumanEval/3",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.005719900131225586)",
+            "solutions": [
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/4",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.009095907211303711)",
+            "solutions": [
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(numbers)"
+            ]
+          }
+        ],
+        "bo_4": [
+          {
+            "task_id": "HumanEval/0",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.003899812698364258)",
+            "solutions": [
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False",
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False",
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False",
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/1",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.008222103118896484)",
+            "solutions": [
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    count = 0\n    \n    for char in paren_string:\n        if char == '(':\n            count += 1\n            current.append(char)\n        elif char == ')':\n            count -= 1\n            current.append(char)\n            \n        if count == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result",
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    count = 0\n    \n    for char in paren_string:\n        if char == '(':\n            count += 1\n            current.append(char)\n        elif char == ')':\n            count -= 1\n            current.append(char)\n            \n        if count == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result",
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    count = 0\n    \n    for char in paren_string:\n        if char == '(':\n            count += 1\n            current.append(char)\n        elif char == ')':\n            count -= 1\n            current.append(char)\n            \n        if count == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result",
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    count = 0\n    \n    for char in paren_string:\n        if char == '(':\n            count += 1\n            current.append(char)\n        elif char == ')':\n            count -= 1\n            current.append(char)\n            \n        if count == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result"
+            ]
+          },
+          {
+            "task_id": "HumanEval/2",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.011780261993408203)",
+            "solutions": [
+              "def truncate_number(number: float) -> float:\n    return number - int(number)",
+              "def truncate_number(number: float) -> float:\n    return number - int(number)",
+              "def truncate_number(number: float) -> float:\n    return number - int(number)",
+              "def truncate_number(number: float) -> float:\n    return number - int(number)"
+            ]
+          },
+          {
+            "task_id": "HumanEval/3",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.006862163543701172)",
+            "solutions": [
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for operation in operations:\n        balance += operation\n        if balance < 0:\n            return True\n    return False",
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False",
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False",
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/4",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.006049633026123047)",
+            "solutions": [
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    deviations = [abs(x - mean) for x in numbers]\n    return sum(deviations) / len(deviations)",
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)",
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(numbers)",
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(absolute_deviations)"
+            ]
+          }
+        ]
+      },
+      "metrics": {
+        "pass_at_1_n1": 0.0,
+        "avg_ratio_n1": 0.0,
+        "avg_passed_n1": 0.0,
+        "avg_total_n1": 1.0,
+        "pass_at_1_n4": 0.0,
+        "avg_ratio_n4": 0.0,
+        "avg_passed_n4": 0.0,
+        "avg_total_n4": 1.0,
+        "best_pass_at_1": 0.0
+      }
+    },
+    "cycle_2": {
+      "cycle": 2,
+      "timestamp": 1750550410.561368,
+      "duration": 122.55451130867004,
+      "humaneval_results": {
+        "bo_1": [
+          {
+            "task_id": "HumanEval/0",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.008961915969848633)",
+            "solutions": [
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/1",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.005914926528930664)",
+            "solutions": [
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    count = 0\n    \n    for char in paren_string:\n        if char == '(':\n            count += 1\n            current.append(char)\n        elif char == ')':\n            count -= 1\n            current.append(char)\n            \n        if count == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result"
+            ]
+          },
+          {
+            "task_id": "HumanEval/2",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.011420965194702148)",
+            "solutions": [
+              "def truncate_number(number: float) -> float:\n    return number - int(number)"
+            ]
+          },
+          {
+            "task_id": "HumanEval/3",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.007967948913574219)",
+            "solutions": [
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/4",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.005520343780517578)",
+            "solutions": [
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(numbers)"
+            ]
+          }
+        ],
+        "bo_4": [
+          {
+            "task_id": "HumanEval/0",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.005408048629760742)",
+            "solutions": [
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False",
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False",
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False",
+              "def has_close_elements(numbers: List[float], threshold: float) -> bool:\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/1",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.00472712516784668)",
+            "solutions": [
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current_group = \"\"\n    count = 0\n    \n    for char in paren_string:\n        current_group += char\n        if char == '(':\n            count += 1\n        elif char == ')':\n            count -= 1\n        \n        if count == 0 and current_group:\n            result.append(current_group)\n            current_group = \"\"\n            \n    return result",
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    count = 0\n    \n    for char in paren_string:\n        if char == '(':\n            count += 1\n            current.append(char)\n        elif char == ')':\n            count -= 1\n            current.append(char)\n            \n        if count == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result",
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    depth = 0\n    \n    for char in paren_string:\n        if char == '(':\n            depth += 1\n            current.append(char)\n        elif char == ')':\n            depth -= 1\n            current.append(char)\n            \n        if depth == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result",
+              "def separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current = []\n    count = 0\n    \n    for char in paren_string:\n        if char == '(':\n            count += 1\n        elif char == ')':\n            count -= 1\n        current.append(char)\n        \n        if count == 0 and current:\n            result.append(''.join(current))\n            current = []\n            \n    return result"
+            ]
+          },
+          {
+            "task_id": "HumanEval/2",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.007868766784667969)",
+            "solutions": [
+              "def truncate_number(number: float) -> float:\n    return number - int(number)",
+              "def truncate_number(number: float) -> float:\n    return number - int(number)",
+              "def truncate_number(number: float) -> float:\n    return number - int(number)",
+              "def truncate_number(number: float) -> float:\n    return number - int(number)"
+            ]
+          },
+          {
+            "task_id": "HumanEval/3",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.003637075424194336)",
+            "solutions": [
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False",
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False",
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False",
+              "def below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False"
+            ]
+          },
+          {
+            "task_id": "HumanEval/4",
+            "result": "ExecutionResult(passed=0, total=1, ratio=0.0, error='Exception occurred in preexec_fn.', execution_time=0.006738901138305664)",
+            "solutions": [
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(numbers)",
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(numbers)",
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(numbers)",
+              "def mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    absolute_deviations = [abs(x - mean) for x in numbers]\n    return sum(absolute_deviations) / len(numbers)"
+            ]
+          }
+        ]
+      },
+      "metrics": {
+        "pass_at_1_n1": 0.0,
+        "avg_ratio_n1": 0.0,
+        "avg_passed_n1": 0.0,
+        "avg_total_n1": 1.0,
+        "pass_at_1_n4": 0.0,
+        "avg_ratio_n4": 0.0,
+        "avg_passed_n4": 0.0,
+        "avg_total_n4": 1.0,
+        "best_pass_at_1": 0.0
+      }
+    }
+  },
+  "final_metrics": {
+    "best_pass_at_1": 0.0,
+    "avg_pass_at_1": 0.0,
+    "best_ratio": 0.0,
+    "avg_ratio": 0.0,
+    "total_cycles": 2
+  }
+}

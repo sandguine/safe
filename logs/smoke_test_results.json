@@ -1,0 +1,119 @@
+{
+  "summary": {
+    "total_tests": 7,
+    "passed_tests": 7,
+    "failed_tests": 0,
+    "success_rate": 1.0,
+    "total_duration": 9.913432121276855,
+    "timestamp": "2025-06-21 19:13:49",
+    "all_tests_passed": true
+  },
+  "tests": [
+    {
+      "test_name": "Environment Setup",
+      "status": "PASS",
+      "duration": 5.0067901611328125e-05,
+      "details": {
+        "python_version": "3.12.9 | packaged by conda-forge | (main, Mar  4 2025, 22:44:42) [Clang 18.1.8 ]",
+        "api_key_present": true,
+        "api_key_length": 108,
+        "working_dir": "/Users/sandy/Desktop/anthropic/oversight_curriculum",
+        "script_dir": "/Users/sandy/Desktop/anthropic/oversight_curriculum",
+        "required_files": {
+          "src/deduction_loop.py": true,
+          "src/hhh_filter.py": true,
+          "src/metrics.py": true,
+          "src/referee.py": true,
+          "requirements.txt": true
+        },
+        "all_files_present": true
+      },
+      "error_message": null
+    },
+    {
+      "test_name": "Module Imports",
+      "status": "PASS",
+      "duration": 0.3524341583251953,
+      "details": {
+        "imports": {
+          "deduction_loop": true,
+          "hhh_filter": true,
+          "metrics": true,
+          "referee": true,
+          "best_of_n": true,
+          "collusion_mitigation": true
+        },
+        "all_imports_successful": true
+      },
+      "error_message": null
+    },
+    {
+      "test_name": "HHH Filter",
+      "status": "PASS",
+      "duration": 9.5572669506073,
+      "details": {
+        "filter_initialized": true,
+        "safe_content_approved": true,
+        "safe_helpful_score": 1.0,
+        "safe_harmless_score": 1.0,
+        "safe_honest_score": 1.0,
+        "harmful_content_blocked": true,
+        "harmful_helpful_score": 0.5,
+        "harmful_harmless_score": 0.5,
+        "harmful_honest_score": 0.5
+      },
+      "error_message": null
+    },
+    {
+      "test_name": "Metrics Collector",
+      "status": "PASS",
+      "duration": 0.00032591819763183594,
+      "details": {
+        "collector_initialized": true,
+        "test_data_added": true,
+        "summary_generated": true,
+        "total_cycles": 1,
+        "approval_rate": 0.5,
+        "success_rate": 1.0,
+        "avg_reward": 0.5,
+        "avg_safety": 0.8
+      },
+      "error_message": null
+    },
+    {
+      "test_name": "Deduction Loop Creation",
+      "status": "PASS",
+      "duration": 0.00020813941955566406,
+      "details": {
+        "loop_created": true,
+        "referee_enabled": true,
+        "max_puzzles": 1,
+        "max_solutions": 1,
+        "referee_created": true
+      },
+      "error_message": null
+    },
+    {
+      "test_name": "File Permissions",
+      "status": "PASS",
+      "duration": 0.0014612674713134766,
+      "details": {
+        "results_dir_created": true,
+        "logs_dir_created": true,
+        "write_access": true
+      },
+      "error_message": null
+    },
+    {
+      "test_name": "Cost Tracking",
+      "status": "PASS",
+      "duration": 0.0013990402221679688,
+      "details": {
+        "cost_script_exists": true,
+        "cost_script_importable": true
+      },
+      "error_message": null
+    }
+  ],
+  "timestamp": "2025-06-21 19:13:49"
+}

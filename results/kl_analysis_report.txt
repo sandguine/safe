@@ -1,0 +1,20 @@
+KL DIVERGENCE ANALYSIS REPORT
+==================================================
+Model: claude-3-5-sonnet-20241022
+Base Temperature: 0.7
+Puzzle Set Size: 10
+
+RESULTS SUMMARY:
+------------------------------
+n	Reward	KL Div	Acc Imp (pp)
+------------------------------
+1	0.760	0.0000	+0.0
+4	0.760	0.0000	+0.0
+16	0.760	0.0000	+0.0
+64	0.759	0.0000	+0.0
+
+KEY FINDINGS:
+--------------------
+• Best accuracy improvement: +0.0pp (n=1)
+• Lowest KL divergence: 0.0000 (n=1)
+• Best average reward: 0.760 (n=1)

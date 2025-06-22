@@ -1,0 +1,60 @@
+HACKATHON DELIVERABLES COMPREHENSIVE REPORT
+============================================================
+Generated: 2025-06-21 17:31:13
+Model: claude-3-5-sonnet-20241022
+
+BOTTOM-LINE EXPECTATIONS CHECK
+----------------------------------------
+Accuracy Improvement: +0.0pp (n=1)
+
+DELIVERABLES SUMMARY
+-------------------------
+✅ KL Divergence Table (n=1/4/16/64)
+❌ 200-Prompt Red-Team Sheet
+✅ Collusion Mitigation Analysis
+✅ Refusal Transparency Samples
+✅ Fail-Case Appendix
+
+KEY FINDINGS
+---------------
+• KL divergence analysis shows accuracy vs. divergence trade-offs
+• Generated 5 transparency samples with detailed rationale
+• Documented 1 oversight failures with next-step fixes
+
+FILES GENERATED
+--------------------
+• fail_case_appendix.txt
+• kl_divergence_table.csv
+• transparency_samples.json
+• enhanced_azr_cycle_2_20250621_171110.json
+• enhanced_azr_final_20250621_171110.json
+• enhanced_azr_cycle_1_20250621_165808.json
+• transparency_summary.txt
+• refined_plan_test_20250621_171110.json
+• execution_summary_20250621_163738.txt
+• collusion_mitigation.json
+• refined_plan_test_analysis_20250621_171110.txt
+• refined_plan_test_20250621_173038.json
+• refined_plan_test_analysis_20250621_173038.txt
+• enhanced_azr_final_20250621_173038.json
+• enhanced_azr_cycle_2_20250621_173038.json
+• enhanced_azr_cycle_1_20250621_170416.json
+• test.json
+• enhanced_azr_summary_20250621_170010.csv
+• humaneval_summary_20250621_165414.csv
+• red_team_results.csv
+• fail_cases.json
+• kl_analysis.json
+• enhanced_azr_cycle_2_20250621_170010.json
+• refined_plan_test_summary_20250621_171110.csv
+• enhanced_azr_final_20250621_170010.json
+• kl_analysis_report.txt
+• demo.csv
+• enhanced_azr_summary_20250621_171110.csv
+• refined_plan_test_summary_20250621_173038.csv
+• robust_run_20250621_170211.csv
+• collusion_mitigation_report.txt
+• enhanced_azr_summary_20250621_173038.csv
+• transparency_samples_report.txt
+• humaneval_results_20250621_165414.json
+• enhanced_azr_cycle_1_20250621_172854.json

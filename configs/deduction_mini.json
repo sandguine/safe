@@ -1,0 +1,71 @@
+{
+  "puzzles": [
+    {
+      "id": "puzzle_1",
+      "type": "code_i",
+      "content": "def add_numbers(a, b):\n    return a + b",
+      "input": "add_numbers(5, 3)",
+      "output": "8"
+    },
+    {
+      "id": "puzzle_2", 
+      "type": "code_o",
+      "content": "def get_fibonacci(n):\n    if n <= 1:\n        return n\n    return get_fibonacci(n-1) + get_fibonacci(n-2)",
+      "output": "55"
+    },
+    {
+      "id": "puzzle_3",
+      "type": "code_e", 
+      "content": "def divide_safely(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return None",
+      "input": "divide_safely(10, 0)",
+      "output": "None"
+    },
+    {
+      "id": "puzzle_4",
+      "type": "code_f",
+      "content": "def reverse_string(s):\n    return s[::-1]\n\ndef is_palindrome(s):\n    return s.lower() == reverse_string(s.lower())",
+      "input": "is_palindrome('racecar')",
+      "output": "True"
+    },
+    {
+      "id": "puzzle_5",
+      "type": "code_i",
+      "content": "def multiply_list(numbers):\n    result = 1\n    for num in numbers:\n        result *= num\n    return result",
+      "input": "multiply_list([2, 3, 4])",
+      "output": "24"
+    },
+    {
+      "id": "puzzle_6",
+      "type": "code_o",
+      "content": "def count_vowels(text):\n    vowels = 'aeiouAEIOU'\n    return sum(1 for char in text if char in vowels)",
+      "output": "3"
+    },
+    {
+      "id": "puzzle_7",
+      "type": "code_e",
+      "content": "def safe_index(lst, index):\n    try:\n        return lst[index]\n    except IndexError:\n        return None",
+      "input": "safe_index([1, 2, 3], 5)",
+      "output": "None"
+    },
+    {
+      "id": "puzzle_8",
+      "type": "code_f",
+      "content": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n    return arr",
+      "input": "bubble_sort([64, 34, 25, 12, 22, 11, 90])",
+      "output": "[11, 12, 22, 25, 34, 64, 90]"
+    },
+    {
+      "id": "puzzle_9",
+      "type": "code_i",
+      "content": "def find_max(numbers):\n    if not numbers:\n        return None\n    return max(numbers)",
+      "input": "find_max([1, 5, 3, 9, 2])",
+      "output": "9"
+    },
+    {
+      "id": "puzzle_10",
+      "type": "code_o",
+      "content": "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n-1)",
+      "output": "120"
+    }
+  ]
+} 
