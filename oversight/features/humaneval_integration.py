@@ -117,12 +117,12 @@ class SecureSandbox:
                 print(f"DEBUG: stderr: {result.stderr}")
 
                 for line in output_lines:
-                    if line.startswith("PASSED:"):
+                    if line.startswith("PASSED: "):
                         passed += 1
                         total += 1
-                    elif line.startswith("FAILED:"):
+                    elif line.startswith("FAILED: "):
                         total += 1
-                    elif line.startswith("ERROR:"):
+                    elif line.startswith("ERROR: "):
                         total += 1
 
                 ratio = passed / total if total > 0 else 0.0
@@ -227,8 +227,8 @@ class AsyncHumanEvalRunner:
         # Load HumanEval tasks
         self.tasks = self._load_humaneval_tasks()
 
-        # Initialize model
-        self.model = get_model()
+        # Initialize model with real API by default
+        self.model = get_model(use_mock=use_mock)
 
     def _load_humaneval_tasks(self) -> List[HumanEvalTask]:
         """Load HumanEval-164 tasks"""
@@ -274,7 +274,11 @@ Provide only the function implementation, no explanations:"""
                 try:
                     if self.use_mock:
                         # Use mock response for testing
-                        response = f"def {task.entry_point}():\n    # Mock solution\n    return None"
+                        response = (
+                            f"def {task.entry_point}():\n"
+                            f"    # Mock solution\n"
+                            f"    return None"
+                        )
                     else:
                         # Use real model
                         response = await asyncio.to_thread(
@@ -282,8 +286,8 @@ Provide only the function implementation, no explanations:"""
                         )
 
                     solution = response.strip()
-                    print(f"DEBUG: Generated solution for {task.task_id}:")
-                    print(f"DEBUG: {solution[:200]}...")  # First 200 chars
+                    print(f"DEBUG: Generated solution for {task.task_id}: ")
+                    print(f"DEBUG: {solution[: 200]}...")  # First 200 chars
                     return solution
                 except Exception as e:
                     print(f"Error generating solution for {task.task_id}: {e}")
@@ -429,11 +433,11 @@ Provide only the function implementation, no explanations:"""
                 if result.ratio >= 1.0:
                     print(
                         "  ✓ Perfect solution found "
-                        f"(ratio: {result.ratio:.3f})"
+                        f"(ratio: {result.ratio: .3f})"
                     )
                 else:
                     print(
-                        f"  - Partial solution (ratio: {result.ratio:.3f}, "
+                        f"  - Partial solution (ratio: {result.ratio: .3f}, "
                         f"{result.passed}/{result.total})"
                     )
 
@@ -482,8 +486,8 @@ def save_results(results: Dict[str, Any], output_dir: str = "results"):
             )
 
             f.write(
-                f"{n},{pass_at_1:.4f},{avg_ratio:.4f},{avg_passed:.2f},"
-                f"{avg_total:.2f},{len(n_results)}\n"
+                f"{n},{pass_at_1: .4f},{avg_ratio: .4f},{avg_passed: .2f},"
+                f"{avg_total: .2f},{len(n_results)}\n"
             )
 
     print(f"Results saved to {json_file} and {csv_file}")
@@ -564,7 +568,7 @@ async def main():
             json.dump(summary, f, indent=2, default=lambda x: x.__dict__)
 
         print(f"Results saved to {args.output}")
-        print(f"Pass@1: {pass_at_1:.3f}")
+        print(f"Pass@1: {pass_at_1: .3f}")
     else:
         print("No results generated")
 

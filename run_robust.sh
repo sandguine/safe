@@ -88,7 +88,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
     print_warning ".env file not found. Creating template..."
     cat > "$ENV_FILE" << EOF
 # Oversight Curriculum Environment Configuration
-CLAUDE_API_KEY=sk-your-actual-api-key-here
+ANTHROPIC_API_KEY=sk-your-actual-api-key-here
 CLAUDE_MODEL=claude-3-5-sonnet-20241022
 LOG_LEVEL=INFO
 EOF
@@ -104,14 +104,16 @@ if [[ -f "$ENV_FILE" ]]; then
 fi
 
 # Validate API key if provided
-if [[ -n "$CLAUDE_API_KEY" && "$CLAUDE_API_KEY" != "sk-your-actual-api-key-here" ]]; then
-    if validate_api_key "$CLAUDE_API_KEY"; then
+if [[ -n "$ANTHROPIC_API_KEY" && "$ANTHROPIC_API_KEY" != "sk-your-actual-api-key-here" ]]; then
+    if validate_api_key "$ANTHROPIC_API_KEY"; then
         print_success "Valid API key format detected"
     else
-        print_warning "API key format appears invalid. Demo will use mock responses."
+        print_error "API key format appears invalid. Please check your .env file."
+        exit 1
     fi
 else
-    print_warning "No valid API key found. Demo will use mock responses."
+    print_error "No valid ANTHROPIC_API_KEY found. Please set it in your .env file."
+    exit 1
 fi
 
 # Step 4: Install/check dependencies
@@ -191,7 +193,7 @@ Execution Time: ${EXECUTION_TIME} seconds
 ENVIRONMENT:
 - Working Directory: $(pwd)
 - Python Version: $PYTHON_VERSION
-- API Key Status: $(if [[ -n "$CLAUDE_API_KEY" && "$CLAUDE_API_KEY" != "sk-your-actual-api-key-here" ]]; then echo "Configured"; else echo "Not configured (using mock)"; fi)
+- API Key Status: $(if [[ -n "$ANTHROPIC_API_KEY" && "$ANTHROPIC_API_KEY" != "sk-your-actual-api-key-here" ]]; then echo "Configured"; else echo "Not configured (using mock)"; fi)
 
 FILES GENERATED:
 - demo/baseline.json - Baseline capability results

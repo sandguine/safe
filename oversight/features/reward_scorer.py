@@ -261,12 +261,12 @@ def main():
     scorer = EnhancedRewardScorer()
     score = scorer.score_solution(args.code, args.task)
 
-    print(f"Overall Score: {score.overall_score:.3f}")
-    print(f"Syntax: {score.syntax_score:.3f}")
-    print(f"Logic: {score.logic_score:.3f}")
-    print(f"Efficiency: {score.efficiency_score:.3f}")
-    print(f"Readability: {score.readability_score:.3f}")
-    print(f"Test Coverage: {score.test_coverage_score:.3f}")
+    print(f"Overall Score: {score.overall_score: .3f}")
+    print(f"Syntax: {score.syntax_score: .3f}")
+    print(f"Logic: {score.logic_score: .3f}")
+    print(f"Efficiency: {score.efficiency_score: .3f}")
+    print(f"Readability: {score.readability_score: .3f}")
+    print(f"Test Coverage: {score.test_coverage_score: .3f}")
     print(f"Feedback: {score.detailed_feedback}")
 
     # Save score

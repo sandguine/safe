@@ -204,10 +204,13 @@ class KLDivergenceAnalyzer:
         with open(output_file, "w") as f:
             json.dump(result.to_dict(), f, indent=2)
 
-        print(f"KL divergence analysis saved to: {output_file}")
+        print(
+            f"KL divergence analysis saved to: {output_file}"
+        )
         print(f"KL(p||q) = {result.kl_divergence:.4f}")
         print(
-            f"Entropy p = {result.entropy_p:.4f}, Entropy q = {result.entropy_q:.4f}"
+            f"Entropy p = {result.entropy_p:.4f}, "
+            f"Entropy q = {result.entropy_q:.4f}"
         )
         ci_low, ci_high = result.confidence_interval
         print(f"95% CI: [{ci_low:.4f}, {ci_high:.4f}]")

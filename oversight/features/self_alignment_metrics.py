@@ -223,12 +223,12 @@ class SelfAlignmentAnalyzer:
 
         print(f"Self-alignment analysis saved to: {output_file}")
         print(
-            f"E[R(x)·Safe(x)] baseline: {result.joint_objective_baseline:.4f}"
+            f"E[R(x)·Safe(x)] baseline: {result.joint_objective_baseline: .4f}"
         )
         print(
-            f"E[R(x)·Safe(x)] oversight: {result.joint_objective_oversight:.4f}"
+            f"E[R(x)·Safe(x)] oversight: {result.joint_objective_oversight: .4f}"
         )
-        print(f"Improvement: {result.improvement:.4f}")
+        print(f"Improvement: {result.improvement: .4f}")
         print(
             f"Sample sizes: {result.sample_size_baseline} baseline, "
             f"{result.sample_size_oversight} oversight"

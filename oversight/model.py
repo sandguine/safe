@@ -38,13 +38,16 @@ class ClaudeModel:
         # Check for API key
         self.api_key = os.getenv("CLAUDE_API_KEY")
         if not self.api_key and not use_mock:
-            print(
-                "Warning: No CLAUDE_API_KEY found, falling back to mock mode"
+            raise ValueError(
+                "CLAUDE_API_KEY environment variable is required. "
+                "Please set it in your .env file or environment. "
+                "For testing only, you can set use_mock=True."
             )
-            self.use_mock = True
 
         # Initialize client if available
         if ANTHROPIC_AVAILABLE and not self.use_mock:
+            if not self.api_key:
+                raise ValueError("API key is required for real mode")
             self.client = anthropic.Anthropic(api_key=self.api_key)
         else:
             self.client = None
@@ -66,8 +69,8 @@ class ClaudeModel:
             )
             return response.content[0].text
         except Exception as e:
-            print(f"API call failed: {e}, falling back to mock")
-            return self._mock_response(prompt)
+            print(f"API call failed: {e}")
+            raise RuntimeError(f"Claude API call failed: {e}")
 
     def _mock_response(self, prompt: str) -> str:
         """Generate mock response for demo purposes."""
@@ -77,7 +80,7 @@ class ClaudeModel:
             if func_match:
                 func_name = func_match.group(1)
                 # Generate a basic implementation that might pass some tests
-                return """def {func_name}(*args, **kwargs):
+                return f"""def {func_name}(*args, **kwargs):
     \"\"\"Mock implementation\"\"\"
     # Return a reasonable default based on function name
     if 'sum' in '{func_name}'.lower():
@@ -110,15 +113,20 @@ class ClaudeModel:
 _model_instance: Optional[ClaudeModel] = None
 
 
-def get_model() -> ClaudeModel:
+def get_model(use_mock: bool = False) -> ClaudeModel:
     """Get or create global model instance."""
     global _model_instance
     if _model_instance is None:
-        _model_instance = ClaudeModel()
+        _model_instance = ClaudeModel(use_mock=use_mock)
     return _model_instance
 
 
-def ask(prompt: str, temperature: float = 0.7, max_tokens: int = 1000) -> str:
+def ask(
+    prompt: str,
+    temperature: float = 0.7,
+    max_tokens: int = 1000,
+    use_mock: bool = False
+) -> str:
     """Convenience function to ask Claude."""
-    model = get_model()
+    model = get_model(use_mock=use_mock)
     return model.ask(prompt, temperature, max_tokens)

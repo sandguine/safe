@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -eux
 
+# Load .env if present
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
+
+# Check for API key
+if [[ -z "$ANTHROPIC_API_KEY" || "$ANTHROPIC_API_KEY" == "sk-your-actual-api-key-here" ]]; then
+  echo "❌ ERROR: ANTHROPIC_API_KEY is not set or is a placeholder."
+  echo "Please set your API key in the .env file or export it in your shell."
+  exit 1
+else
+  echo "✅ API key detected."
+fi
+
 echo "🚀 Starting SAFE MVP Demo..."
 echo "================================"
 
