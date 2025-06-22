@@ -25,7 +25,7 @@ class TestOversightPipeline:
     @pytest.fixture
     def mock_settings(self):
         """Mock settings for testing"""
-        with patch('src.config.get_settings') as mock_get_settings:
+        with patch('oversight.config.get_settings') as mock_get_settings:
             mock_settings = Mock()
             mock_settings.model.name = "claude-3-5-sonnet-20241022"
             mock_settings.execution.demo.cycles = 2
@@ -37,7 +37,7 @@ class TestOversightPipeline:
     @pytest.fixture
     def mock_deduction_loop(self):
         """Mock deduction loop for testing"""
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             
             # Mock successful cycle
@@ -117,7 +117,7 @@ class TestOversightPipeline:
     async def test_pipeline_error_handling(self, mock_settings, runner_config):
         """Test pipeline error handling"""
         # Mock deduction loop to raise an error
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             mock_instance.run_cycle.side_effect = Exception("API Error")
             mock_loop.return_value = mock_instance
@@ -133,7 +133,7 @@ class TestOversightPipeline:
     async def test_pipeline_safety_violation(self, mock_settings, runner_config):
         """Test pipeline handling of safety violations"""
         # Mock deduction loop to simulate safety violation
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             
             # First cycle succeeds, second cycle has safety violation
@@ -217,7 +217,7 @@ class TestPipelineProperties:
     @pytest.mark.asyncio
     async def test_pipeline_cycle_count(self, cycles):
         """Test that pipeline runs the correct number of cycles"""
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             mock_instance.run_cycle.return_value = {
                 'cycle': 1,
@@ -249,7 +249,7 @@ class TestPipelineProperties:
     @pytest.mark.asyncio
     async def test_pipeline_referee_configuration(self, enable_referee):
         """Test that referee configuration is respected"""
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             mock_instance.run_cycle.return_value = {
                 'cycle': 1,
@@ -283,7 +283,7 @@ class TestPipelineProperties:
     @pytest.mark.asyncio
     async def test_pipeline_mode_configuration(self, mode):
         """Test that different modes use correct configuration"""
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             mock_instance.run_cycle.return_value = {
                 'cycle': 1,
@@ -317,7 +317,7 @@ class TestPipelineMetrics:
     @pytest.mark.asyncio
     async def test_metrics_collection(self):
         """Test that metrics are properly collected and stored"""
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             mock_instance.run_cycle.return_value = {
                 'cycle': 1,
@@ -352,7 +352,7 @@ class TestPipelineMetrics:
     @pytest.mark.asyncio
     async def test_comparison_analysis(self):
         """Test that comparison analysis works correctly"""
-        with patch('src.deduction_loop.DeductionLoop') as mock_loop:
+        with patch('oversight.deduction_loop.DeductionLoop') as mock_loop:
             mock_instance = Mock()
             
             # Baseline: lower performance

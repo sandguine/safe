@@ -12,7 +12,7 @@ from typing import List, Dict, Any
 from dataclasses import dataclass
 import itertools
 
-from src.hhh_filter import HHHFilter, SafetyLevel
+from oversight.hhh_filter import HHHFilter, SafetyLevel
 
 
 @dataclass

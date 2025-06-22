@@ -1,4 +1,8 @@
-#!/bin/bash
+  python -m pip install -e .
+  python -m oversight run --mode demo --dry-run
+  pytest -q
+  pytest --cov=oversight_curriculum --cov-report=xml
+  mypy oversight_curriculum | head#!/bin/bash
 # Package oversight artifacts for review
 
 echo "📦 Packaging oversight curriculum artifacts..."
