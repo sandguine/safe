@@ -1,35 +1,40 @@
 #!/usr/bin/env python3
 """
-Comprehensive verification script for the Claude API setup
+GitHub Actions verification script for Claude API setup
+Checks if the API key is available in GitHub Actions environment
 """
 
 import os
 import sys
 from pathlib import Path
 
-# Load environment variables from .env file
-try:
-    from dotenv import load_dotenv
 
-    load_dotenv()
-except ImportError:
-    print(
-        "Warning: python-dotenv not installed. "
-        "Install with: pip install python-dotenv"
-    )
+def check_github_environment():
+    """Check if we're running in GitHub Actions"""
+    print("=== GitHub Actions Environment Check ===")
+
+    if os.getenv("GITHUB_ACTIONS"):
+        print("✅ Running in GitHub Actions")
+        print(f"   Workflow: {os.getenv('GITHUB_WORKFLOW', 'Unknown')}")
+        print(f"   Run ID: {os.getenv('GITHUB_RUN_ID', 'Unknown')}")
+        return True
+    else:
+        print("❌ Not running in GitHub Actions")
+        print("   This script is designed for GitHub Actions CI/CD")
+        return False
 
 
 def check_api_key():
-    """Step 1: Check if API key is set"""
-    print("=== Step 1: Checking API Key ===")
+    """Check if API key is available in GitHub Actions"""
+    print("\n=== API Key Check ===")
     api_key = os.getenv("CLAUDE_API_KEY")
 
     if not api_key:
-        print("❌ CLAUDE_API_KEY is not set")
-        print("   Please set it with one of these methods:")
-        print("   - export CLAUDE_API_KEY='your-key-here'")
-        print("   - set CLAUDE_API_KEY=your-key-here (Windows)")
-        print("   - Or create a .env file with CLAUDE_API_KEY=your-key-here")
+        print("❌ CLAUDE_API_KEY is not set in GitHub Actions")
+        print("   Please add it as a repository secret:")
+        print("   1. Go to repository Settings")
+        print("   2. Secrets and variables → Actions")
+        print("   3. Add repository secret: CLAUDE_API_KEY")
         return False
 
     if not api_key.startswith("sk-"):
@@ -41,8 +46,8 @@ def check_api_key():
 
 
 def check_dependencies():
-    """Step 2: Check if required packages are installed"""
-    print("\n=== Step 2: Checking Dependencies ===")
+    """Check if required packages are installed"""
+    print("\n=== Dependencies Check ===")
 
     required_packages = ["requests", "pathlib", "dotenv", "anthropic"]
 
@@ -55,17 +60,15 @@ def check_dependencies():
             print(f"✅ {package} is available")
         except ImportError:
             print(f"❌ {package} is missing")
-            print(f"   Run: pip install {package}")
             return False
 
     return True
 
 
 def check_model_import():
-    """Step 3: Check if we can import the model module"""
-    print("\n=== Step 3: Checking Model Import ===")
+    """Check if we can import the model module"""
+    print("\n=== Model Import Check ===")
 
-    # Add oversight directory to path
     oversight_path = Path(__file__).parent / "oversight"
     if not oversight_path.exists():
         print("❌ oversight/ directory not found")
@@ -84,21 +87,19 @@ def check_model_import():
 
 
 def test_api_request():
-    """Step 4: Test actual API request"""
-    print("\n=== Step 4: Testing API Request ===")
+    """Test actual API request in GitHub Actions"""
+    print("\n=== API Request Test ===")
 
     if not check_api_key():
         return False
 
     try:
-        # Add oversight to path and import
         oversight_path = Path(__file__).parent / "oversight"
         sys.path.insert(0, str(oversight_path))
         import model
 
-        # Test with a very simple prompt
         print("   Sending test request...")
-        response = model.ask("Say 'test' and nothing else.")
+        response = model.ask("Say 'GitHub Actions test' and nothing else.")
 
         print("✅ API request successful!")
         print(f"   Response: '{response.strip()}'")
@@ -114,8 +115,14 @@ def test_api_request():
 
 
 def main():
-    """Run all verification steps"""
-    print("🔍 Claude API Setup Verification\n")
+    """Run all verification steps for GitHub Actions"""
+    print("🔍 GitHub Actions Claude API Setup Verification\n")
+
+    # First check if we're in GitHub Actions
+    if not check_github_environment():
+        print("\n⚠️  This script is designed for GitHub Actions.")
+        print("   For local development, use: python verify_setup.py")
+        return 1
 
     steps = [
         ("API Key", check_api_key),
@@ -134,7 +141,7 @@ def main():
             results.append((step_name, False))
 
     print("\n" + "=" * 50)
-    print("📊 VERIFICATION SUMMARY")
+    print("📊 GITHUB ACTIONS VERIFICATION SUMMARY")
     print("=" * 50)
 
     passed = sum(1 for _, result in results if result)
@@ -147,12 +154,14 @@ def main():
     print(f"\nOverall: {passed}/{total} steps passed")
 
     if passed == total:
-        print("\n🎉 SUCCESS! Your Claude API setup is working correctly.")
-        print("   You can now proceed with the main project.")
+        print("\n🎉 SUCCESS! GitHub Actions setup is working correctly.")
+        print("   Your CI/CD pipeline can now use the Claude API.")
+        return 0
     else:
         print("\n⚠️  Some issues found. Please fix them before proceeding.")
         print("   Check the error messages above for guidance.")
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

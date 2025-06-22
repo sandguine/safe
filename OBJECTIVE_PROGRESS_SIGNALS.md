@@ -10,7 +10,7 @@ The Objective Progress Signals System provides automated, measurable indicators 
 **Purpose**: Quick validation of core functionality
 **What it does**:
 - Tests environment setup and dependencies
-- Validates module imports
+- Validates module imports from `oversight/` directory
 - Checks HHH filter functionality
 - Tests metrics collection
 - Verifies file permissions
@@ -29,6 +29,8 @@ python scripts/smoke_test.py --verbose
 ```
 
 **Success Criteria**: All tests pass with clear pass/fail status
+
+**Note**: This script validates the `oversight/` module structure, not `src/`
 
 ### 2. **Nightly Benchmarks** (`scripts/nightly_benchmark.py`)
 **Purpose**: Automated performance tracking over time
@@ -392,7 +394,37 @@ python scripts/smoke_test.py
 - Enhance automation
 - Better integration
 
----
+## 🛠️ Troubleshooting
+
+### **Common Issues**
+
+**Smoke Tests Failing**
+- Check if `oversight/` directory exists and contains required modules
+- Verify `CLAUDE_API_KEY` is set correctly
+- Ensure all dependencies are installed
+
+**Script Import Errors**
+- Most scripts expect to be run from the project root directory
+- Check that `oversight/` module structure is correct
+- Verify Python path includes the project directory
+
+**Cost Monitoring Issues**
+- Ensure `cost_watch.py` has write permissions for log files
+- Check that the script is run from the project root
+- Verify budget limits are reasonable
+
+**Safety Dashboard Problems**
+- Check if harm suite data files exist
+- Verify API key has sufficient permissions
+- Ensure monitoring thresholds are appropriate
+
+### **Debug Mode**
+```bash
+# Run with verbose output
+python scripts/smoke_test.py --verbose
+python scripts/safety_dashboard.py --test --verbose
+python scripts/progress_monitor.py --dashboard --verbose
+```
 
 ## 📞 Support
 
@@ -403,4 +435,24 @@ For questions or issues with the Objective Progress Signals System:
 3. **Review reports**: Generated reports contain detailed information
 4. **Check blockers**: Use blocker tracker for issue management
 
-The system is designed to be self-documenting and self-monitoring, providing clear signals of progress and areas needing attention. 
+The system is designed to be self-documenting and self-monitoring, providing clear signals of progress and areas needing attention.
+
+## 📁 Project Structure
+
+The system expects the following structure:
+```
+oversight_curriculum/
+├── oversight/              # Main module directory
+│   ├── model.py           # API wrapper
+│   ├── hhh_filter.py      # Safety filter
+│   └── ...
+├── scripts/               # Monitoring scripts
+│   ├── smoke_test.py      # Core validation
+│   ├── safety_dashboard.py # Safety monitoring
+│   └── ...
+├── cost_watch.py          # Cost monitoring
+├── requirements.txt       # Dependencies
+└── ...
+```
+
+**Note**: The system is designed for the `oversight_curriculum` project structure, not a generic `src/` directory.
