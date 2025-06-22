@@ -72,13 +72,38 @@ def start_cost_meter(dry_run=False):
         log("DRY RUN: Would start cost meter with max-cost 110, interval 60s", 
             "DRY_RUN")
         log("DRY RUN: Would create logs/cost.log", "DRY_RUN")
+        log("DRY RUN: Would lock PID in tmp/cost.pid", "DRY_RUN")
         return True
     
     log("Starting cost meter...", "STEP")
     
     try:
-        # Create logs directory if it doesn't exist
+        # Create directories
         Path("logs").mkdir(exist_ok=True)
+        Path("tmp").mkdir(exist_ok=True)
+        
+        # Check for existing cost watcher and kill if stale
+        pid_file = Path("tmp/cost.pid")
+        if pid_file.exists():
+            try:
+                with open(pid_file, 'r') as f:
+                    old_pid = int(f.read().strip())
+                
+                # Check if process is still running
+                result = subprocess.run(["kill", "-0", str(old_pid)], 
+                                      capture_output=True)
+                if result.returncode == 0:
+                    log(f"Killing existing cost watcher (PID {old_pid})", "INFO")
+                    subprocess.run(["kill", str(old_pid)], capture_output=True)
+                    time.sleep(1)
+                else:
+                    log("Stale PID file found, removing", "INFO")
+                
+                pid_file.unlink()
+            except Exception as e:
+                log(f"Error handling existing PID: {e}", "WARNING")
+                if pid_file.exists():
+                    pid_file.unlink()
         
         # Start cost meter in background
         cmd = [
@@ -99,7 +124,12 @@ def start_cost_meter(dry_run=False):
         # Wait a moment to see if it starts successfully
         time.sleep(2)
         if process.poll() is None:
+            # Write PID to file
+            with open(pid_file, 'w') as f:
+                f.write(str(process.pid))
+            
             log("Cost meter started successfully", "SUCCESS")
+            log(f"PID locked: {process.pid}", "INFO")
             
             # Verify cost.log is being written to
             time.sleep(3)

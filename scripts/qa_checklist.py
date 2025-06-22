@@ -140,22 +140,87 @@ def qa_unit_tests():
         log(f"❌ Error running tests: {e}", "ERROR")
         checks.append(False)
     
-    # Check 2: No excessive xfail usage
+    # Check 2: XFail tech debt tracking
     test_files = list(Path("tests").glob("*.py"))
-    xfail_count = 0
+    xfail_tests = []
     total_tests = 0
     
     for test_file in test_files:
         try:
             with open(test_file, 'r') as f:
                 content = f.read()
-                xfail_count += content.count("@pytest.mark.xfail")
+                lines = content.split('\n')
+                
+                for i, line in enumerate(lines):
+                    if "@pytest.mark.xfail" in line:
+                        # Find the test function name
+                        for j in range(i, min(i + 5, len(lines))):
+                            if lines[j].strip().startswith("def test_"):
+                                test_name = lines[j].split("def ")[1].split("(")[0]
+                                xfail_tests.append(f"{test_file.name}::{test_name}")
+                                break
+                
                 total_tests += content.count("def test_")
         except Exception:
             pass
     
+    # Save current xfail list
+    artifacts_dir = Path("artifacts") / time.strftime("%Y-%m-%d")
+    artifacts_dir.mkdir(parents=True, exist_ok=True)
+    xfail_file = artifacts_dir / "xfail_tests.json"
+    
+    xfail_data = {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "xfail_tests": xfail_tests,
+        "total_tests": total_tests,
+        "xfail_ratio": len(xfail_tests) / total_tests if total_tests > 0 else 0
+    }
+    
+    with open(xfail_file, 'w') as f:
+        json.dump(xfail_data, f, indent=2)
+    
+    log(f"XFail tests: {len(xfail_tests)}/{total_tests} ({xfail_data['xfail_ratio']:.1%})", "INFO")
+    
+    # Check for xfail growth (tech debt)
+    previous_xfail_file = None
+    for i in range(1, 8):  # Check last 7 days
+        check_date = time.strftime("%Y-%m-%d", time.localtime(time.time() - i * 86400))
+        check_file = Path("artifacts") / check_date / "xfail_tests.json"
+        if check_file.exists():
+            previous_xfail_file = check_file
+            break
+    
+    if previous_xfail_file:
+        try:
+            with open(previous_xfail_file, 'r') as f:
+                prev_data = json.load(f)
+            
+            prev_count = len(prev_data.get("xfail_tests", []))
+            current_count = len(xfail_tests)
+            
+            if current_count <= prev_count:
+                log(f"✓ XFail count stable or reduced: {current_count} ≤ {prev_count}", "SUCCESS")
+                checks.append(True)
+            else:
+                log(f"⚠️ XFail count increased: {current_count} > {prev_count} (tech debt growing)", "WARNING")
+                checks.append(False)
+                
+                # Show new xfail tests
+                new_tests = set(xfail_tests) - set(prev_data.get("xfail_tests", []))
+                if new_tests:
+                    log("New xfail tests:", "WARNING")
+                    for test in new_tests:
+                        log(f"  - {test}", "WARNING")
+        except Exception as e:
+            log(f"⚠️ Could not compare xfail history: {e}", "WARNING")
+            checks.append(True)  # Don't fail on history issues
+    else:
+        log("ℹ️ No previous xfail data for comparison", "INFO")
+        checks.append(True)
+    
+    # Check xfail ratio
     if total_tests > 0:
-        xfail_ratio = xfail_count / total_tests
+        xfail_ratio = len(xfail_tests) / total_tests
         if xfail_ratio < 0.3:  # Less than 30% xfail
             log(f"✓ Reasonable xfail ratio: {xfail_ratio:.1%}", "SUCCESS")
             checks.append(True)
@@ -242,10 +307,14 @@ def qa_dashboard():
     checks = []
     
     try:
-        result = subprocess.run(
-            ["python", "scripts/progress_monitor.py", "--dashboard"],
-            capture_output=True, text=True, timeout=300
-        )
+        # Generate timestamped dashboard HTML
+        timestamp = time.strftime("%Y%m%d_%H%M")
+        html_file = f"results/dashboard_{timestamp}.html"
+        
+        result = subprocess.run([
+            "python", "scripts/progress_monitor.py", 
+            "--dashboard", "--html", html_file
+        ], capture_output=True, text=True, timeout=300)
         
         if "Overall Status: PASS" in result.stdout:
             log("✓ Dashboard shows PASS status", "SUCCESS")
@@ -255,6 +324,23 @@ def qa_dashboard():
             checks.append(False)
         else:
             log("⚠️ Could not determine dashboard status", "WARNING")
+            checks.append(False)
+        
+        # Check if HTML file was created
+        if Path(html_file).exists():
+            log(f"✓ Dashboard HTML saved: {html_file}", "SUCCESS")
+            checks.append(True)
+            
+            # Copy to artifacts with timestamp
+            artifacts_dir = Path("artifacts") / time.strftime("%Y-%m-%d")
+            artifacts_dir.mkdir(parents=True, exist_ok=True)
+            artifacts_html = artifacts_dir / f"dashboard_{timestamp}.html"
+            
+            import shutil
+            shutil.copy2(html_file, artifacts_html)
+            log(f"✓ Dashboard archived: {artifacts_html}", "SUCCESS")
+        else:
+            log("❌ Dashboard HTML not generated", "ERROR")
             checks.append(False)
         
         # Check success rate

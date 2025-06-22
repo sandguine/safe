@@ -1,0 +1,128 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+    
+    - name: Run tests
+      run: |
+        pytest -v --cov=src --cov-report=xml --cov-report=html
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+
+  qa:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+    
+    - name: Run QA Checklist
+      run: |
+        python scripts/qa_checklist.py --verbose
+      env:
+        CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+    
+    - name: Upload QA artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: qa-artifacts-${{ github.run_number }}
+        path: |
+          artifacts/
+          coverage.xml
+          htmlcov/
+          logs/
+        retention-days: 7
+
+  safety:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run safety tests
+      run: |
+        python scripts/safety_dashboard.py --test
+      env:
+        CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+    
+    - name: Upload safety results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: safety-results-${{ github.run_number }}
+        path: logs/safety_test_*.json
+        retention-days: 7
+
+  dashboard:
+    runs-on: ubuntu-latest
+    needs: [test, qa, safety]
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Generate dashboard
+      run: |
+        python scripts/progress_monitor.py --dashboard --html results/dashboard_${{ github.run_number }}.html
+      env:
+        CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+    
+    - name: Upload dashboard
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: dashboard-${{ github.run_number }}
+        path: results/dashboard_${{ github.run_number }}.html
+        retention-days: 7 
