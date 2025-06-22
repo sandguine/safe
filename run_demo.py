@@ -408,21 +408,21 @@ def run_baseline_experiment(cycles: int,
         print(f"\n--- Cycle {cycle}/{cycles} ---")
         metrics = loop.run_cycle()
         
-        # Print cycle summary
-        print(f"Puzzles: {metrics['puzzles_generated']} generated, "
-              f"{metrics['puzzles_approved']} approved")
-        print(f"Solutions: {metrics['solutions_generated']} generated, "
-              f"{metrics['solutions_correct']} correct")
-        print(f"Avg reward: {metrics['avg_solution_reward']:.3f}")
-        print(f"Duration: {metrics['cycle_duration']:.2f}s")
+        # Print cycle summary with correct keys
+        print(f"Puzzles: {metrics.get('new_puzzles', 0)} generated, "
+              f"{metrics.get('approved_puzzles', 0)} approved")
+        print(f"Solutions: {metrics.get('new_solutions', 0)} generated, "
+              f"{metrics.get('correct_solutions', 0)} correct")
+        print(f"Avg reward: {metrics.get('avg_reward', 0.0):.3f}")
+        print(f"Duration: {metrics.get('cycle_duration', 0.0):.2f}s")
     
     # Get final summary
     summary = loop.get_summary_stats()
     print(f"\nBASELINE SUMMARY:")
-    print(f"Total cycles: {summary['total_cycles']}")
-    print(f"Approval rate: {summary['approval_rate']:.2%}")
-    print(f"Success rate: {summary['success_rate']:.2%}")
-    print(f"Avg reward: {summary['avg_reward']:.3f}")
+    print(f"Total cycles: {summary.get('cycle_number', 0)}")
+    print(f"Approval rate: {summary.get('approval_rate', 0.0):.2%}")
+    print(f"Success rate: {summary.get('accuracy', 0.0):.2%}")
+    print(f"Avg reward: {summary.get('avg_reward', 0.0):.3f}")
     
     return loop.metrics
 
@@ -456,24 +456,21 @@ def run_oversight_experiment(cycles: int,
         print(f"\n--- Cycle {cycle}/{cycles} ---")
         metrics = loop.run_cycle()
         
-        # Print cycle summary
-        print(f"Puzzles: {metrics['puzzles_generated']} generated, "
-              f"{metrics['puzzles_approved']} approved, "
-              f"{metrics['puzzles_rejected']} rejected")
-        print(f"Solutions: {metrics['solutions_generated']} generated, "
-              f"{metrics['solutions_correct']} correct")
-        print(f"Avg reward: {metrics['avg_solution_reward']:.3f}")
-        print(f"Avg safety: {metrics['avg_puzzle_safety']:.3f}")
-        print(f"Duration: {metrics['cycle_duration']:.2f}s")
+        # Print cycle summary with correct keys
+        print(f"Puzzles: {metrics.get('new_puzzles', 0)} generated, "
+              f"{metrics.get('approved_puzzles', 0)} approved")
+        print(f"Solutions: {metrics.get('new_solutions', 0)} generated, "
+              f"{metrics.get('correct_solutions', 0)} correct")
+        print(f"Avg reward: {metrics.get('avg_reward', 0.0):.3f}")
+        print(f"Duration: {metrics.get('cycle_duration', 0.0):.2f}s")
     
     # Get final summary
     summary = loop.get_summary_stats()
     print(f"\nOVERSIGHT SUMMARY:")
-    print(f"Total cycles: {summary['total_cycles']}")
-    print(f"Approval rate: {summary['approval_rate']:.2%}")
-    print(f"Success rate: {summary['success_rate']:.2%}")
-    print(f"Avg reward: {summary['avg_reward']:.3f}")
-    print(f"Avg safety: {summary['avg_safety']:.3f}")
+    print(f"Total cycles: {summary.get('cycle_number', 0)}")
+    print(f"Approval rate: {summary.get('approval_rate', 0.0):.2%}")
+    print(f"Success rate: {summary.get('accuracy', 0.0):.2%}")
+    print(f"Avg reward: {summary.get('avg_reward', 0.0):.3f}")
     
     return loop.metrics
 

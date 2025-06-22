@@ -81,6 +81,13 @@ python src/best_of_n.py --detailed
 - **Learning Improvement**: ≥ 15% improvement over baseline
 - **Safety Compliance**: ≤ 5% harmful content slipped through
 
+### **Success Definition**
+**Success = pass@1 ≥ 0.60 OR uplift ≥ +8 percentage points over baseline**
+
+This dual criterion ensures that either:
+- **Primary**: Achieve 60% success rate on HumanEval-164, OR
+- **Fallback**: Demonstrate significant improvement (+8pp) over single-sample baseline
+
 ### **Performance Targets**
 - **Execution Time**: ≤ 15 seconds for quick demo
 - **Cost Efficiency**: ≤ $5 per full experiment

@@ -124,8 +124,12 @@ class DeductionLoop:
             # Use dynamic puzzle generation (original implementation)
             puzzle_types = ['code_i', 'code_o', 'code_e', 'code_f']
             
+            # Calculate how many puzzles to generate per type
+            puzzles_per_type = max(1, self.max_puzzles_per_cycle // len(puzzle_types))
+            
             for puzzle_type in puzzle_types:
-                puzzles_to_generate = self.max_puzzles_per_cycle // len(puzzle_types)
+                # Generate at least 1 puzzle per type, or distribute evenly
+                puzzles_to_generate = min(puzzles_per_type, self.max_puzzles_per_cycle)
                 
                 for i in range(puzzles_to_generate):
                     try:
@@ -135,6 +139,10 @@ class DeductionLoop:
                             self.puzzles.append(puzzle)
                     except Exception as e:
                         self.logger.error(f"Failed to generate {puzzle_type} puzzle: {e}")
+                
+                # If we've generated enough puzzles, stop
+                if len(new_puzzles) >= self.max_puzzles_per_cycle:
+                    break
         
         return new_puzzles
     
