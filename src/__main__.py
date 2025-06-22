@@ -1,6 +1,6 @@
 """
 Unified CLI interface for oversight curriculum.
-Allows running the system as: python -m oversight run --mode demo
+Allows running the system as: python -m src run --mode demo
 """
 
 import asyncio
@@ -11,8 +11,8 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from runner import OversightRunner, RunnerConfig, ExecutionMode
-from config import load_settings, get_execution_config
+from .runner import OversightRunner, RunnerConfig, ExecutionMode
+from .config import load_settings, get_execution_config
 
 
 def create_parser() -> argparse.ArgumentParser:

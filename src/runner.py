@@ -11,10 +11,10 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, Any
 
-from deduction_loop import DeductionLoop
-from metrics import MetricsCollector, ComparisonAnalyzer
-from hhh_filter import HHHFilter
-from best_of_n import BestOfNSampler
+from .deduction_loop import DeductionLoop
+from .metrics import MetricsCollector, ComparisonAnalyzer
+from .hhh_filter import HHHFilter
+from .best_of_n import BestOfNSampler
 
 
 class ExecutionMode(Enum):

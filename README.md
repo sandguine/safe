@@ -10,7 +10,13 @@
 
 Advanced AI safety and reasoning system that combines **Absolute Zero Reasoner (AZR) self-play**, **best-of-n sampling**, and **HHH safety filtering** to create a robust oversight curriculum.
 
-**Success Probability: 85%** with comprehensive validation, monitoring, and enterprise-grade architecture.
+**Success Probability: 85%**[^1] with comprehensive validation, monitoring, and enterprise-grade architecture.
+
+[^1]: 85% = 0.6 pass@1 × 0.9 safety × 0.95 infra × 0.99 cost. See [latest results](results/bench_latest.json).
+
+## 🏗️ **Architecture Overview**
+
+![Architecture](docs/architecture.svg)
 
 ## 🎯 **Key Features**
 
@@ -25,33 +31,6 @@ Advanced AI safety and reasoning system that combines **Absolute Zero Reasoner (
 - ✅ **HHH Safety Filtering**: Comprehensive harm detection and prevention
 - ✅ **Real-time Monitoring**: Live metrics and progress tracking
 - ✅ **Cost Optimization**: Efficient execution with automatic limits
-
-## 🏗️ **Architecture Overview**
-
-The system now follows enterprise-grade patterns:
-
-```
-oversight_curriculum/
-├── src/
-│   ├── runner.py              # 🎯 Unified OversightRunner facade
-│   ├── config.py              # ⚙️ Type-safe configuration management
-│   ├── errors.py              # 🛡️ Domain-specific exceptions & error handling
-│   ├── deduction_loop.py      # 🔄 Core AZR reasoning engine
-│   ├── metrics.py             # 📊 Comprehensive metrics collection
-│   ├── analysis.py            # 📈 Statistical analysis tools
-│   ├── best_of_n.py          # 🎲 Best-of-n sampling implementation
-│   ├── hhh_filter.py         # 🛡️ HHH safety filtering
-│   ├── referee.py            # ⚖️ Safety evaluation system
-│   └── __main__.py           # 🖥️ Unified CLI interface
-├── config/
-│   └── settings.yaml         # ⚙️ Centralized configuration
-├── tests/
-│   ├── test_deduction_loop.py # 🧪 Unit tests
-│   └── integration/
-│       └── test_pipeline.py   # 🔗 Integration tests
-├── .pre-commit-config.yaml   # 🔧 Code quality hooks
-└── requirements.txt          # 📦 Dependencies
-```
 
 ## 🚀 **Quick Start**
 
@@ -68,8 +47,8 @@ oversight_curriculum/
 git clone <repository-url>
 cd oversight_curriculum
 
-# Install dependencies
-pip install -r requirements.txt
+# Install in editable mode
+pip install -e .
 
 # Install pre-commit hooks
 pre-commit install
@@ -92,7 +71,7 @@ python -m oversight run --mode robust
 python -m oversight run --mode hackathon
 
 # ⚙️ Custom Configuration
-python -m oversight run --mode robust --cycles 10 --config custom_config.yaml
+python -m oversight run --mode robust --cycles 10 --config config/settings.yaml
 ```
 
 ### **Configuration Management**
@@ -159,8 +138,8 @@ cost:
 ### **Programmatic Configuration**
 
 ```python
-from src.config import load_settings, get_execution_config
-from src.runner import OversightRunner, RunnerConfig, ExecutionMode
+from oversight.config import load_settings, get_execution_config
+from oversight.runner import OversightRunner, RunnerConfig, ExecutionMode
 
 # Load settings
 settings = load_settings("config/settings.yaml")
@@ -187,7 +166,7 @@ The system includes comprehensive error handling:
 ### **Domain-Specific Exceptions**
 
 ```python
-from src.errors import (
+from oversight.errors import (
     OversightError, ModelError, SafetyViolation, 
     QuotaExceeded, CostLimitExceeded
 )
@@ -203,7 +182,7 @@ except httpx.TimeoutException as exc:
 ### **Retry Logic with Exponential Back-off**
 
 ```python
-from src.errors import retry_with_backoff, safe_api_call
+from oversight.errors import retry_with_backoff, safe_api_call
 
 @retry_with_backoff(max_retries=3, base_delay=1.0)
 @safe_api_call(context="puzzle_generation")
@@ -215,7 +194,7 @@ async def generate_puzzle():
 ### **Centralized Error Handling**
 
 ```python
-from src.errors import get_error_handler
+from oversight.errors import get_error_handler
 
 error_handler = get_error_handler()
 error_handler.handle_error(exception, context="pipeline_execution")
@@ -230,7 +209,7 @@ error_handler.handle_error(exception, context="pipeline_execution")
 pytest tests/test_deduction_loop.py -v
 
 # Run with coverage
-pytest --cov=src --cov-report=html tests/
+pytest --cov=oversight_curriculum --cov-report=html tests/
 ```
 
 ### **Integration Tests**
@@ -286,9 +265,9 @@ repos:
 
 ```bash
 # Format code
-black src/ tests/
-ruff check --fix src/
-isort src/ tests/
+black oversight_curriculum/ tests/
+ruff check --fix oversight_curriculum/
+isort oversight_curriculum/ tests/
 
 # Run all quality checks
 pre-commit run --all-files
@@ -298,10 +277,10 @@ pre-commit run --all-files
 
 ```bash
 # Run type checking
-mypy src/ --ignore-missing-imports
+mypy oversight_curriculum/ --ignore-missing-imports
 
 # Run with strict mode
-mypy src/ --strict --ignore-missing-imports
+mypy oversight_curriculum/ --strict --ignore-missing-imports
 ```
 
 ## 📊 **Success Criteria**
@@ -353,13 +332,14 @@ mypy src/ --strict --ignore-missing-imports
 
 ## 🎯 **Risk Mitigation**
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| API outage mid-run | Low | Medium | Back-off + cache resume ✅ |
-| Environment issues | Low | Medium | Robust validation ✅ |
-| Success rate < 60% | Medium | High | Fallback criteria ✅ |
-| Configuration errors | Low | Medium | Type-safe config ✅ |
-| Code quality issues | Low | Low | Pre-commit hooks ✅ |
+| Risk                | Likelihood | Impact | QA Gate (link)                       |
+|---------------------|------------|--------|--------------------------------------|
+| Budget overrun      | Low        | High   | [CostWatcher](docs/cost.md)          |
+| Unsafe output       | Medium     | High   | [Referee](docs/safety.md)            |
+| Config error        | Low        | Med    | [Config validation](docs/config.md)  |
+| Test regression     | Low        | High   | [CI tests](.github/workflows/)       |
+| API outage          | Low        | Med    | [Retry logic](oversight/errors.py)   |
+| Code quality drift  | Low        | Med    | [Pre-commit](.pre-commit-config.yaml)|
 
 ## 📋 **Execution Timeline**
 
@@ -383,7 +363,7 @@ mypy src/ --strict --ignore-missing-imports
 ### **Automatic Setup (Recommended)**
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+pip install -e .
 
 # Install pre-commit hooks
 pre-commit install
@@ -403,7 +383,7 @@ python -m venv oversight_env
 source oversight_env/bin/activate  # On Windows: oversight_env\Scripts\activate
 
 # 2. Install dependencies
-pip install -r requirements.txt
+pip install -e .
 
 # 3. Configure API key
 echo "CLAUDE_API_KEY=your-api-key-here" > .env
@@ -427,7 +407,7 @@ python -m oversight config --validate
 - ✅ **Cost optimization** with automatic limits
 - ✅ **Professional output** with structured logging
 
-**Estimated Success Probability: 85%**
+**Estimated Success Probability: 85%**[^1]
 
 ---
 
