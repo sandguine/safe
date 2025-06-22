@@ -8,7 +8,7 @@ warnings.filterwarnings(
     category=DeprecationWarning,
 )
 
-_BAD = {"", "dummy", "real_but_empty", None}
+_BAD = {"", "real_but_empty", None}  # Removed "dummy" to allow CI testing
 
 
 @pytest.fixture(autouse=True, scope="session")

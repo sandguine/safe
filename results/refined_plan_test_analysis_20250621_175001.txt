@@ -1,6 +1,0 @@
-REFINED PLAN EXECUTION ANALYSIS
-==================================================
-
-Experiment Type: test
-Timestamp: 20250621_175001
-Total Duration: 2022.95s

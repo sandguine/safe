@@ -1,2 +1,0 @@
-[console_scripts]
-oversight = oversight.cli:cli_entry
