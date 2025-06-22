@@ -1,5 +1,9 @@
 # 🚀 **Oversight Curriculum - AI Safety & Reasoning System**
 
+[![Nightly Evidence Status](https://github.com/example/oversight_curriculum/workflows/Evidence%20Generation/badge.svg)](https://github.com/example/oversight_curriculum/actions/workflows/evidence.yml)
+[![CI Status](https://github.com/example/oversight_curriculum/workflows/CI/badge.svg)](https://github.com/example/oversight_curriculum/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 ![Status: Enterprise Ready](https://img.shields.io/badge/Status-Enterprise%20Ready%20🚀-brightgreen)
 ![Tests: Passing](https://img.shields.io/badge/Tests-Passing-green)
 ![Coverage: 85%+](https://img.shields.io/badge/Coverage-85%25+-green)
@@ -167,7 +171,7 @@ The system includes comprehensive error handling:
 
 ```python
 from oversight.errors import (
-    OversightError, ModelError, SafetyViolation, 
+    OversightError, ModelError, SafetyViolation,
     QuotaExceeded, CostLimitExceeded
 )
 

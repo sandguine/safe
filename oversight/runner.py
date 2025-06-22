@@ -3,19 +3,20 @@ Main runner for oversight curriculum experiments.
 Provides the core execution engine for AI safety evaluation.
 """
 
-from enum import Enum
-from pathlib import Path
-from typing import Optional, Dict, Any, TYPE_CHECKING
 import asyncio
 import importlib
+import json
 import os
 import warnings
-import pytest
-import json
+from enum import Enum
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
-from .config import get_settings
-from .errors import OversightError
-from .metrics import MetricsCollector
+import pytest
+
+from oversight.config import get_settings
+from oversight.errors import OversightError
+from oversight.metrics import MetricsCollector
 
 if TYPE_CHECKING:
     try:
@@ -36,6 +37,7 @@ def _get_deduction_loop_cls():
 
 class ExecutionMode(Enum):
     """Execution modes for oversight experiments."""
+
     DEMO = "demo"
     ROBUST = "robust"
     HACKATHON = "hackathon"
@@ -43,7 +45,7 @@ class ExecutionMode(Enum):
 
 class RunnerConfig:
     """Configuration for the oversight runner."""
-    
+
     def __init__(
         self,
         mode: ExecutionMode = ExecutionMode.DEMO,
@@ -54,7 +56,9 @@ class RunnerConfig:
         enable_hhh_filter: bool = False,
         enable_best_of_n: bool = False,
         config_path: Optional[Path] = None,
-        **kwargs
+        model_name: str = "claude-3-5-sonnet-20241022",
+        output_dir: str = "./output",
+        **kwargs,
     ):
         self.mode = mode
         self.cycles = cycles
@@ -64,13 +68,15 @@ class RunnerConfig:
         self.enable_hhh_filter = enable_hhh_filter
         self.enable_best_of_n = enable_best_of_n
         self.config_path = config_path
+        self.model_name = model_name
+        self.output_dir = output_dir
         self.settings = get_settings()
         self.extra_args = kwargs
 
 
 class OversightRunner:
     """Main runner for oversight curriculum experiments."""
-    
+
     def __init__(self, config: RunnerConfig):
         self.config = config
         self.settings = config.settings
@@ -78,20 +84,20 @@ class OversightRunner:
         self.deduction_loop = _get_deduction_loop_cls()(
             max_iterations=self.config.cycles
         )
-        
+
     def _validate_environment(self) -> bool:
         """Validate the execution environment (legacy method for tests)."""
         # Stub implementation for tests
         return True
-        
+
     async def run_baseline(self) -> MetricsCollector:
         """Run *baseline* experiment (no oversight)."""
         return await self._run("baseline")
-        
+
     async def run_comparison(self) -> dict:
         """Run baseline **and** oversight, then compare."""
         return await self._run_comparison()
-        
+
     async def run_demo(self) -> Dict[str, Any]:
         """Run demo mode experiment."""
         baseline_metrics = await self._run("baseline")
@@ -101,21 +107,21 @@ class OversightRunner:
             "status": "completed",
             "baseline_metrics": baseline_metrics.get_summary(),
             "oversight_metrics": oversight_metrics.get_summary(),
-            "message": "Demo experiment completed successfully"
+            "message": "Demo experiment completed successfully",
         }
-        
+
     async def run_robust(self) -> Dict[str, Any]:
         """Run robust mode experiment."""
         baseline_metrics = await self._run("baseline")
         oversight_metrics = await self._run("oversight")
         return {
-            "mode": "robust", 
+            "mode": "robust",
             "status": "completed",
             "baseline_metrics": baseline_metrics.get_summary(),
             "oversight_metrics": oversight_metrics.get_summary(),
-            "message": "Robust experiment completed successfully"
+            "message": "Robust experiment completed successfully",
         }
-    
+
     def run(self) -> Dict[str, Any]:
         """Execute the oversight experiment."""
         try:
@@ -131,13 +137,13 @@ class OversightRunner:
                 )
         except Exception as e:
             raise OversightError(f"Runner execution failed: {e}") from e
-    
+
     async def _run_hackathon(self) -> Dict[str, Any]:
         """Run hackathon mode experiment."""
         return {
             "mode": "hackathon",
             "status": "completed",
-            "message": "Hackathon experiment completed successfully"
+            "message": "Hackathon experiment completed successfully",
         }
 
     async def _run(self, mode: str) -> MetricsCollector:
@@ -164,9 +170,7 @@ class OversightRunner:
     def _analyze(base: MetricsCollector, over: MetricsCollector) -> dict:
         bs, os = base.get_summary(), over.get_summary()
         return {
-            "approval_rate_improvement": (
-                os.approval_rate - bs.approval_rate
-            ),
+            "approval_rate_improvement": (os.approval_rate - bs.approval_rate),
             "solution_reward_gain": (
                 os.avg_solution_reward - bs.avg_solution_reward
             ),
@@ -182,14 +186,22 @@ class OversightRunner:
             )
             metrics.update(cycle_metrics)
         return metrics
-    
+
     async def run_oversight(self) -> MetricsCollector:
         """Run oversight experiment (legacy method for tests)."""
         return await self._run_oversight()
 
     def _get_skip_counts(self, session):
-        external_skips = len([x for x in session.stats["skipped"] if "external" in x.keywords])
-        other_skips = len([x for x in session.stats["skipped"] if "external" not in x.keywords])
+        external_skips = len(
+            [x for x in session.stats["skipped"] if "external" in x.keywords]
+        )
+        other_skips = len(
+            [
+                x
+                for x in session.stats["skipped"]
+                if "external" not in x.keywords
+            ]
+        )
         return external_skips, other_skips
 
     warnings.filterwarnings(
@@ -204,16 +216,18 @@ class OversightRunner:
         if os.environ.get("CI") != "true":
             pytest.skip("local run – secret may be dummy")
         else:
-            assert os.getenv("CLAUDE_API_KEY") not in bad, "Mis-configured CLAUDE_API_KEY"
+            assert (
+                os.getenv("CLAUDE_API_KEY") not in bad
+            ), "Mis-configured CLAUDE_API_KEY"
 
     def pytest_sessionfinish(session):
         skipped = session.stats.get("skipped", [])
         external_skips = len([x for x in skipped if "external" in x.keywords])
         other_skips = len([x for x in skipped if "external" not in x.keywords])
         total_skips = len(skipped)
-        
+
         assert total_skips <= 2, f"Too many skips: {total_skips}"
-        
+
         summary = {
             "passed": len(session.stats.get("passed", [])),
             "failed": len(session.stats.get("failed", [])),
@@ -221,15 +235,17 @@ class OversightRunner:
             "external_skips": external_skips,
             "other_skips": other_skips,
         }
-        
+
         os.makedirs("artifacts", exist_ok=True)
         with open("artifacts/test_summary.json", "w") as f:
             json.dump(summary, f)
-        
+
         # Output detailed skip breakdown to GitHub Step Summary if running in CI
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
                 f.write(f"### Test Summary\n")
                 f.write(f"- Passed: {summary['passed']}\n")
                 f.write(f"- Failed: {summary['failed']}\n")
-                f.write(f"- Skipped: {total_skips}/2 (external: {external_skips}, other: {other_skips})\n") 
+                f.write(
+                    f"- Skipped: {total_skips}/2 (external: {external_skips}, other: {other_skips})\n"
+                )

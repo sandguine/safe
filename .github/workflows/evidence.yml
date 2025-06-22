@@ -1,0 +1,54 @@
+name: Evidence Generation
+
+on:
+  schedule:
+    # Run nightly at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install -e ".[dev]"
+
+    - name: Run full evidence suite
+      run: make evidence
+      env:
+        CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY_REAL }}
+
+    - name: Upload evidence artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: evidence-${{ github.run_number }}
+        path: |
+          results/humaneval_*.json
+          results/harm_suite_*.csv
+          results/demo_*.csv
+          results/bench_*.json
+        retention-days: 14
+
+    - name: Generate evidence summary
+      run: |
+        echo "Evidence generation completed at $(date)" > results/evidence_summary.txt
+        echo "Run ID: ${{ github.run_number }}" >> results/evidence_summary.txt
+        echo "Commit: ${{ github.sha }}" >> results/evidence_summary.txt
+        ls -la results/ >> results/evidence_summary.txt
+
+    - name: Upload evidence summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: evidence-summary-${{ github.run_number }}
+        path: results/evidence_summary.txt
+        retention-days: 14
