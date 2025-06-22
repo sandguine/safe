@@ -1,85 +1,52 @@
 #!/bin/bash
-# Comprehensive run script for oversight curriculum.
-# Executes all components: baseline, oversight, analysis, and comparison.
+# Run all oversight curriculum components
+# Now with standardized validation from run_robust.py
 
 set -e  # Exit on any error
 
-echo "🎯 OVERSIGHT CURRICULUM - COMPLETE RUN"
-echo "======================================"
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
 
-# Check if API key is set
-if [ -z "$CLAUDE_API_KEY" ]; then
-    echo "❌ Error: CLAUDE_API_KEY environment variable not set"
-    echo "Please set your API key: export CLAUDE_API_KEY='your-key-here'"
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗"
+echo -e "║                OVERSIGHT CURRICULUM RUN ALL               ║"
+echo -e "║                    Standardized Validation                ║"
+echo -e "╚══════════════════════════════════════════════════════════════╝${NC}"
+
+# Step 1: Run standardized validation
+echo -e "${PURPLE}[STEP]${NC} [$(date +%H:%M:%S)] run_all.sh: Running validation..."
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from validation import validate_script
+success = validate_script('run_all.sh')
+sys.exit(0 if success else 1)
+"
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}[ERROR]${NC} [$(date +%H:%M:%S)] run_all.sh: Validation failed"
+    echo -e "${RED}❌ Cannot proceed due to validation errors${NC}"
     exit 1
 fi
 
-# Create results directory
-mkdir -p results
-
-echo "📋 Configuration:"
-echo "  - Model: claude-3-5-sonnet-20241022"
-echo "  - Cycles: 10 (optimized for ≤15s execution)"
-echo "  - Puzzles per cycle: 2"
-echo "  - Solutions per puzzle: 1"
-echo "  - Use config puzzles: Yes"
+echo -e "${GREEN}[SUCCESS]${NC} [$(date +%H:%M:%S)] run_all.sh: Validation passed"
 echo ""
 
-# Step 1: Run baseline experiment (no referee)
-echo "🔄 Step 1: Running baseline experiment..."
-python azr_loop.py --no_ref --cycles 10 --output results/baseline_demo.csv
+echo -e "${BLUE}🚀 Running all oversight curriculum components...${NC}"
 
-echo ""
+# Run all components
+echo -e "${BLUE}1. Running demo...${NC}"
+./run_demo.sh
 
-# Step 2: Run oversight experiment (with referee)
-echo "🔄 Step 2: Running oversight experiment..."
-python azr_loop.py --with_ref --cycles 10 --output results/oversight_demo.csv
+echo -e "${BLUE}2. Running hackathon demo...${NC}"
+./run_hackathon_demo.sh
 
-echo ""
+echo -e "${BLUE}3. Running full pipeline...${NC}"
+./run_full.sh --dry-run
 
-# Step 3: Run full demo (baseline + oversight + comparison)
-echo "🔄 Step 3: Running full demo with comparison..."
-python run_demo.py --cycles 10 --puzzles_per_cycle 2 --solutions_per_puzzle 1 --skip_plots
-
-echo ""
-
-# Step 4: Run analysis on CSV files
-echo "🔄 Step 4: Running analysis on results..."
-python src/analysis.py --baseline results/baseline_demo.csv --oversight results/oversight_demo.csv
-
-echo ""
-
-# Step 5: Run unit tests
-echo "🔄 Step 5: Running unit tests..."
-python -m pytest tests/test_deduction_loop.py -v
-
-echo ""
-
-# Step 6: Generate final summary
-echo "📊 FINAL SUMMARY"
-echo "================"
-echo "Generated files:"
-ls -la results/
-
-echo ""
-echo "🎉 Complete run finished successfully!"
-echo "Check the 'results/' directory for all output files:"
-echo "  - baseline_demo.csv: Baseline experiment results"
-echo "  - oversight_demo.csv: Oversight experiment results"
-echo "  - comparison_plot.png: Visual comparison"
-echo "  - baseline_metrics.json: Detailed baseline metrics"
-echo "  - oversight_metrics.json: Detailed oversight metrics"
-echo "  - comparison_report.txt: Text comparison report"
-echo "  - combined_results.json: All results combined"
-echo ""
-
-# Check execution time
-echo "⏱️  Performance check:"
-if [ -f results/combined_results.json ]; then
-    echo "✅ All components executed successfully"
-else
-    echo "⚠️  Some components may have failed"
-fi
-
-echo ""
-echo "🚀 Ready for research and experimentation!" 
+echo -e "${GREEN}🎉 All components completed successfully!${NC}" 

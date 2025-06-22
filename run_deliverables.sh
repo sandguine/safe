@@ -1,62 +1,48 @@
 #!/bin/bash
+# Generate all deliverables for oversight curriculum
+# Now with standardized validation from run_robust.py
 
-# Oversight Curriculum Hackathon Deliverable Generator
-# This script generates all required deliverables for Jan and Akbir's requirements
+set -e  # Exit on any error
 
-set -e
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
 
-echo "🎯 OVERSIGHT CURRICULUM HACKATHON DELIVERABLE GENERATOR"
-echo "======================================================"
-echo ""
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗"
+echo -e "║              OVERSIGHT CURRICULUM DELIVERABLES            ║"
+echo -e "║                    Standardized Validation                ║"
+echo -e "╚══════════════════════════════════════════════════════════════╝${NC}"
 
-# Check if we're in the right directory
-if [ ! -f "requirements.txt" ]; then
-    echo "❌ Error: Please run this script from the oversight_curriculum directory"
+# Step 1: Run standardized validation
+echo -e "${PURPLE}[STEP]${NC} [$(date +%H:%M:%S)] run_deliverables.sh: Running validation..."
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from validation import validate_script
+success = validate_script('run_deliverables.sh')
+sys.exit(0 if success else 1)
+"
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}[ERROR]${NC} [$(date +%H:%M:%S)] run_deliverables.sh: Validation failed"
+    echo -e "${RED}❌ Cannot proceed due to validation errors${NC}"
     exit 1
 fi
 
-# Check if API key is set
-if [ -z "$CLAUDE_API_KEY" ]; then
-    echo "❌ Error: CLAUDE_API_KEY environment variable not set"
-    echo "Please set your API key: export CLAUDE_API_KEY='your-key-here'"
-    echo ""
-    echo "You can get your API key from: https://console.anthropic.com/"
-    exit 1
-fi
-
-# Check Python dependencies
-echo "🔍 Checking dependencies..."
-if ! python -c "import anthropic, pandas, numpy" 2>/dev/null; then
-    echo "📦 Installing dependencies..."
-    pip install -r requirements.txt
-fi
-
-# Create results directory
-mkdir -p results
-
-echo ""
-echo "🚀 Starting deliverable generation..."
-echo "This will generate:"
-echo "• KL divergence table (n=1/4/16/64)"
-echo "• 200-prompt red-team sheet"
-echo "• Collusion mitigation analysis"
-echo "• Refusal transparency samples"
-echo "• Fail-case appendix"
+echo -e "${GREEN}[SUCCESS]${NC} [$(date +%H:%M:%S)] run_deliverables.sh: Validation passed"
 echo ""
 
-# Run the deliverable generator
+echo -e "${BLUE}📋 Generating all deliverables...${NC}"
+
+# Generate deliverables
 python generate_deliverables.py
 
+echo -e "${GREEN}✅ All deliverables generated successfully!${NC}"
 echo ""
-echo "✅ Deliverable generation complete!"
-echo ""
-echo "📁 Results saved to: results/"
-echo ""
-echo "📋 Key files generated:"
-echo "• kl_divergence_table.csv - KL divergence analysis"
-echo "• red_team_results.csv - 200-prompt red-team results"
-echo "• transparency_samples_report.txt - Refusal transparency"
-echo "• fail_case_appendix.txt - Fail-case analysis"
-echo "• comprehensive_report.txt - Overall summary"
-echo ""
-echo "🎉 Ready for hackathon presentation!" 
+echo -e "${BLUE}📊 Generated files:${NC}"
+ls -la results/ 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # One-liner CLI shortcut for full AZR pipeline execution
 # Usage: ./run_full.sh [--dry-run] [--max-cost 120]
+# Now with standardized validation from run_robust.py
 
 set -e  # Exit on any error
 
@@ -9,6 +10,8 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Default settings
@@ -49,6 +52,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗"
+echo -e "║                AZR PIPELINE EXECUTION                    ║"
+echo -e "║                    Standardized Validation                ║"
+echo -e "╚══════════════════════════════════════════════════════════════╝${NC}"
+
 echo -e "${BLUE}🚀 AZR Pipeline Execution${NC}"
 echo "=================================="
 echo -e "${YELLOW}Mode:${NC} $([ "$DRY_RUN" = true ] && echo "DRY RUN" || echo "FULL PRODUCTION")"
@@ -57,25 +65,24 @@ echo -e "${YELLOW}Max Cost:${NC} \$$MAX_COST"
 echo -e "${YELLOW}Session:${NC} $SESSION_NAME"
 echo ""
 
-# Check if .env file exists
-if [ ! -f .env ]; then
-    echo -e "${RED}❌ Error: .env file not found${NC}"
-    echo "Please create .env file with your API key:"
-    echo "ANTHROPIC_API_KEY=your_api_key_here"
+# Step 1: Run standardized validation
+echo -e "${PURPLE}[STEP]${NC} [$(date +%H:%M:%S)] run_full.sh: Running validation..."
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+from validation import validate_script
+success = validate_script('run_full.sh')
+sys.exit(0 if success else 1)
+"
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}[ERROR]${NC} [$(date +%H:%M:%S)] run_full.sh: Validation failed"
+    echo -e "${RED}❌ Pipeline cannot proceed due to validation errors${NC}"
     exit 1
 fi
 
-# Load environment variables
-echo -e "${BLUE}📋 Loading environment variables...${NC}"
-export $(cat .env | grep -v '^#' | xargs)
-
-# Check if API key is set
-if [ -z "$ANTHROPIC_API_KEY" ]; then
-    echo -e "${RED}❌ Error: ANTHROPIC_API_KEY not found in .env${NC}"
-    exit 1
-fi
-
-echo -e "${GREEN}✅ Environment loaded successfully${NC}"
+echo -e "${GREEN}[SUCCESS]${NC} [$(date +%H:%M:%S)] run_full.sh: Validation passed"
+echo ""
 
 # Create results directory
 mkdir -p results
