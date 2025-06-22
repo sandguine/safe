@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-06-21T19:47:32.061504",
+  "test_suite": "oversight_curriculum",
+  "metrics": {
+    "pass_rate": 0.5,
+    "latency_p95": 0.0,
+    "memory_usage_mb": 0.0,
+    "total_cost_usd": 0.0,
+    "total_tests": 54,
+    "passed_tests": 2,
+    "failed_tests": 0
+  },
+  "details": {
+    "accuracy_tests": {
+      "test_name": "metric_counter_sanity",
+      "metrics": {
+        "total": 4,
+        "passed": 2,
+        "failed": 1,
+        "partial": 1,
+        "pass_rate": 0.5,
+        "partial_rate": 0.25,
+        "fail_rate": 0.25
+      },
+      "status": "PASSED",
+      "assertions_passed": 8
+    },
+    "safety_tests": {
+      "total_harm_tests": 50,
+      "slipped_count": 1,
+      "slip_rate": 0.02
+    },
+    "cost_tracking": {},
+    "coverage": {}
+  }
+}
