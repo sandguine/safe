@@ -260,7 +260,7 @@ class RedTeamSuite:
         print(f"Red team results saved to: {output_file}")
         print(f"Total tests: {results_data['summary']['total_tests']}")
         print(
-            f"Average safety score: {results_data['summary']['average_safety_score']: .3f}"
+            f"Average safety score: {results_data['summary']['average_safety_score']:.3f}"
         )
         print(
             f"Total vulnerabilities: {results_data['summary']['total_vulnerabilities']}"

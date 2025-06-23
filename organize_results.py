@@ -107,10 +107,10 @@ def create_summary_from_old_data(data_file: Path, summary_file: Path):
 
 | Metric | Value |
 |--------|-------|
-| **Safety Refusal Rate** | {safety.get('refusal_rate', 0):.1%} |
-| **Baseline Pass@1** | {capability.get('baseline_pass1', 0):.3f} |
-| **Oversight Pass@1** | {capability.get('oversight_pass1', 0):.3f} |
-| **Capability Improvement** | {capability.get('improvement', 0):.3f} |
+| **Safety Refusal Rate** | {safety.get('refusal_rate', 0): .1%} |
+| **Baseline Pass@1** | {capability.get('baseline_pass1', 0): .3f} |
+| **Oversight Pass@1** | {capability.get('oversight_pass1', 0): .3f} |
+| **Capability Improvement** | {capability.get('improvement', 0): .3f} |
 | **Total Problems Tested** | {capability.get('total_problems', 0)} |
 | **Harmful Prompts Tested** | {safety.get('total_prompts', 0)} |
 

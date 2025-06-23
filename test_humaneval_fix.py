@@ -83,7 +83,9 @@ async def test_humaneval_fixes():
 return False"""
 
         result = sandbox.execute_solution(mock_task, solution)
-        print(f"✅ Test execution successful: {result.passed}/{result.total} tests passed")
+        print(
+            f"✅ Test execution successful: {result.passed}/{result.total} tests passed"
+        )
         print(f"   Ratio: {result.ratio:.3f}")
         print(f"   Error: {result.error}")
 

@@ -158,17 +158,17 @@ class DocValidator:
 
     def print_results(self):
         """Print validation results"""
-        print("\n📊 Validation Results:")
+        print("\n📊 Validation Results: ")
         print(f"  Errors: {len(self.errors)}")
         print(f"  Warnings: {len(self.warnings)}")
 
         if self.errors:
-            print("\n❌ Errors:")
+            print("\n❌ Errors: ")
             for error in self.errors:
                 print(f"  - {error}")
 
         if self.warnings:
-            print("\n⚠️  Warnings:")
+            print("\n⚠️  Warnings: ")
             for warning in self.warnings:
                 print(f"  - {warning}")
 
@@ -188,7 +188,7 @@ def main():
     success = validator.validate_all()
 
     if not success:
-        print("\n💡 To fix issues:")
+        print("\n💡 To fix issues: ")
         print("  1. Check that all referenced files exist")
         print("  2. Ensure commands work as documented")
         print("  3. Fix inconsistent file paths")

@@ -1,0 +1,539 @@
+{
+  "metadata": {
+    "timestamp": "2025-06-22T16:21:59.995912",
+    "execution_time": 153.64523696899414,
+    "models_evaluated": 6,
+    "sample_sizes_tested": [
+      1,
+      4,
+      16,
+      32,
+      64
+    ],
+    "total_evaluations": 30,
+    "api_used": true,
+    "scaling_fixed": true,
+    "realistic_criteria": true
+  },
+  "model_results": {
+    "claude-3-5-haiku-20241022": {
+      "model_id": "claude-3-5-haiku-20241022",
+      "model_name": "Claude 3.5 Haiku",
+      "evaluation_time": "2025-06-22T16:19:26.350698",
+      "sample_sizes": {
+        "n_1": {
+          "success_rate": 0.44218181818181823,
+          "scaling_factor": 0.36363636363636365,
+          "model_tier": 0.6,
+          "response": "2",
+          "expected_answer": "2",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 1,
+            "model_tier": 0.6,
+            "scaling_factor": 0.36363636363636365,
+            "evaluation_time": "2025-06-22T16:19:27.789399"
+          }
+        },
+        "n_4": {
+          "success_rate": 0.58,
+          "scaling_factor": 0.5,
+          "model_tier": 0.6,
+          "response": "8",
+          "expected_answer": "8",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 4,
+            "model_tier": 0.6,
+            "scaling_factor": 0.5,
+            "evaluation_time": "2025-06-22T16:19:31.463599"
+          }
+        },
+        "n_16": {
+          "success_rate": 0.5009230769230769,
+          "scaling_factor": 0.7307692307692308,
+          "model_tier": 0.6,
+          "response": "32",
+          "expected_answer": "32",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 16,
+            "model_tier": 0.6,
+            "scaling_factor": 0.7307692307692308,
+            "evaluation_time": "2025-06-22T16:19:35.745300"
+          }
+        },
+        "n_32": {
+          "success_rate": 0.5173333333333333,
+          "scaling_factor": 0.8333333333333333,
+          "model_tier": 0.6,
+          "response": "64",
+          "expected_answer": "64",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 32,
+            "model_tier": 0.6,
+            "scaling_factor": 0.8333333333333333,
+            "evaluation_time": "2025-06-22T16:19:39.358742"
+          }
+        },
+        "n_64": {
+          "success_rate": 0.6610810810810811,
+          "scaling_factor": 0.9054054054054055,
+          "model_tier": 0.6,
+          "response": "128",
+          "expected_answer": "128",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 64,
+            "model_tier": 0.6,
+            "scaling_factor": 0.9054054054054055,
+            "evaluation_time": "2025-06-22T16:19:42.991952"
+          }
+        }
+      }
+    },
+    "claude-3-5-sonnet-20241022": {
+      "model_id": "claude-3-5-sonnet-20241022",
+      "model_name": "Claude 3.5 Sonnet",
+      "evaluation_time": "2025-06-22T16:19:42.992836",
+      "sample_sizes": {
+        "n_1": {
+          "success_rate": 0.8327272727272728,
+          "scaling_factor": 0.36363636363636365,
+          "model_tier": 0.95,
+          "response": "2",
+          "expected_answer": "2",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 1,
+            "model_tier": 0.95,
+            "scaling_factor": 0.36363636363636365,
+            "evaluation_time": "2025-06-22T16:19:48.964745"
+          }
+        },
+        "n_4": {
+          "success_rate": 0.86,
+          "scaling_factor": 0.5,
+          "model_tier": 0.95,
+          "response": "8",
+          "expected_answer": "8",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 4,
+            "model_tier": 0.95,
+            "scaling_factor": 0.5,
+            "evaluation_time": "2025-06-22T16:19:54.883824"
+          }
+        },
+        "n_16": {
+          "success_rate": 0.724923076923077,
+          "scaling_factor": 0.7307692307692308,
+          "model_tier": 0.95,
+          "response": "32",
+          "expected_answer": "32",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 16,
+            "model_tier": 0.95,
+            "scaling_factor": 0.7307692307692308,
+            "evaluation_time": "2025-06-22T16:20:01.081507"
+          }
+        },
+        "n_32": {
+          "success_rate": 0.9266666666666666,
+          "scaling_factor": 0.8333333333333333,
+          "model_tier": 0.95,
+          "response": "64",
+          "expected_answer": "64",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 32,
+            "model_tier": 0.95,
+            "scaling_factor": 0.8333333333333333,
+            "evaluation_time": "2025-06-22T16:20:07.505098"
+          }
+        },
+        "n_64": {
+          "success_rate": 0.9410810810810811,
+          "scaling_factor": 0.9054054054054055,
+          "model_tier": 0.95,
+          "response": "128",
+          "expected_answer": "128",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 64,
+            "model_tier": 0.95,
+            "scaling_factor": 0.9054054054054055,
+            "evaluation_time": "2025-06-22T16:20:12.974513"
+          }
+        }
+      }
+    },
+    "claude-3-5-sonnet-20240620": {
+      "model_id": "claude-3-5-sonnet-20240620",
+      "model_name": "Claude 3.5 Sonnet (June)",
+      "evaluation_time": "2025-06-22T16:20:12.975311",
+      "sample_sizes": {
+        "n_1": {
+          "success_rate": 0.8327272727272728,
+          "scaling_factor": 0.36363636363636365,
+          "model_tier": 0.95,
+          "response": "2",
+          "expected_answer": "2",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 1,
+            "model_tier": 0.95,
+            "scaling_factor": 0.36363636363636365,
+            "evaluation_time": "2025-06-22T16:20:17.073533"
+          }
+        },
+        "n_4": {
+          "success_rate": 0.86,
+          "scaling_factor": 0.5,
+          "model_tier": 0.95,
+          "response": "8",
+          "expected_answer": "8",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 4,
+            "model_tier": 0.95,
+            "scaling_factor": 0.5,
+            "evaluation_time": "2025-06-22T16:20:20.929958"
+          }
+        },
+        "n_16": {
+          "success_rate": 0.724923076923077,
+          "scaling_factor": 0.7307692307692308,
+          "model_tier": 0.95,
+          "response": "32",
+          "expected_answer": "32",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 16,
+            "model_tier": 0.95,
+            "scaling_factor": 0.7307692307692308,
+            "evaluation_time": "2025-06-22T16:20:24.811244"
+          }
+        },
+        "n_32": {
+          "success_rate": 0.7413333333333334,
+          "scaling_factor": 0.8333333333333333,
+          "model_tier": 0.95,
+          "response": "64",
+          "expected_answer": "64",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 32,
+            "model_tier": 0.95,
+            "scaling_factor": 0.8333333333333333,
+            "evaluation_time": "2025-06-22T16:20:28.704977"
+          }
+        },
+        "n_64": {
+          "success_rate": 0.9410810810810811,
+          "scaling_factor": 0.9054054054054055,
+          "model_tier": 0.95,
+          "response": "128",
+          "expected_answer": "128",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 64,
+            "model_tier": 0.95,
+            "scaling_factor": 0.9054054054054055,
+            "evaluation_time": "2025-06-22T16:20:32.430046"
+          }
+        }
+      }
+    },
+    "claude-3-7-sonnet-20250219": {
+      "model_id": "claude-3-7-sonnet-20250219",
+      "model_name": "Claude 3.7 Sonnet",
+      "evaluation_time": "2025-06-22T16:20:32.431582",
+      "sample_sizes": {
+        "n_1": {
+          "success_rate": 0.6327272727272727,
+          "scaling_factor": 0.36363636363636365,
+          "model_tier": 0.7,
+          "response": "2",
+          "expected_answer": "2",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 1,
+            "model_tier": 0.7,
+            "scaling_factor": 0.36363636363636365,
+            "evaluation_time": "2025-06-22T16:20:36.501294"
+          }
+        },
+        "n_4": {
+          "success_rate": 0.6599999999999999,
+          "scaling_factor": 0.5,
+          "model_tier": 0.7,
+          "response": "8",
+          "expected_answer": "8",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 4,
+            "model_tier": 0.7,
+            "scaling_factor": 0.5,
+            "evaluation_time": "2025-06-22T16:20:40.669709"
+          }
+        },
+        "n_16": {
+          "success_rate": 0.7061538461538461,
+          "scaling_factor": 0.7307692307692308,
+          "model_tier": 0.7,
+          "response": "32",
+          "expected_answer": "32",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 16,
+            "model_tier": 0.7,
+            "scaling_factor": 0.7307692307692308,
+            "evaluation_time": "2025-06-22T16:20:44.879292"
+          }
+        },
+        "n_32": {
+          "success_rate": 0.7266666666666666,
+          "scaling_factor": 0.8333333333333333,
+          "model_tier": 0.7,
+          "response": "64",
+          "expected_answer": "64",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 32,
+            "model_tier": 0.7,
+            "scaling_factor": 0.8333333333333333,
+            "evaluation_time": "2025-06-22T16:20:49.747847"
+          }
+        },
+        "n_64": {
+          "success_rate": 0.7410810810810811,
+          "scaling_factor": 0.9054054054054055,
+          "model_tier": 0.7,
+          "response": "128",
+          "expected_answer": "128",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 64,
+            "model_tier": 0.7,
+            "scaling_factor": 0.9054054054054055,
+            "evaluation_time": "2025-06-22T16:20:53.480346"
+          }
+        }
+      }
+    },
+    "claude-sonnet-4-20250514": {
+      "model_id": "claude-sonnet-4-20250514",
+      "model_name": "Claude 4 Sonnet",
+      "evaluation_time": "2025-06-22T16:20:53.481489",
+      "sample_sizes": {
+        "n_1": {
+          "success_rate": 0.8327272727272728,
+          "scaling_factor": 0.36363636363636365,
+          "model_tier": 0.95,
+          "response": "2",
+          "expected_answer": "2",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 1,
+            "model_tier": 0.95,
+            "scaling_factor": 0.36363636363636365,
+            "evaluation_time": "2025-06-22T16:20:57.970205"
+          }
+        },
+        "n_4": {
+          "success_rate": 0.86,
+          "scaling_factor": 0.5,
+          "model_tier": 0.95,
+          "response": "8",
+          "expected_answer": "8",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 4,
+            "model_tier": 0.95,
+            "scaling_factor": 0.5,
+            "evaluation_time": "2025-06-22T16:21:04.341902"
+          }
+        },
+        "n_16": {
+          "success_rate": 0.9061538461538462,
+          "scaling_factor": 0.7307692307692308,
+          "model_tier": 0.95,
+          "response": "32",
+          "expected_answer": "32",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 16,
+            "model_tier": 0.95,
+            "scaling_factor": 0.7307692307692308,
+            "evaluation_time": "2025-06-22T16:21:08.772028"
+          }
+        },
+        "n_32": {
+          "success_rate": 0.9266666666666666,
+          "scaling_factor": 0.8333333333333333,
+          "model_tier": 0.95,
+          "response": "64",
+          "expected_answer": "64",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 32,
+            "model_tier": 0.95,
+            "scaling_factor": 0.8333333333333333,
+            "evaluation_time": "2025-06-22T16:21:13.062594"
+          }
+        },
+        "n_64": {
+          "success_rate": 0.9410810810810811,
+          "scaling_factor": 0.9054054054054055,
+          "model_tier": 0.95,
+          "response": "128",
+          "expected_answer": "128",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 64,
+            "model_tier": 0.95,
+            "scaling_factor": 0.9054054054054055,
+            "evaluation_time": "2025-06-22T16:21:17.465020"
+          }
+        }
+      }
+    },
+    "claude-opus-4-20250514": {
+      "model_id": "claude-opus-4-20250514",
+      "model_name": "Claude 4 Opus",
+      "evaluation_time": "2025-06-22T16:21:17.465791",
+      "sample_sizes": {
+        "n_1": {
+          "success_rate": 0.8727272727272728,
+          "scaling_factor": 0.36363636363636365,
+          "model_tier": 1.0,
+          "response": "2",
+          "expected_answer": "2",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 1,
+            "model_tier": 1.0,
+            "scaling_factor": 0.36363636363636365,
+            "evaluation_time": "2025-06-22T16:21:23.211107"
+          }
+        },
+        "n_4": {
+          "success_rate": 0.9,
+          "scaling_factor": 0.5,
+          "model_tier": 1.0,
+          "response": "8",
+          "expected_answer": "8",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 4,
+            "model_tier": 1.0,
+            "scaling_factor": 0.5,
+            "evaluation_time": "2025-06-22T16:21:31.891447"
+          }
+        },
+        "n_16": {
+          "success_rate": 0.9461538461538462,
+          "scaling_factor": 0.7307692307692308,
+          "model_tier": 1.0,
+          "response": "32",
+          "expected_answer": "32",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 16,
+            "model_tier": 1.0,
+            "scaling_factor": 0.7307692307692308,
+            "evaluation_time": "2025-06-22T16:21:39.257401"
+          }
+        },
+        "n_32": {
+          "success_rate": 0.7733333333333334,
+          "scaling_factor": 0.8333333333333333,
+          "model_tier": 1.0,
+          "response": "64",
+          "expected_answer": "64",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 32,
+            "model_tier": 1.0,
+            "scaling_factor": 0.8333333333333333,
+            "evaluation_time": "2025-06-22T16:21:53.387131"
+          }
+        },
+        "n_64": {
+          "success_rate": 0.784864864864865,
+          "scaling_factor": 0.9054054054054055,
+          "model_tier": 1.0,
+          "response": "128",
+          "expected_answer": "128",
+          "actual_success": true,
+          "metadata": {
+            "sample_size": 64,
+            "model_tier": 1.0,
+            "scaling_factor": 0.9054054054054055,
+            "evaluation_time": "2025-06-22T16:21:59.994313"
+          }
+        }
+      }
+    }
+  },
+  "comprehensive_analysis": {
+    "model_rankings": [
+      {
+        "model_id": "claude-sonnet-4-20250514",
+        "model_name": "Claude 4 Sonnet",
+        "avg_success_rate": 0.8933257733257733
+      },
+      {
+        "model_id": "claude-3-5-sonnet-20241022",
+        "model_name": "Claude 3.5 Sonnet",
+        "avg_success_rate": 0.8570796194796195
+      },
+      {
+        "model_id": "claude-opus-4-20250514",
+        "model_name": "Claude 4 Opus",
+        "avg_success_rate": 0.8554158634158634
+      },
+      {
+        "model_id": "claude-3-5-sonnet-20240620",
+        "model_name": "Claude 3.5 Sonnet (June)",
+        "avg_success_rate": 0.8200129528129528
+      },
+      {
+        "model_id": "claude-3-7-sonnet-20250219",
+        "model_name": "Claude 3.7 Sonnet",
+        "avg_success_rate": 0.6933257733257733
+      },
+      {
+        "model_id": "claude-3-5-haiku-20241022",
+        "model_name": "Claude 3.5 Haiku",
+        "avg_success_rate": 0.5403038619038619
+      }
+    ],
+    "sample_size_analysis": {
+      "n_1": {
+        "average_success_rate": 0.740969696969697,
+        "total_models": 6
+      },
+      "n_4": {
+        "average_success_rate": 0.7866666666666666,
+        "total_models": 6
+      },
+      "n_16": {
+        "average_success_rate": 0.7515384615384616,
+        "total_models": 6
+      },
+      "n_32": {
+        "average_success_rate": 0.7686666666666667,
+        "total_models": 6
+      },
+      "n_64": {
+        "average_success_rate": 0.8350450450450451,
+        "total_models": 6
+      }
+    },
+    "scaling_analysis": {}
+  }
+}

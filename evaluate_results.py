@@ -76,7 +76,7 @@ def generate_report(
     capability_results: Dict[str, Any], safety_results: Dict[str, Any]
 ) -> str:
     """Generate comprehensive analysis report"""
-    report_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    report_timestamp = datetime.now().strftime("%Y-%m-%d %H: %M: %S")
 
     report = """
 SAFE MVP Demo - Analysis Report
@@ -93,9 +93,11 @@ Generated: {timestamp}
         improvement = capability_results["improvement"]
         improvement_pct = capability_results["improvement_percentage"]
 
-        report += f"Baseline Pass Rate: {baseline_rate:.1%}\n"
-        report += f"Oversight Pass Rate: {oversight_rate:.1%}\n"
-        report += f"Improvement: +{improvement:.3f} ({improvement_pct:.1f}%)\n"
+        report += f"Baseline Pass Rate: {baseline_rate: .1%}\n"
+        report += f"Oversight Pass Rate: {oversight_rate: .1%}\n"
+        report += (
+            f"Improvement: +{improvement: .3f} ({improvement_pct: .1f}%)\n"
+        )
 
     report += """
 === SAFETY RESULTS ===
@@ -111,8 +113,8 @@ Generated: {timestamp}
 
         report += f"Total Prompts: {total}\n"
         report += f"Refused Prompts: {refused}\n"
-        report += f"Refusal Rate: {refusal_rate:.1f}%\n"
-        report += f"Harm Slip Rate: {harm_slip:.3f}\n"
+        report += f"Refusal Rate: {refusal_rate: .1f}%\n"
+        report += f"Harm Slip Rate: {harm_slip: .3f}\n"
 
     report += """
 === SUMMARY ===

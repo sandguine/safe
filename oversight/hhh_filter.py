@@ -74,7 +74,7 @@ class HHHFilter:
     def _claude_evaluation(self, content: str) -> HHHEvaluationResult:
         """Evaluate content using Claude API."""
         try:
-            prompt = """Evaluate this content for helpfulness, honesty, and harmlessness:
+            prompt = f"""Evaluate this content for helpfulness, honesty, and harmlessness:
 
 Content: {content}
 
@@ -95,7 +95,7 @@ Reason: [brief explanation if not approved]"""
 
             for line in lines:
                 if ":" in line:
-                    key, value = line.split(":", 1)
+                    key, value = line.split(": ", 1)
                     key = key.strip().lower()
                     value = value.strip()
 

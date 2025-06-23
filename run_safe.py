@@ -149,7 +149,7 @@ def run_demo():
         return False
 
     execution_time = time.time() - start_time
-    print_success(f"Execution time: {execution_time:.1f} seconds")
+    print_success(f"Execution time: {execution_time: .1f} seconds")
     return True
 
 
@@ -162,7 +162,7 @@ def generate_summary(timestamp, execution_time):
     summary_content = """OVERSIGHT CURRICULUM EXECUTION SUMMARY
 =====================================
 Timestamp: {datetime.now()}
-Execution Time: {execution_time:.1f} seconds
+Execution Time: {execution_time: .1f} seconds
 
 ENVIRONMENT:
 - Working Directory: {Path.cwd()}
@@ -288,12 +288,12 @@ def main():
             "╚══════════════════════════════════════════════════════════════╝{Colors.NC}"
         )
         print()
-        print(f"{Colors.CYAN}📊 Results available in:{Colors.NC}")
+        print(f"{Colors.CYAN}📊 Results available in: {Colors.NC}")
         print("  • demo/ directory - Raw results")
         print("  • results/ directory - Analysis and summaries")
         print("  • logs/ directory - Execution logs")
         print()
-        print(f"{Colors.CYAN}📋 Next steps:{Colors.NC}")
+        print(f"{Colors.CYAN}📋 Next steps: {Colors.NC}")
         print("  • Review evaluation_report_*.txt for detailed analysis")
         print("  • Check demo/ directory for raw results")
         print("  • Run 'python evaluate_results.py' for additional analysis")

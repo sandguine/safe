@@ -130,7 +130,8 @@ class ResultsAnalyzer:
         plt.close()
 
         print(
-            f"Safety analysis plot saved to: {self.output_dir / 'safety_analysis.png'}"
+            f"Safety analysis plot saved to: {self.output_dir /
+    'safety_analysis.png'}"
         )
 
     def plot_capability_analysis(self):
@@ -169,7 +170,7 @@ class ResultsAnalyzer:
             ax1.text(
                 bar.get_x() + bar.get_width() / 2.0,
                 height + 0.01,
-                f"{rate:.3f}",
+                f"{rate: .3f}",
                 ha="center",
                 va="bottom",
             )
@@ -194,7 +195,7 @@ class ResultsAnalyzer:
         ax2.text(
             0,
             improvement + 0.01 if improvement >= 0 else improvement - 0.01,
-            f"{improvement:.3f}\n({improvement_pct:+.1f}%)",
+            f"{improvement: .3f}\n({improvement_pct: +.1f}%)",
             ha="center",
             va="bottom" if improvement >= 0 else "top",
         )
@@ -208,7 +209,8 @@ class ResultsAnalyzer:
         plt.close()
 
         print(
-            f"Capability analysis plot saved to: {self.output_dir / 'capability_analysis.png'}"
+            f"Capability analysis plot saved to: {self.output_dir /
+    'capability_analysis.png'}"
         )
 
     def plot_tradeoff_curve(self):
@@ -260,8 +262,8 @@ class ResultsAnalyzer:
             )
 
         # Add quadrant labels
-        ax.axhline(y=0.5, color="gray", linestyle=":", alpha=0.5)
-        ax.axvline(x=0.5, color="gray", linestyle=":", alpha=0.5)
+        ax.axhline(y=0.5, color="gray", linestyle=": ", alpha=0.5)
+        ax.axvline(x=0.5, color="gray", linestyle=": ", alpha=0.5)
 
         ax.text(
             0.25,
@@ -317,7 +319,8 @@ class ResultsAnalyzer:
         plt.close()
 
         print(
-            f"Tradeoff curve saved to: {self.output_dir / 'tradeoff_curve.png'}"
+            f"Tradeoff curve saved to: {self.output_dir /
+    'tradeoff_curve.png'}"
         )
 
     def generate_summary_report(self):
@@ -333,7 +336,8 @@ Generated: {self.results.get('timestamp', 'Unknown')}
 - **Total Prompts Tested**: {self.results.get('safety_analysis', {}).get('total_prompts', 0)}
 - **Refused Prompts**: {self.results.get('safety_analysis', {}).get('refused_prompts', 0)}
 - **Refusal Rate**: {self.results.get('safety_analysis', {}).get('refusal_rate', 0):.1%}
-- **Safety Rate**: {1 - self.results.get('safety_analysis', {}).get('refusal_rate', 0):.1%}
+- **Safety Rate**: {1 -
+    self.results.get('safety_analysis', {}).get('refusal_rate', 0):.1%}
 
 ### Capability Performance
 - **Baseline Pass@1**: {self.results.get('capability_analysis', {}).get('baseline_pass1', 0):.3f}
@@ -377,7 +381,8 @@ Generated: {self.results.get('timestamp', 'Unknown')}
             f.write(report)
 
         print(
-            f"Summary report saved to: {self.output_dir / 'analysis_summary.md'}"
+            f"Summary report saved to: {self.output_dir /
+    'analysis_summary.md'}"
         )
 
     def run_full_analysis(self):

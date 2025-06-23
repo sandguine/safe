@@ -27,7 +27,7 @@ def test_api():
     # Check if API key is loaded
     api_key = os.getenv("CLAUDE_API_KEY")
     if api_key:
-        print(f"✓ API key found: {api_key[:20]}...")
+        print(f"✓ API key found: {api_key[: 20]}...")
     else:
         print("✗ No API key found")
         return
@@ -57,7 +57,7 @@ Provide only the function implementation, no explanations:"""
     try:
         print("\nGenerating solution...")
         response = ask(prompt, temperature=0.7)
-        print(f"\nGenerated solution:\n{response}")
+        print(f"\nGenerated solution: \n{response}")
 
         # Check if it looks like valid Python code
         if "def " in response and "return" in response:

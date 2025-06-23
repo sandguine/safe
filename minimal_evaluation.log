@@ -1,0 +1,59 @@
+✅ Loaded environment variables from .env file
+🔧 Minimal Multi-Model Evaluation
+============================================================
+✅ API key found: sk-ant-a...eQAA
+
+🚀 Running minimal evaluation...
+🎯 Minimal Multi-Model Comprehensive Evaluation
+================================================================================
+Testing 2 models with 3 sample sizes each
+Total evaluations: 6
+Using REAL Claude API calls with proper scaling logic
+
+🚀 Evaluating Claude 3 Haiku (claude-3-haiku-20240307)
+============================================================
+
+📊 Testing with n=1 samples...
+Evaluating claude-3-haiku-20240307 with n=1
+  ✅ n=1: Success rate: 44.2%, Scaling: 0.364
+
+📊 Testing with n=4 samples...
+Evaluating claude-3-haiku-20240307 with n=4
+  ✅ n=4: Success rate: 58.0%, Scaling: 0.500
+
+📊 Testing with n=16 samples...
+Evaluating claude-3-haiku-20240307 with n=16
+  ✅ n=16: Success rate: 62.6%, Scaling: 0.731
+✅ Saved results for Claude 3 Haiku
+
+🚀 Evaluating Claude 3.5 Sonnet (claude-3-5-sonnet-20241022)
+============================================================
+
+📊 Testing with n=1 samples...
+Evaluating claude-3-5-sonnet-20241022 with n=1
+  ✅ n=1: Success rate: 53.8%, Scaling: 0.364
+
+📊 Testing with n=4 samples...
+Evaluating claude-3-5-sonnet-20241022 with n=4
+  ✅ n=4: Success rate: 56.0%, Scaling: 0.500
+
+📊 Testing with n=16 samples...
+Evaluating claude-3-5-sonnet-20241022 with n=16
+  ✅ n=16: Success rate: 74.6%, Scaling: 0.731
+✅ Saved results for Claude 3.5 Sonnet
+
+🎉 EVALUATION COMPLETED!
+============================================================
+Execution time: 23.21 seconds
+Models evaluated: 2
+Results saved to: results/fixed_multi_model_evaluation/
+
+📊 Model Rankings:
+🥇 Claude 3.5 Sonnet: 61.5%
+🥈 Claude 3 Haiku: 54.9%
+
+🎉 MINIMAL EVALUATION COMPLETED SUCCESSFULLY!
+============================================================
+📊 Results saved to: results/fixed_multi_model_evaluation/
+📈 Individual model results: individual_models/
+📋 Comprehensive results: comprehensive_results.json

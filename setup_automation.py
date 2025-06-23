@@ -437,7 +437,7 @@ jobs:
                 "\n🎉 Automation setup complete! "
                 f"({success_count}/{len(steps)} steps successful)"
             )
-            print("\n📋 Next steps:")
+            print("\n📋 Next steps: ")
             print("1. Run: ./setup_dev.sh (if not already done)")
             print("2. Run: ./check_all.sh (to verify everything works)")
             print("3. Make a test commit to verify pre-commit hooks")
@@ -458,7 +458,7 @@ def main():
 
     if success:
         print("\n✅ All automation tools are now configured!")
-        print("🔧 Future commits will automatically:")
+        print("🔧 Future commits will automatically: ")
         print("  - Format code with Black")
         print("  - Check style with flake8")
         print("  - Sort imports with isort")

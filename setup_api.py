@@ -20,15 +20,15 @@ def setup_api_key():
     # Check if already configured
     if os.getenv("CLAUDE_API_KEY"):
         print("✅ API key already configured!")
-        print(f"   Found: {os.getenv('CLAUDE_API_KEY')[:8]}..."
-              f"{os.getenv('CLAUDE_API_KEY')[-4:]}")
+        print(f"   Found: {os.getenv('CLAUDE_API_KEY')[: 8]}..."
+              f"{os.getenv('CLAUDE_API_KEY')[-4: ]}")
         return True
 
     print("To run the SAFE demo with real model integration, you need a "
           "Claude API key.")
     print()
-    print("📋 Steps to get your API key:")
-    print("1. Go to https://console.anthropic.com/")
+    print("📋 Steps to get your API key: ")
+    print("1. Go to https: //console.anthropic.com/")
     print("2. Sign up or log in to your account")
     print("3. Navigate to 'API Keys' section")
     print("4. Create a new API key")
@@ -39,7 +39,7 @@ def setup_api_key():
     api_key = input("🔑 Enter your Claude API key (or press Enter to skip): ").strip()
 
     if not api_key:
-        print("\n⚠️  No API key provided. You can:")
+        print("\n⚠️  No API key provided. You can: ")
         print("   - Run this script again later")
         print("   - Set CLAUDE_API_KEY environment variable manually")
         print("   - Create a .env file with CLAUDE_API_KEY=your-key")
@@ -47,7 +47,8 @@ def setup_api_key():
 
     # Validate API key format
     if not api_key.startswith("sk-ant-"):
-        print("\n❌ Invalid API key format. Claude API keys start with 'sk-ant-'")
+        print(
+            "\n❌ Invalid API key format. Claude API keys start with 'sk-ant-'")
         return False
 
     # Save to .env file
@@ -61,7 +62,7 @@ def setup_api_key():
 
     except Exception as e:
         print(f"\n❌ Failed to save API key: {e}")
-        print("   You can manually create a .env file with:")
+        print("   You can manually create a .env file with: ")
         print(f"   CLAUDE_API_KEY={api_key}")
         return False
 
@@ -70,7 +71,7 @@ def main():
     """Main function."""
     success = setup_api_key()
     if success:
-        print("\n🎉 Setup complete! You can now run:")
+        print("\n🎉 Setup complete! You can now run: ")
         print("   python enhanced_demo.py")
     else:
         print("\n⚠️  Setup incomplete. Please configure your API key before "

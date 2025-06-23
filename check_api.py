@@ -26,15 +26,15 @@ def check_api_key():
     api_key = os.getenv("CLAUDE_API_KEY")
     if not api_key:
         print("❌ CLAUDE_API_KEY not found in environment")
-        print("\nTo set up your API key:")
-        print("1. Get your API key from https://console.anthropic.com/")
-        print("2. Create a .env file in the project root:")
+        print("\nTo set up your API key: ")
+        print("1. Get your API key from https: //console.anthropic.com/")
+        print("2. Create a .env file in the project root: ")
         print("   echo 'CLAUDE_API_KEY=your-key-here' > .env")
-        print("3. Or set it in your shell:")
+        print("3. Or set it in your shell: ")
         print("   export CLAUDE_API_KEY='your-key-here'")
         return False
 
-    print(f"✅ CLAUDE_API_KEY found: {api_key[:8]}...{api_key[-4:]}")
+    print(f"✅ CLAUDE_API_KEY found: {api_key[: 8]}...{api_key[-4: ]}")
 
     # Test model initialization
     try:
@@ -45,14 +45,14 @@ def check_api_key():
         # Test a simple API call
         print("\n🧪 Testing API call...")
         response = model.ask("Say 'Hello, SAFE!'", temperature=0.1)
-        print(f"✅ API call successful: {response[:50]}...")
+        print(f"✅ API call successful: {response[: 50]}...")
 
         print("\n🎉 All checks passed! Ready to run enhanced demo.")
         return True
 
     except Exception as e:
         print(f"❌ API test failed: {e}")
-        print("\nTroubleshooting:")
+        print("\nTroubleshooting: ")
         print("1. Verify your API key is correct")
         print("2. Check your internet connection")
         print("3. Ensure you have sufficient API credits")

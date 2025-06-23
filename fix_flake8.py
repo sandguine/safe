@@ -14,15 +14,18 @@ def fix_whitespace_after_colons(content):
     # Fix type hints like Dict[str,Any] -> Dict[str, Any]
     content = re.sub(r'(\w+)\[([^]]+)\]', lambda m:
                     m.group(1) + '[' +
-                    re.sub(r'([^,\s]):([^,\s])', r'\1: \2', m.group(2)) + ']', content)
+                    re.sub(r'([^,\s]):([^,\s])', r'\1: \2', m.group(2)) +
+    ']', content)
 
-    # Fix dict literals like {a:b,c:d} -> {a: b, c: d}
+    # Fix dict literals like {a: b,c: d} -> {a: b, c: d}
     content = re.sub(r'\{([^}]+)\}', lambda m:
-                    '{' + re.sub(r'([^,\s]):([^,\s])', r'\1: \2', m.group(1)) + '}', content)
+                    '{' + re.sub(r'([^,\s]): ([^,\s])', r'\1: \2', m.group(1)) +
+    '}', content)
 
-    # Fix function calls like func(a:b,c:d) -> func(a: b, c: d)
+    # Fix function calls like func(a: b,c: d) -> func(a: b, c: d)
     content = re.sub(r'\(([^)]+)\)', lambda m:
-                    '(' + re.sub(r'([^,\s]):([^,\s])', r'\1: \2', m.group(1)) + ')', content)
+                    '(' + re.sub(r'([^,\s]):([^,\s])', r'\1: \2', m.group(1)) +
+    ')', content)
 
     return content
 
@@ -59,8 +62,8 @@ def fix_long_lines(content, max_length=79):
             for i in range(max_length, 0, -1):
                 if line[i] in '+-*/=!':
                     if i > 0 and line[i-1] == ' ' and i < len(line)-1 and line[i+1] == ' ':
-                        fixed_lines.append(line[:i+1])
-                        fixed_lines.append('    ' + line[i+2:])
+                        fixed_lines.append(line[: i+1])
+                        fixed_lines.append('    ' + line[i+2: ])
                         break
             else:
                 fixed_lines.append(line)

@@ -1,0 +1,77 @@
+{
+  "model_id": "claude-3-5-haiku-20241022",
+  "model_name": "Claude 3.5 Haiku",
+  "evaluation_time": "2025-06-22T16:19:26.350698",
+  "sample_sizes": {
+    "n_1": {
+      "success_rate": 0.44218181818181823,
+      "scaling_factor": 0.36363636363636365,
+      "model_tier": 0.6,
+      "response": "2",
+      "expected_answer": "2",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 1,
+        "model_tier": 0.6,
+        "scaling_factor": 0.36363636363636365,
+        "evaluation_time": "2025-06-22T16:19:27.789399"
+      }
+    },
+    "n_4": {
+      "success_rate": 0.58,
+      "scaling_factor": 0.5,
+      "model_tier": 0.6,
+      "response": "8",
+      "expected_answer": "8",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 4,
+        "model_tier": 0.6,
+        "scaling_factor": 0.5,
+        "evaluation_time": "2025-06-22T16:19:31.463599"
+      }
+    },
+    "n_16": {
+      "success_rate": 0.5009230769230769,
+      "scaling_factor": 0.7307692307692308,
+      "model_tier": 0.6,
+      "response": "32",
+      "expected_answer": "32",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 16,
+        "model_tier": 0.6,
+        "scaling_factor": 0.7307692307692308,
+        "evaluation_time": "2025-06-22T16:19:35.745300"
+      }
+    },
+    "n_32": {
+      "success_rate": 0.5173333333333333,
+      "scaling_factor": 0.8333333333333333,
+      "model_tier": 0.6,
+      "response": "64",
+      "expected_answer": "64",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 32,
+        "model_tier": 0.6,
+        "scaling_factor": 0.8333333333333333,
+        "evaluation_time": "2025-06-22T16:19:39.358742"
+      }
+    },
+    "n_64": {
+      "success_rate": 0.6610810810810811,
+      "scaling_factor": 0.9054054054054055,
+      "model_tier": 0.6,
+      "response": "128",
+      "expected_answer": "128",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 64,
+        "model_tier": 0.6,
+        "scaling_factor": 0.9054054054054055,
+        "evaluation_time": "2025-06-22T16:19:42.991952"
+      }
+    }
+  }
+}

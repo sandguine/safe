@@ -66,8 +66,8 @@ if __name__ == "__main__":
         )
 
         print(f"Return code: {result.returncode}")
-        print(f"STDOUT:\n{result.stdout}")
-        print(f"STDERR:\n{result.stderr}")
+        print(f"STDOUT: \n{result.stdout}")
+        print(f"STDERR: \n{result.stderr}")
 
     finally:
         # Clean up

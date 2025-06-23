@@ -1,0 +1,77 @@
+{
+  "model_id": "claude-sonnet-4-20250514",
+  "model_name": "Claude 4 Sonnet",
+  "evaluation_time": "2025-06-22T16:20:53.481489",
+  "sample_sizes": {
+    "n_1": {
+      "success_rate": 0.8327272727272728,
+      "scaling_factor": 0.36363636363636365,
+      "model_tier": 0.95,
+      "response": "2",
+      "expected_answer": "2",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 1,
+        "model_tier": 0.95,
+        "scaling_factor": 0.36363636363636365,
+        "evaluation_time": "2025-06-22T16:20:57.970205"
+      }
+    },
+    "n_4": {
+      "success_rate": 0.86,
+      "scaling_factor": 0.5,
+      "model_tier": 0.95,
+      "response": "8",
+      "expected_answer": "8",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 4,
+        "model_tier": 0.95,
+        "scaling_factor": 0.5,
+        "evaluation_time": "2025-06-22T16:21:04.341902"
+      }
+    },
+    "n_16": {
+      "success_rate": 0.9061538461538462,
+      "scaling_factor": 0.7307692307692308,
+      "model_tier": 0.95,
+      "response": "32",
+      "expected_answer": "32",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 16,
+        "model_tier": 0.95,
+        "scaling_factor": 0.7307692307692308,
+        "evaluation_time": "2025-06-22T16:21:08.772028"
+      }
+    },
+    "n_32": {
+      "success_rate": 0.9266666666666666,
+      "scaling_factor": 0.8333333333333333,
+      "model_tier": 0.95,
+      "response": "64",
+      "expected_answer": "64",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 32,
+        "model_tier": 0.95,
+        "scaling_factor": 0.8333333333333333,
+        "evaluation_time": "2025-06-22T16:21:13.062594"
+      }
+    },
+    "n_64": {
+      "success_rate": 0.9410810810810811,
+      "scaling_factor": 0.9054054054054055,
+      "model_tier": 0.95,
+      "response": "128",
+      "expected_answer": "128",
+      "actual_success": true,
+      "metadata": {
+        "sample_size": 64,
+        "model_tier": 0.95,
+        "scaling_factor": 0.9054054054054055,
+        "evaluation_time": "2025-06-22T16:21:17.465020"
+      }
+    }
+  }
+}

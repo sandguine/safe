@@ -125,7 +125,7 @@ def ask(
     prompt: str,
     temperature: float = 0.7,
     max_tokens: int = 1000,
-    use_mock: bool = False
+    use_mock: bool = False,
 ) -> str:
     """Convenience function to ask Claude."""
     model = get_model(use_mock=use_mock)
