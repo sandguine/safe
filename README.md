@@ -44,6 +44,7 @@ This codebase implements a pipeline that:
 
 ## Setup
 
+### Option 1: With Claude API Key (Recommended)
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -51,33 +52,45 @@ pip install -r requirements.txt
 # Set Claude API key
 export CLAUDE_API_KEY="your-key-here"
 
-# Run demo
+# Run demo with real model
 python enhanced_demo.py
 ```
+
+### Option 2: Without API Key (Mock Mode)
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run demo with mock responses
+python enhanced_demo.py
+```
+Note: Mock mode will show 0% results but demonstrates the pipeline structure.
 
 ## Requirements
 
 - Python 3.9+
-- Claude API key
+- Claude API key (optional, for real evaluation)
 - HumanEval benchmark data (auto-downloaded)
 
 ## Expected Results
 
-With a real Claude API key:
+### With Claude API Key
 - **Capability**: ~25% baseline → ~40% oversight (Pass@1 on HumanEval)
 - **Safety**: ~90% harmful prompt refusal rate
 - **Analysis**: KL divergence measurements and joint objective scores
 
-Without API key (mock mode):
+### Without API Key (Mock Mode)
 - All metrics show 0% or placeholder values
 - Demonstrates pipeline structure without real model calls
+- Useful for understanding the codebase and testing setup
 
 ## Limitations
 
-- Requires Claude API key for real evaluation
+- Requires Claude API key for meaningful results
 - Tests only 10 HumanEval problems by default
 - Safety filtering uses simple keyword matching as fallback
 - KL divergence uses basic word-level tokenization
+- Limited to Claude API (not model-agnostic)
 
 ## Files
 
