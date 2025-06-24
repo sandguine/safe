@@ -20,19 +20,19 @@ def load_results(file_path: str) -> Dict[str, Any]:
 
 
 def analyze_capability_results(
-    baseline_path: str, oversight_path: str
+    baseline_path: str, resonant_filtering_path: str
 ) -> Dict[str, Any]:
     """Analyze capability improvement results"""
     baseline = load_results(baseline_path)
-    oversight = load_results(oversight_path)
+    resonant_filtering = load_results(resonant_filtering_path)
 
-    if not baseline or not oversight:
+    if not baseline or not resonant_filtering:
         return {"error": "Could not load results"}
 
     # Extract pass rates
     baseline_pass_rate = baseline.get("pass_rate", 0.0)
-    oversight_pass_rate = oversight.get("pass_rate", 0.0)
-    improvement = oversight_pass_rate - baseline_pass_rate
+    resonant_filtering_pass_rate = resonant_filtering.get("pass_rate", 0.0)
+    improvement = resonant_filtering_pass_rate - baseline_pass_rate
 
     improvement_percentage = 0
     if baseline_pass_rate > 0:
@@ -40,11 +40,11 @@ def analyze_capability_results(
 
     return {
         "baseline_pass_rate": baseline_pass_rate,
-        "oversight_pass_rate": oversight_pass_rate,
+        "resonant_filtering_pass_rate": resonant_filtering_pass_rate,
         "improvement": improvement,
         "improvement_percentage": improvement_percentage,
         "baseline_details": baseline,
-        "oversight_details": oversight,
+        "resonant_filtering_details": resonant_filtering,
     }
 
 
@@ -89,12 +89,12 @@ Generated: {timestamp}
         report += f"Error: {capability_results['error']}\n"
     else:
         baseline_rate = capability_results["baseline_pass_rate"]
-        oversight_rate = capability_results["oversight_pass_rate"]
+        resonant_filtering_rate = capability_results["resonant_filtering_pass_rate"]
         improvement = capability_results["improvement"]
         improvement_pct = capability_results["improvement_percentage"]
 
         report += f"Baseline Pass Rate: {baseline_rate: .1%}\n"
-        report += f"Oversight Pass Rate: {oversight_rate: .1%}\n"
+        report += f"Resonant Filtering Pass Rate: {resonant_filtering_rate: .1%}\n"
         report += (
             f"Improvement: +{improvement: .3f} ({improvement_pct: .1f}%)\n"
         )
@@ -141,7 +141,7 @@ Generated: {timestamp}
     report += """
 === TECHNICAL DETAILS ===
 - Analysis timestamp: {timestamp}
-- Files analyzed: baseline.json, oversight.json, safety.json
+- Files analyzed: baseline.json, resonant_filtering.json, safety.json
 - Demo version: SAFE MVP 1.0
 """
 
@@ -170,7 +170,7 @@ def main():
 
     # Analyze capability results
     capability_results = analyze_capability_results(
-        "demo/baseline.json", "demo/oversight.json"
+        "demo/baseline.json", "demo/resonant_filtering.json"
     )
 
     # Analyze safety results

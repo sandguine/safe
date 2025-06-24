@@ -44,7 +44,7 @@ except ImportError:
 
 
 # Local imports
-from oversight.model import ask, get_model
+from resonant_filtering.model import ask, get_model
 
 
 @dataclass
@@ -499,7 +499,7 @@ async def main():
     parser = argparse.ArgumentParser(description="HumanEval Integration CLI")
     parser.add_argument(
         "--mode",
-        choices=["baseline", "oversight"],
+        choices=["baseline", "resonant_filtering"],
         default="baseline",
         help="Execution mode",
     )

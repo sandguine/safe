@@ -23,13 +23,13 @@ class FeatureFlags:
     @staticmethod
     def is_enabled(flag: str) -> bool:
         """Check if a feature flag is enabled"""
-        env_var = f"OVERSIGHT_{flag.upper()}"
+        env_var = f"RESONANT_FILTERING_{flag.upper()}"
         return os.getenv(env_var, "false").lower() == "true"
 
     @staticmethod
     def get_model_mode() -> str:
         """Get model execution mode"""
-        if os.getenv("OVERSIGHT_FASTLANE") == "true":
+        if os.getenv("RESONANT_FILTERING_FASTLANE") == "true":
             return "stub"
         return "live"
 

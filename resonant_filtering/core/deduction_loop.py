@@ -6,7 +6,7 @@ Provides iterative reasoning and safety evaluation capabilities.
 import asyncio
 import sys as _sys
 
-from .errors import OversightError
+from .errors import ResonantFilteringError
 
 
 class DeductionLoop:
@@ -44,7 +44,7 @@ class DeductionLoop:
                 "final_result": self.results[-1] if self.results else None,
             }
         except Exception as e:
-            raise OversightError(f"Deduction loop failed: {e}") from e
+            raise ResonantFilteringError(f"Deduction loop failed: {e}") from e
 
     def _deduction_step(self, prompt: str, iteration: int) -> dict:
         """Perform a single deduction step."""

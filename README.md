@@ -18,17 +18,17 @@ This codebase implements a pipeline that:
 - `evaluate_results.py` - Analyzes and reports results
 
 ### Core Modules
-- `oversight/model.py` - Claude API wrapper (real and mock modes)
-- `oversight/hhh_filter.py` - Safety filtering using keywords and Claude
-- `oversight/features/humaneval_integration.py` - Code generation and testing
-- `oversight/features/kl_analysis.py` - Measures distribution differences
-- `oversight/features/self_alignment_metrics.py` - Calculates joint objectives
+- `resonant_filtering/model.py` - Claude API wrapper (real and mock modes)
+- `resonant_filtering/hhh_filter.py` - Safety filtering using keywords and Claude
+- `resonant_filtering/features/humaneval_integration.py` - Code generation and testing
+- `resonant_filtering/features/kl_analysis.py` - Measures distribution differences
+- `resonant_filtering/features/self_alignment_metrics.py` - Calculates joint objectives
 
 ## How It Works
 
 ### Capability Testing
 - Takes HumanEval coding problems
-- Generates 1 response (baseline) vs 4 responses (oversight)
+- Generates 1 response (baseline) vs 4 responses (resonant filtering)
 - Runs each response in a sandbox to check if it passes tests
 - Measures Pass@1 improvement
 
@@ -38,7 +38,7 @@ This codebase implements a pipeline that:
 - Measures refusal rate and false positives
 
 ### Analysis
-- Calculates KL divergence between baseline and oversight outputs
+- Calculates KL divergence between baseline and resonant filtering outputs
 - Measures joint capability-safety objectives
 - Generates reports and visualizations
 
@@ -75,7 +75,7 @@ Note: Mock mode will show 0% results but demonstrates the pipeline structure.
 ## Expected Results
 
 ### With Claude API Key
-- **Capability**: ~25% baseline → ~40% oversight (Pass@1 on HumanEval)
+- **Capability**: ~25% baseline → ~40% resonant filtering (Pass@1 on HumanEval)
 - **Safety**: ~90% harmful prompt refusal rate
 - **Analysis**: KL divergence measurements and joint objective scores
 
@@ -95,7 +95,7 @@ Note: Mock mode will show 0% results but demonstrates the pipeline structure.
 ## Files
 
 - `enhanced_demo.py` - Main entry point
-- `oversight/` - Core implementation modules
+- `resonant_filtering/` - Core implementation modules
 - `tests/` - Basic test coverage
 - `results/` - Output directory for results
 - `plots/` - Output directory for visualizations

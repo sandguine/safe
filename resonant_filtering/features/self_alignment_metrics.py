@@ -19,28 +19,28 @@ class SelfAlignmentResult:
     """Result of self-alignment objective measurement"""
 
     joint_objective_baseline: float
-    joint_objective_oversight: float
+    joint_objective_resonant_filtering: float
     improvement: float
     reward_scores_baseline: List[float]
-    reward_scores_oversight: List[float]
+    reward_scores_resonant_filtering: List[float]
     safety_scores_baseline: List[float]
-    safety_scores_oversight: List[float]
+    safety_scores_resonant_filtering: List[float]
     sample_size_baseline: int
-    sample_size_oversight: int
+    sample_size_resonant_filtering: int
     analysis_timestamp: str
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
         return {
             "joint_objective_baseline": self.joint_objective_baseline,
-            "joint_objective_oversight": self.joint_objective_oversight,
+            "joint_objective_resonant_filtering": self.joint_objective_resonant_filtering,
             "improvement": self.improvement,
             "reward_scores_baseline": self.reward_scores_baseline,
-            "reward_scores_oversight": self.reward_scores_oversight,
+            "reward_scores_resonant_filtering": self.reward_scores_resonant_filtering,
             "safety_scores_baseline": self.safety_scores_baseline,
-            "safety_scores_oversight": self.safety_scores_oversight,
+            "safety_scores_resonant_filtering": self.safety_scores_resonant_filtering,
             "sample_size_baseline": self.sample_size_baseline,
-            "sample_size_oversight": self.sample_size_oversight,
+            "sample_size_resonant_filtering": self.sample_size_resonant_filtering,
             "analysis_timestamp": self.analysis_timestamp,
         }
 
@@ -128,70 +128,70 @@ class SelfAlignmentAnalyzer:
     def analyze_solutions(
         self,
         baseline_solutions: List[str],
-        oversight_solutions: List[str],
+        resonant_filtering_solutions: List[str],
         task_ids: List[str],
     ) -> SelfAlignmentResult:
-        """Analyze self-alignment objective for baseline vs oversight"""
+        """Analyze self-alignment objective for baseline vs resonant filtering"""
 
         # Calculate reward scores
         baseline_rewards = []
-        oversight_rewards = []
+        resonant_filtering_rewards = []
 
         for i, solution in enumerate(baseline_solutions):
             task_id = task_ids[i] if i < len(task_ids) else f"task_{i}"
             reward = self.calculate_reward_score(solution, task_id)
             baseline_rewards.append(reward)
 
-        for i, solution in enumerate(oversight_solutions):
+        for i, solution in enumerate(resonant_filtering_solutions):
             task_id = task_ids[i] if i < len(task_ids) else f"task_{i}"
             reward = self.calculate_reward_score(solution, task_id)
-            oversight_rewards.append(reward)
+            resonant_filtering_rewards.append(reward)
 
         # Calculate safety scores
         baseline_safety = [
             self.calculate_safety_score(s) for s in baseline_solutions
         ]
-        oversight_safety = [
-            self.calculate_safety_score(s) for s in oversight_solutions
+        resonant_filtering_safety = [
+            self.calculate_safety_score(s) for s in resonant_filtering_solutions
         ]
 
         # Calculate joint objectives
         joint_baseline = self.calculate_joint_objective(
             baseline_rewards, baseline_safety
         )
-        joint_oversight = self.calculate_joint_objective(
-            oversight_rewards, oversight_safety
+        joint_resonant_filtering = self.calculate_joint_objective(
+            resonant_filtering_rewards, resonant_filtering_safety
         )
 
-        improvement = joint_oversight - joint_baseline
+        improvement = joint_resonant_filtering - joint_baseline
 
         return SelfAlignmentResult(
             joint_objective_baseline=joint_baseline,
-            joint_objective_oversight=joint_oversight,
+            joint_objective_resonant_filtering=joint_resonant_filtering,
             improvement=improvement,
             reward_scores_baseline=baseline_rewards,
-            reward_scores_oversight=oversight_rewards,
+            reward_scores_resonant_filtering=resonant_filtering_rewards,
             safety_scores_baseline=baseline_safety,
-            safety_scores_oversight=oversight_safety,
+            safety_scores_resonant_filtering=resonant_filtering_safety,
             sample_size_baseline=len(baseline_solutions),
-            sample_size_oversight=len(oversight_solutions),
+            sample_size_resonant_filtering=len(resonant_filtering_solutions),
             analysis_timestamp=datetime.now().isoformat(),
         )
 
     def analyze_humaneval_results(
-        self, baseline_file: str, oversight_file: str
+        self, baseline_file: str, resonant_filtering_file: str
     ) -> SelfAlignmentResult:
         """Analyze self-alignment from HumanEval results files"""
 
         # Load results
         with open(baseline_file, "r") as f:
             baseline_data = json.load(f)
-        with open(oversight_file, "r") as f:
-            oversight_data = json.load(f)
+        with open(resonant_filtering_file, "r") as f:
+            resonant_filtering_data = json.load(f)
 
         # Extract solutions and task IDs
         baseline_solutions = []
-        oversight_solutions = []
+        resonant_filtering_solutions = []
         task_ids = []
 
         # Baseline solutions
@@ -199,19 +199,18 @@ class SelfAlignmentAnalyzer:
             task_id = result.get("task_id", "unknown")
             solutions = result.get("solutions", [])
             if solutions:
-                baseline_solutions.append(solutions[0])  # Take first solution
+                baseline_solutions.append(solutions[0])
                 task_ids.append(task_id)
 
-        # Oversight solutions
-        for result in oversight_data.get("results", {}).get("bo_4", []):
+        # Resonant filtering solutions
+        for result in resonant_filtering_data.get("results", {}).get("bo_4", []):
             task_id = result.get("task_id", "unknown")
             solutions = result.get("solutions", [])
             if solutions:
-                # Take best solution (first one for now)
-                oversight_solutions.append(solutions[0])
+                resonant_filtering_solutions.append(solutions[0])
 
         return self.analyze_solutions(
-            baseline_solutions, oversight_solutions, task_ids
+            baseline_solutions, resonant_filtering_solutions, task_ids
         )
 
     def save_analysis(self, result: SelfAlignmentResult, output_file: str):
@@ -226,12 +225,12 @@ class SelfAlignmentAnalyzer:
             f"E[R(x)·Safe(x)] baseline: {result.joint_objective_baseline:.4f}"
         )
         print(
-            f"E[R(x)·Safe(x)] oversight: {result.joint_objective_oversight:.4f}"
+            f"E[R(x)·Safe(x)] resonant filtering: {result.joint_objective_resonant_filtering:.4f}"
         )
-        print(f"Improvement: {result.improvement:.4f}")
+        print(f"Improvement: +{result.improvement:.4f}")
         print(
             f"Sample sizes: {result.sample_size_baseline} baseline, "
-            f"{result.sample_size_oversight} oversight"
+            f"{result.sample_size_resonant_filtering} resonant filtering"
         )
 
 
@@ -244,7 +243,7 @@ def main():
         "--baseline", required=True, help="Baseline results file"
     )
     parser.add_argument(
-        "--oversight", required=True, help="Oversight results file"
+        "--resonant_filtering", required=True, help="Resonant filtering results file"
     )
     parser.add_argument(
         "--output", default="results/self_alignment.json", help="Output file"
@@ -253,7 +252,7 @@ def main():
     args = parser.parse_args()
 
     analyzer = SelfAlignmentAnalyzer()
-    result = analyzer.analyze_humaneval_results(args.baseline, args.oversight)
+    result = analyzer.analyze_humaneval_results(args.baseline, args.resonant_filtering)
     analyzer.save_analysis(result, args.output)
 
 

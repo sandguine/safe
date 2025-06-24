@@ -142,60 +142,62 @@ class KLDivergenceAnalyzer:
         return (float(lower_bound), float(upper_bound))
 
     def analyze_distributions(
-        self, baseline_texts: List[str], oversight_texts: List[str]
+        self, baseline_texts: List[str], resonant_filtering_texts: List[str]
     ) -> KLDivergenceResult:
-        """Analyze KL divergence between baseline and oversight distributions"""
+        """Analyze KL divergence between baseline and resonant_filtering distributions"""
 
         # Estimate distributions
         p_dist = self.estimate_token_distribution(baseline_texts)
-        q_dist = self.estimate_token_distribution(oversight_texts)
+        q_dist = self.estimate_token_distribution(resonant_filtering_texts)
 
-        # Calculate metrics
-        kl_div = self.calculate_kl_divergence(p_dist, q_dist)
+        # Calculate KL divergence
+        kl_divergence = self.calculate_kl_divergence(p_dist, q_dist)
+
+        # Calculate entropies
         entropy_p = self.calculate_entropy(p_dist)
         entropy_q = self.calculate_entropy(q_dist)
 
-        # Bootstrap confidence interval
-        ci = self.bootstrap_confidence_interval(
-            baseline_texts, oversight_texts
+        # Calculate confidence interval
+        confidence_interval = self.bootstrap_confidence_interval(
+            baseline_texts, resonant_filtering_texts
         )
 
         return KLDivergenceResult(
-            kl_divergence=kl_div,
+            kl_divergence=kl_divergence,
             entropy_p=entropy_p,
             entropy_q=entropy_q,
             sample_size_p=len(baseline_texts),
-            sample_size_q=len(oversight_texts),
-            confidence_interval=ci,
+            sample_size_q=len(resonant_filtering_texts),
+            confidence_interval=confidence_interval,
             analysis_timestamp=datetime.now().isoformat(),
         )
 
     def analyze_humaneval_results(
-        self, baseline_file: str, oversight_file: str
+        self, baseline_file: str, resonant_filtering_file: str
     ) -> KLDivergenceResult:
         """Analyze KL divergence from HumanEval results files"""
 
         # Load results
         with open(baseline_file, "r") as f:
             baseline_data = json.load(f)
-        with open(oversight_file, "r") as f:
-            oversight_data = json.load(f)
+        with open(resonant_filtering_file, "r") as f:
+            resonant_filtering_data = json.load(f)
 
         # Extract solution texts
         baseline_texts = []
-        oversight_texts = []
+        resonant_filtering_texts = []
 
         # Baseline solutions
         for result in baseline_data.get("results", {}).get("bo_1", []):
             solutions = result.get("solutions", [])
             baseline_texts.extend(solutions)
 
-        # Oversight solutions
-        for result in oversight_data.get("results", {}).get("bo_4", []):
+        # Resonant filtering solutions
+        for result in resonant_filtering_data.get("results", {}).get("bo_4", []):
             solutions = result.get("solutions", [])
-            oversight_texts.extend(solutions)
+            resonant_filtering_texts.extend(solutions)
 
-        return self.analyze_distributions(baseline_texts, oversight_texts)
+        return self.analyze_distributions(baseline_texts, resonant_filtering_texts)
 
     def save_analysis(self, result: KLDivergenceResult, output_file: str):
         """Save KL divergence analysis to file"""
@@ -223,7 +225,7 @@ def main():
         "--baseline", required=True, help="Baseline results file"
     )
     parser.add_argument(
-        "--oversight", required=True, help="Oversight results file"
+        "--resonant_filtering", required=True, help="Resonant Filtering results file"
     )
     parser.add_argument(
         "--output", default="results/kl_analysis.json", help="Output file"
@@ -232,7 +234,7 @@ def main():
     args = parser.parse_args()
 
     analyzer = KLDivergenceAnalyzer()
-    result = analyzer.analyze_humaneval_results(args.baseline, args.oversight)
+    result = analyzer.analyze_humaneval_results(args.baseline, args.resonant_filtering)
     analyzer.save_analysis(result, args.output)
 
 

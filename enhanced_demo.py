@@ -19,15 +19,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict
 
-# Add oversight to path
+# Add resonant-filtering to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from oversight.features.humaneval_integration import AsyncHumanEvalRunner
-from oversight.features.kl_analysis import KLDivergenceAnalyzer
-from oversight.features.red_team_suite import RedTeamSuite
-from oversight.features.self_alignment_metrics import SelfAlignmentAnalyzer
-from oversight.hhh_filter import HHHFilter
-from oversight.model import get_model
+from resonant_filtering.features.humaneval_integration import AsyncHumanEvalRunner
+from resonant_filtering.features.kl_analysis import KLDivergenceAnalyzer
+from resonant_filtering.features.red_team_suite import RedTeamSuite
+from resonant_filtering.features.self_alignment_metrics import SelfAlignmentAnalyzer
+from resonant_filtering.hhh_filter import HHHFilter
+from resonant_filtering.model import get_model
 
 
 class EnhancedSAFEDemo:
@@ -95,16 +95,16 @@ class EnhancedSAFEDemo:
                 n_values=[1], max_tasks=10, temperature=0.7
             )
 
-            # Run oversight (n=4)
-            print("   Running oversight (n=4)...")
-            oversight_results = await runner.run_experiment(
+            # Run resonant filtering (n=4)
+            print("   Running resonant filtering (n=4)...")
+            resonant_filtering_results = await runner.run_experiment(
                 n_values=[4], max_tasks=10, temperature=0.7
             )
 
             # Calculate pass@1
             baseline_pass1 = baseline_results.get("pass1", 0.0)
-            oversight_pass1 = oversight_results.get("pass1", 0.0)
-            improvement = oversight_pass1 - baseline_pass1
+            resonant_filtering_pass1 = resonant_filtering_results.get("pass1", 0.0)
+            improvement = resonant_filtering_pass1 - baseline_pass1
             improvement_pct = (
                 (improvement / baseline_pass1 * 100)
                 if baseline_pass1 > 0
@@ -113,15 +113,15 @@ class EnhancedSAFEDemo:
 
             return {
                 "baseline_pass1": baseline_pass1,
-                "oversight_pass1": oversight_pass1,
+                "resonant_filtering_pass1": resonant_filtering_pass1,
                 "improvement": improvement,
                 "improvement_percentage": improvement_pct,
                 "total_problems": 10,
                 "baseline_details": (
                     baseline_results.get("results", {}).get("bo_1", [])
                 ),
-                "oversight_details": (
-                    oversight_results.get("results", {}).get("bo_4", [])
+                "resonant_filtering_details": (
+                    resonant_filtering_results.get("results", {}).get("bo_4", [])
                 ),
                 "api_used": True,  # Always true now
             }
@@ -192,36 +192,37 @@ class EnhancedSAFEDemo:
         try:
             # Extract solution texts from capability results
             baseline_texts = []
-            oversight_texts = []
+            resonant_filtering_texts = []
 
             baseline_details = self.results["capability_analysis"].get(
                 "baseline_details", []
             )
-            oversight_details = self.results["capability_analysis"].get(
-                "oversight_details", []
+            resonant_filtering_details = self.results["capability_analysis"].get(
+                "resonant_filtering_details", []
             )
 
+            # Extract solution texts
             for result in baseline_details:
                 solutions = result.get("solutions", [])
                 baseline_texts.extend(solutions)
 
-            for result in oversight_details:
+            for result in resonant_filtering_details:
                 solutions = result.get("solutions", [])
-                oversight_texts.extend(solutions)
+                resonant_filtering_texts.extend(solutions)
 
-            if baseline_texts and oversight_texts:
-                kl_result = self.kl_analyzer.analyze_distributions(
-                    baseline_texts, oversight_texts
+            if baseline_texts and resonant_filtering_texts:
+                result = self.kl_analyzer.analyze_distributions(
+                    baseline_texts, resonant_filtering_texts
                 )
 
                 return {
-                    "kl_divergence": kl_result.kl_divergence,
-                    "entropy_p": kl_result.entropy_p,
-                    "entropy_q": kl_result.entropy_q,
-                    "sample_size_p": kl_result.sample_size_p,
-                    "sample_size_q": kl_result.sample_size_q,
-                    "confidence_interval": kl_result.confidence_interval,
-                    "analysis_timestamp": kl_result.analysis_timestamp,
+                    "kl_divergence": result.kl_divergence,
+                    "entropy_p": result.entropy_p,
+                    "entropy_q": result.entropy_q,
+                    "sample_size_p": result.sample_size_p,
+                    "sample_size_q": result.sample_size_q,
+                    "confidence_interval": result.confidence_interval,
+                    "analysis_timestamp": result.analysis_timestamp,
                 }
             else:
                 return {"error": "Insufficient data for KL analysis"}
@@ -233,60 +234,59 @@ class EnhancedSAFEDemo:
     async def _run_self_alignment_analysis(self) -> Dict:
         """Run self-alignment objective analysis."""
         try:
-            # Extract solutions and task IDs
+            # Extract solutions for self-alignment analysis
             baseline_solutions = []
-            oversight_solutions = []
+            resonant_filtering_solutions = []
             task_ids = []
 
             baseline_details = self.results["capability_analysis"].get(
                 "baseline_details", []
             )
-            oversight_details = self.results["capability_analysis"].get(
-                "oversight_details", []
+            resonant_filtering_details = self.results["capability_analysis"].get(
+                "resonant_filtering_details", []
             )
 
+            # Extract solutions
             for result in baseline_details:
-                task_id = result.get("task_id", "unknown")
                 solutions = result.get("solutions", [])
                 if solutions:
                     baseline_solutions.append(solutions[0])
-                    task_ids.append(task_id)
 
-            for result in oversight_details:
+            for result in resonant_filtering_details:
                 solutions = result.get("solutions", [])
                 if solutions:
-                    oversight_solutions.append(solutions[0])
+                    resonant_filtering_solutions.append(solutions[0])
 
-            if baseline_solutions and oversight_solutions:
+            if baseline_solutions and resonant_filtering_solutions:
                 alignment_result = self.alignment_analyzer.analyze_solutions(
-                    baseline_solutions, oversight_solutions, task_ids
+                    baseline_solutions, resonant_filtering_solutions, task_ids
                 )
 
                 return {
                     "joint_objective_baseline": (
                         alignment_result.joint_objective_baseline
                     ),
-                    "joint_objective_oversight": (
-                        alignment_result.joint_objective_oversight
+                    "joint_objective_resonant_filtering": (
+                        alignment_result.joint_objective_resonant_filtering
                     ),
                     "improvement": alignment_result.improvement,
                     "reward_scores_baseline": (
                         alignment_result.reward_scores_baseline
                     ),
-                    "reward_scores_oversight": (
-                        alignment_result.reward_scores_oversight
+                    "reward_scores_resonant_filtering": (
+                        alignment_result.reward_scores_resonant_filtering
                     ),
                     "safety_scores_baseline": (
                         alignment_result.safety_scores_baseline
                     ),
-                    "safety_scores_oversight": (
-                        alignment_result.safety_scores_oversight
+                    "safety_scores_resonant_filtering": (
+                        alignment_result.safety_scores_resonant_filtering
                     ),
                     "sample_size_baseline": (
                         alignment_result.sample_size_baseline
                     ),
-                    "sample_size_oversight": (
-                        alignment_result.sample_size_oversight
+                    "sample_size_resonant_filtering": (
+                        alignment_result.sample_size_resonant_filtering
                     ),
                     "analysis_timestamp": alignment_result.analysis_timestamp,
                 }
@@ -346,7 +346,7 @@ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 CAPABILITY ANALYSIS
 --------------------
 Baseline Pass@1: {self.results['capability_analysis'].get('baseline_pass1', 0.0):.3f}
-Oversight Pass@1: {self.results['capability_analysis'].get('oversight_pass1', 0.0):.3f}
+Resonant Filtering Pass@1: {self.results['capability_analysis'].get('resonant_filtering_pass1', 0.0):.3f}
 Improvement: +{self.results['capability_analysis'].get('improvement', 0.0):.3f} (
 {self.results['capability_analysis'].get('improvement_percentage', 0.0):.1f}%)
 Total Problems: {self.results['capability_analysis'].get('total_problems', 0)}
@@ -368,7 +368,7 @@ Sample Size q: {self.results['kl_analysis'].get('sample_size_q', 0)}
 SELF-ALIGNMENT ANALYSIS
 -----------------------
 E[R(x)·Safe(x)] Baseline: {self.results['self_alignment_analysis'].get('joint_objective_baseline', 0.0):.4f}
-E[R(x)·Safe(x)] Oversight: {self.results['self_alignment_analysis'].get('joint_objective_oversight', 0.0):.4f}
+E[R(x)·Safe(x)] Resonant Filtering: {self.results['self_alignment_analysis'].get('joint_objective_resonant_filtering', 0.0):.4f}
 Improvement: +{self.results['self_alignment_analysis'].get('improvement', 0.0):.4f}
 
 KEY INSIGHTS
@@ -432,7 +432,7 @@ KEY INSIGHTS
 |--------|-------|
 | **Safety Refusal Rate** | {safety.get('refusal_rate', 0):.1%} |
 | **Baseline Pass@1** | {capability.get('baseline_pass1', 0):.3f} |
-| **Oversight Pass@1** | {capability.get('oversight_pass1', 0):.3f} |
+| **Resonant Filtering Pass@1** | {capability.get('resonant_filtering_pass1', 0):.3f} |
 | **Capability Improvement** | {capability.get('improvement', 0):.3f} |
 | **Total Problems Tested** | {capability.get('total_problems', 0)} |
 | **Harmful Prompts Tested** | {safety.get('total_prompts', 0)} |
@@ -450,7 +450,7 @@ KEY INSIGHTS
     else 'Real Claude API'
 }
 - **Pipeline ready** for real model integration
-- **Best-of-4 oversight** framework implemented
+- **Best-of-4 resonant filtering** framework implemented
 
 ### Strategic Impact
 - ✅ **Modular inference-time safety** demonstrated

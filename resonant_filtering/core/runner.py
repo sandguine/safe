@@ -155,12 +155,13 @@ class OversightRunner:
     async def run_demo(self) -> Dict[str, Any]:
         """Run demo mode experiment."""
         baseline_metrics = await self._run("baseline")
-        oversight_metrics = await self._run("oversight")
+        resonant_filtering_metrics = await self._run("resonant_filtering")
         return {
             "mode": "demo",
             "status": "completed",
             "baseline_metrics": baseline_metrics.get_summary(),
-            "oversight_metrics": oversight_metrics.get_summary(),
+            "resonant_filtering_metrics": resonant_filtering_metrics.get_summary(),
+            "comparison": self._compare_metrics(baseline_metrics, resonant_filtering_metrics),
             "message": "Demo experiment completed successfully",
             "features": {
                 "humaneval": self.humaneval_available,
@@ -173,12 +174,13 @@ class OversightRunner:
     async def run_robust(self) -> Dict[str, Any]:
         """Run robust mode experiment."""
         baseline_metrics = await self._run("baseline")
-        oversight_metrics = await self._run("oversight")
+        resonant_filtering_metrics = await self._run("resonant_filtering")
         return {
             "mode": "robust",
             "status": "completed",
             "baseline_metrics": baseline_metrics.get_summary(),
-            "oversight_metrics": oversight_metrics.get_summary(),
+            "resonant_filtering_metrics": resonant_filtering_metrics.get_summary(),
+            "comparison": self._compare_metrics(baseline_metrics, resonant_filtering_metrics),
             "message": "Robust experiment completed successfully",
             "features": {
                 "humaneval": self.humaneval_available,
@@ -224,11 +226,11 @@ class OversightRunner:
 
     async def _run_comparison(self) -> dict:
         baseline = await self._run("baseline")
-        oversight = await self._run("oversight")
-        comp = self._analyze(baseline, oversight)
+        resonant_filtering = await self._run("resonant_filtering")
+        comp = self._analyze(baseline, resonant_filtering)
         return {
             "baseline_summary": baseline.get_summary(),
-            "oversight_summary": oversight.get_summary(),
+            "resonant_filtering_summary": resonant_filtering.get_summary(),
             "comparison": comp,
         }
 

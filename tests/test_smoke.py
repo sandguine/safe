@@ -12,11 +12,7 @@ def test_imports():
         assert False, "Basic imports should work"
 
 
-def test_oversight_import():
-    """Test that oversight module can be imported."""
-    try:
-        import oversight
-        assert oversight is not None
-    except ImportError:
-        # This is expected in CI if dependencies aren't fully installed
-        pass 
+def test_resonant_filtering_import():
+    """Test that resonant_filtering module can be imported."""
+    import resonant_filtering
+    assert resonant_filtering is not None 

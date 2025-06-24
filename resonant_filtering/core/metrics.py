@@ -108,26 +108,26 @@ class MetricsCollector:
 
 
 class ComparisonAnalyzer:
-    """Analyzer for comparing baseline vs oversight experiment results."""
+    """Analyzer for comparing baseline vs resonant filtering experiment results."""
 
     def __init__(self):
         self.baseline_metrics = None
-        self.oversight_metrics = None
+        self.resonant_filtering_metrics = None
 
     def set_baseline(self, metrics: MetricsCollector) -> None:
         """Set baseline metrics for comparison."""
         self.baseline_metrics = metrics
 
-    def set_oversight(self, metrics: MetricsCollector) -> None:
-        """Set oversight metrics for comparison."""
-        self.oversight_metrics = metrics
+    def set_resonant_filtering(self, metrics: MetricsCollector) -> None:
+        """Set resonant filtering metrics for comparison."""
+        self.resonant_filtering_metrics = metrics
 
     def compare_runs(self) -> Dict[str, Any]:
-        """Compare baseline and oversight runs."""
+        """Compare baseline and resonant filtering runs."""
         # Stub implementation for tests
         return {
             "baseline": {"approval_rate": 0.3, "avg_safety": 0.5},
-            "oversight": {"approval_rate": 0.8, "avg_safety": 0.9},
+            "resonant_filtering": {"approval_rate": 0.8, "avg_safety": 0.9},
             "differences": {
                 "reward_diff": 0.5,
                 "safety_diff": 0.4,

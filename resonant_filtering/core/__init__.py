@@ -21,9 +21,14 @@ from .config import (
     get_execution_config,
     get_settings,
     load_settings,
+    ResonantFilteringConfig,
+    is_enabled,
+    get_model_mode,
+    get_api_key,
+    get_feature_flags,
 )
 from .deduction_loop import DeductionLoop
-from .errors import ModelError, OversightError, SafetyViolation
+from .errors import ModelError, ResonantFilteringError, SafetyViolation
 from .metrics import ExperimentMetrics, MetricsCollector, Summary
 from .model import ask, ask_with_retry
 
@@ -48,7 +53,7 @@ __all__ = [
     "COLLUSION_MITIGATION_ENABLED",
     "KL_ANALYSIS_ENABLED",
     # Core functionality
-    "OversightError",
+    "ResonantFilteringError",
     "ModelError",
     "SafetyViolation",
     "MetricsCollector",
@@ -57,4 +62,5 @@ __all__ = [
     "DeductionLoop",
     "ask",
     "ask_with_retry",
+    "ResonantFilteringConfig",
 ]
